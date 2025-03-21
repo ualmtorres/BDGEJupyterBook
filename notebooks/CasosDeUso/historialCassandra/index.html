@@ -1,0 +1,1572 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="../../../" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Desarrollo de una API REST para gestión historial de pedidos y seguimiento en tiempo real con Express y Cassandra &#8212; Aprendiendo bases de datos con Jupyter</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../../../_static/styles/theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="../../../_static/styles/bootstrap.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="../../../_static/styles/pydata-sphinx-theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+
+  
+  <link href="../../../_static/vendor/fontawesome/6.5.2/css/all.min.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="../../../_static/vendor/fontawesome/6.5.2/webfonts/fa-solid-900.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../../../_static/vendor/fontawesome/6.5.2/webfonts/fa-brands-400.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../../../_static/vendor/fontawesome/6.5.2/webfonts/fa-regular-400.woff2" />
+
+    <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=03e43079" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/styles/sphinx-book-theme.css?v=eba8b062" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/togglebutton.css?v=13237357" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/sphinx-thebe.css?v=4fa983c6" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/sphinx-design.min.css?v=95c83b7e" />
+  
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../../../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b" />
+<link rel="preload" as="script" href="../../../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b" />
+  <script src="../../../_static/vendor/fontawesome/6.5.2/js/all.min.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+    <script src="../../../_static/documentation_options.js?v=9eb32ce0"></script>
+    <script src="../../../_static/doctools.js?v=9a2dae69"></script>
+    <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../../_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="../../../_static/copybutton.js?v=f281be69"></script>
+    <script src="../../../_static/scripts/sphinx-book-theme.js?v=887ef09a"></script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="../../../_static/togglebutton.js?v=4a39c7ea"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="../../../_static/design-tabs.js?v=f930bc37"></script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script async="async" src="../../../_static/sphinx-thebe.js?v=c100c467"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'notebooks/CasosDeUso/historialCassandra/index';</script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" />
+    <link rel="next" title="Actividades complementarias" href="../../ActividadesComplementarias/actividades.html" />
+    <link rel="prev" title="Desarrollo de una API REST para gestión de recomendaciones con Slim Framework y Neo4j" href="../recomendacionesNeo4j/index.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-primary-sidebar-checkbox"/>
+  <label class="overlay overlay-primary" for="pst-primary-sidebar-checkbox"></label>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-secondary-sidebar-checkbox"/>
+  <label class="overlay overlay-secondary" for="pst-secondary-sidebar-checkbox"></label>
+  
+  <div class="search-button__wrapper">
+    <div class="search-button__overlay"></div>
+    <div class="search-button__search-container">
+<form class="bd-search d-flex align-items-center"
+      action="../../../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         id="search-input"
+         placeholder="Search this book..."
+         aria-label="Search this book..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form></div>
+  </div>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+      <div class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+    
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="../../intro.html">
+  
+  
+  
+  
+  
+    
+    
+      
+    
+    
+    <img src="../../../_static/di.png" class="logo__image only-light" alt="Aprendiendo bases de datos con Jupyter - Home"/>
+    <script>document.write(`<img src="../../../_static/di.png" class="logo__image only-dark" alt="Aprendiendo bases de datos con Jupyter - Home"/>`);</script>
+  
+  
+</a></div>
+        <div class="sidebar-primary-item">
+
+ <script>
+ document.write(`
+   <button class="btn search-button-field search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass"></i>
+    <span class="search-button__default-text">Search</span>
+    <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+   </button>
+ `);
+ </script></div>
+        <div class="sidebar-primary-item"><nav class="bd-links bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
+        
+        <ul class="nav bd-sidenav bd-sidenav__home-link">
+            <li class="toctree-l1">
+                <a class="reference internal" href="../../intro.html">
+                    Bases de datos a gran escala
+                </a>
+            </li>
+        </ul>
+        <p aria-level="2" class="caption" role="heading"><span class="caption-text">Temario</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../../Docs/Tema1/tema1.html">Tema 1. Modelos de almacenamiento no relacionales. El fenómeno NoSQL</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../Docs/Tema2/tema2.html">Tema 2. Bases de datos clave-valor</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../Docs/Tema3/tema3.html">Tema 3. Bases de datos orientadas a documentos</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../Docs/Tema4/tema4.html">Tema 4. Bases de datos orientadas a grafos</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../Docs/Tema5/tema5.html">Tema 5. Bases de datos orientadas a columnas</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Labs</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../../Labs/Lab01/lab01.html">Lab 01. Consultas en MongoDB</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../Labs/Lab02/lab02.html">Lab 02. Indexación en MongoDB</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../Labs/Lab03/lab03.html">Lab 03. Desarrollo de un Blog con PHP y MongoDB</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../Labs/Lab04/lab04.html">Lab 04. Framework de Agregación de MongoDB</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../Labs/Lab05/lab05.html">Lab 05. Consultas en Neo4j</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../Labs/Lab06/lab06.html">Lab 06. Desarrollo de un aplicación PHP para la consulta de información cinematográfica almacenada en Neo4j</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Casos de uso</span></p>
+<ul class="current nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../ofertasFlashRedis/index.html">Desarrollo de una API REST para gestión de ofertas flash con Slim Framework y Redis</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../valoracionesMongoDB/index.html">Desarrollo de una API REST para gestión de productos y valoraciones con Slim Framework y MongoDB</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../recomendacionesNeo4j/index.html">Desarrollo de una API REST para gestión de recomendaciones con Slim Framework y Neo4j</a></li>
+<li class="toctree-l1 current active"><a class="current reference internal" href="#">Desarrollo de una API REST para gestión historial de pedidos y seguimiento en tiempo real con Express y Cassandra</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Actividades complementarias</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../../ActividadesComplementarias/actividades.html">Descripción</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../ActividadesComplementarias/gestionRedTransporteMovilidadUrbana.html">Actividad complementaria. Gestión de una red de transporte y movilidad urbana</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../ActividadesComplementarias/gestionEmergenciasDesastresNaturales.html">Actividad complementaria. Gestión de emergencias y desastres naturales</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Licencia</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../../../LICENSE.html">Licencia</a></li>
+</ul>
+
+    </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+  </div>
+  
+  <div id="rtd-footer-container"></div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><button class="sidebar-toggle primary-toggle btn btn-sm" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</button></div>
+      
+    </div>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+<a href="https://github.com/ualmtorres/AprendiendoBasesDeDatosConJupyter" target="_blank"
+   class="btn btn-sm btn-source-repository-button"
+   title="Source repository"
+   data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fab fa-github"></i>
+  </span>
+
+</a>
+
+
+
+
+
+
+<div class="dropdown dropdown-download-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Download this page">
+    <i class="fas fa-download"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="../../../_sources/notebooks/CasosDeUso/historialCassandra/index.md" target="_blank"
+   class="btn btn-sm btn-download-source-button dropdown-item"
+   title="Download source file"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="btn__text-container">.md</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li>
+<button onclick="window.print()"
+  class="btn btn-sm btn-download-pdf-button dropdown-item"
+  title="Print to PDF"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="btn__text-container">.pdf</span>
+</button>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+<button onclick="toggleFullScreen()"
+  class="btn btn-sm btn-fullscreen-button"
+  title="Fullscreen mode"
+  data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="theme-switch fa-solid fa-sun fa-lg" data-mode="light"></i>
+    <i class="theme-switch fa-solid fa-moon fa-lg" data-mode="dark"></i>
+    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"></i>
+  </button>
+`);
+</script>
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm pst-navbar-icon search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
+  </button>
+`);
+</script>
+<button class="sidebar-toggle secondary-toggle btn btn-sm" title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="fa-solid fa-list"></span>
+</button>
+</div></div>
+      
+    </div>
+  
+</div>
+</div>
+              
+              
+
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1>Desarrollo de una API REST para gestión historial de pedidos y seguimiento en tiempo real con Express y Cassandra</h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+            <div>
+                <h2> Contents </h2>
+            </div>
+            <nav aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#resumen">Resumen</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#introduccion">Introducción</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#descripcion-del-problema">Descripción del problema</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#configuracion-del-entorno-de-base-de-datos">Configuración del entorno de base de datos</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#servicios">Servicios</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#instrucciones-de-instalacion">Instrucciones de instalación</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#cassandra">Cassandra</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#uso-basico-del-driver-de-cassandra">Uso básico del driver de Cassandra</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#conexion-a-cassandra">Conexión a Cassandra</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#operaciones-basicas">Operaciones básicas</a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#el-metodo-execute">El método <code class="docutils literal notranslate"><span class="pre">execute</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#lanzando-consultas">Lanzando consultas</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#el-metodo-batch">El método <code class="docutils literal notranslate"><span class="pre">batch</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#estructura-de-la-base-de-datos">Estructura de la base de datos</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#creacion-del-keyspace">Creación del keyspace</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#creacion-de-las-tablas">Creación de las tablas</a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#tabla-orders">Tabla <code class="docutils literal notranslate"><span class="pre">orders</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#tabla-orders-by-user">Tabla <code class="docutils literal notranslate"><span class="pre">orders_by_user</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#tabla-orders-by-status">Tabla <code class="docutils literal notranslate"><span class="pre">orders_by_status</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#desarrollo-de-la-api">Desarrollo de la API</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#especificacion-de-los-endpoints-de-la-api">Especificación de los endpoints de la API</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#ejemplo-de-json-de-un-pedido">Ejemplo de JSON de un pedido</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#ejemplo-de-json-del-estado-de-un-pedido">Ejemplo de JSON del estado de un pedido</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#crear-la-aplicacion-express">Crear la aplicación Express</a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#descripcion-de-la-api">Descripción de la API</a></li>
+</ul>
+</li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#endpoint-de-prueba">Endpoint de prueba</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#endpoints-de-la-api">Endpoints de la API</a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#crear-un-nuevo-pedido">Crear un nuevo pedido</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#obtener-todos-los-pedidos">Obtener todos los pedidos</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#obtener-los-detalles-de-un-pedido">Obtener los detalles de un pedido</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#actualizar-el-estado-de-un-pedido">Actualizar el estado de un pedido</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#pruebas-de-la-api">Pruebas de la API</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#conclusiones">Conclusiones</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#licencia">Licencia</a></li>
+</ul>
+            </nav>
+        </div>
+    </div>
+</div>
+
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <section class="tex2jax_ignore mathjax_ignore" id="desarrollo-de-una-api-rest-para-gestion-historial-de-pedidos-y-seguimiento-en-tiempo-real-con-express-y-cassandra">
+<h1>Desarrollo de una API REST para gestión historial de pedidos y seguimiento en tiempo real con Express y Cassandra<a class="headerlink" href="#desarrollo-de-una-api-rest-para-gestion-historial-de-pedidos-y-seguimiento-en-tiempo-real-con-express-y-cassandra" title="Link to this heading">#</a></h1>
+<p>Manuel Torres</p>
+<p>Bases de datos a gran escala. Máster en Ingeniería Informática. Universidad de Almería</p>
+<hr class="docutils" />
+<section id="resumen">
+<h2>Resumen<a class="headerlink" href="#resumen" title="Link to this heading">#</a></h2>
+<p>El desarrollo de aplicaciones escalables y altamente disponibles es un desafío clave en el mundo del comercio electrónico. A medida que crece el volumen de usuarios y transacciones, es fundamental contar con una infraestructura capaz de manejar grandes cantidades de datos sin comprometer el rendimiento. En este tutorial exploraremos cómo diseñar y construir una API REST eficiente utilizando Apache Cassandra como base de datos, que ofrece una arquitectura distribuida para garantizar velocidad y fiabilidad en la gestión de pedidos.</p>
+<p>A lo largo del proceso se verá cómo adaptar el diseño del esquema de datos a las consultas más comunes, optimizando la forma en que se almacenan y recuperan los pedidos y sus detalles. También se verán estrategias para manejar actualizaciones y filtrados eficientes, asegurando que la API no solo sea funcional, sino también robusta y esté preparada para escalar. Al finalizar, se habrá construido una solución que refleja las mejores prácticas en el uso de bases de datos NoSQL dentro de un entorno realista de comercio electrónico.</p>
+<ul class="simple">
+<li><p>Diseñar una API REST eficiente para la gestión de pedidos utilizando Express y Cassandra.</p></li>
+<li><p>Implementar un esquema de base de datos en Cassandra optimizado para consultas rápidas y escalables.</p></li>
+<li><p>Desarrollar endpoints para crear, consultar y actualizar pedidos en la API REST.</p></li>
+<li><p>Configurar un entorno de desarrollo con Docker para facilitar la implementación y pruebas de la API.</p></li>
+<li><p>Aplicar las mejores prácticas en el diseño de esquemas de datos y consultas en Cassandra.</p></li>
+</ul>
+<div class="admonition tip">
+<p class="admonition-title">Tip</p>
+<p>Disponible el <a class="reference external" href="https://github.com/ualmtorres/ExpressCassandraPedidos">repositorio de GitHub, window=”_blank”</a> con el código fuente de la API REST.</p>
+</div>
+</section>
+<section id="introduccion">
+<h2>Introducción<a class="headerlink" href="#introduccion" title="Link to this heading">#</a></h2>
+<p>En el vertiginoso mundo del comercio electrónico, la capacidad de manejar grandes volúmenes de pedidos con rapidez y eficiencia es crucial para brindar una experiencia satisfactoria a los clientes. Empresas como Amazon, Alibaba y otros gigantes del sector procesan millones de transacciones diarias, lo que exige soluciones de almacenamiento escalables, resilientes y con tiempos de respuesta ultrarrápidos.</p>
+<p>En este contexto Apache Cassandra se presenta como una base de datos NoSQL ideal para gestionar información distribuida a gran escala. Su arquitectura descentralizada y su modelo de replicación permiten garantizar alta disponibilidad, tolerancia a fallos y rendimiento óptimo sin importar el volumen de datos ni la cantidad de usuarios simultáneos.</p>
+<p>En este tutorial se plantea el desarrollo de una API REST para la gestión de pedidos en una plataforma de comercio electrónico, utilizando Cassandra como base de datos. Se implementarán funcionalidades clave, como la creación y consulta de pedidos y la búsqueda eficiente según distintos criterios.</p>
+</section>
+<section id="descripcion-del-problema">
+<h2>Descripción del problema<a class="headerlink" href="#descripcion-del-problema" title="Link to this heading">#</a></h2>
+<p>Nuestra empresa de comercio electrónico ha crecido exponencialmente en los últimos años. A medida que la cantidad de pedidos diarios aumenta, la infraestructura de bases de datos relacionales ha comenzado a mostrar signos de agotamiento: los tiempos de consulta se vuelven más lentos, las actualizaciones generan bloqueos y la capacidad de escalar horizontalmente es limitada.</p>
+<p>Para enfrentar este reto, el equipo de desarrollo ha decidido migrar la gestión de pedidos a Apache Cassandra, una base de datos NoSQL diseñada para manejar grandes volúmenes de datos de manera distribuida, garantizando alta disponibilidad y rendimiento sin importar la carga.</p>
+<p>Una de las tareas será desarrollar una API REST optimizada para la gestión de pedidos, aprovechando la estructura de datos de Cassandra para garantizar consultas eficientes y escalabilidad. La API permitirá:</p>
+<ul class="simple">
+<li><p>Registrar nuevos pedidos con los productos seleccionados.</p></li>
+<li><p>Consultar pedidos por usuario y por estado de procesamiento.</p></li>
+<li><p>Obtener el detalle completo de un pedido.</p></li>
+<li><p>Actualizar el estado de un pedido a medida que avanza en el proceso logístico.</p></li>
+</ul>
+<p>Dado el modelo de Cassandra, será fundamental diseñar correctamente las tablas y las claves de partición para asegurar consultas rápidas y eficientes sin necesidad de realizar joins.</p>
+</section>
+<section id="configuracion-del-entorno-de-base-de-datos">
+<h2>Configuración del entorno de base de datos<a class="headerlink" href="#configuracion-del-entorno-de-base-de-datos" title="Link to this heading">#</a></h2>
+<p>Para facilitar el desarrollo de la API, se usará una instalación local de Cassandra con Docker. De esta forma, se podrá simular un entorno de producción sin necesidad de configuraciones complejas ni servidores dedicados. El archivo <code class="docutils literal notranslate"><span class="pre">docker-compose.yml</span></code> contendrá la configuración necesaria para levantar un contenedor de Cassandra con las opciones de red y volúmenes adecuados. También se incluirá un contenedor para la interfaz web de Cassandra, que permitirá visualizar y explorar los datos de forma gráfica.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Aunque no es habitual forzar una IP específica en un despliegue real, en este caso se asignará una IP fija al contenedor de Cassandra para facilitar la conexión desde Cassandra Web, ya que éste necesita conocer la dirección IP del nodo de Cassandra.</p>
+</div>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">version</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;3.8&quot;</span>
+<span class="nt">networks</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">pedidos-net</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">driver</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bridge</span>
+<span class="w">    </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">pedidos-net</span>
+<span class="w">    </span><span class="nt">ipam</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">driver</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">default</span>
+<span class="w">      </span><span class="nt">config</span><span class="p">:</span>
+<span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">subnet</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;10.0.0.0/24&quot;</span>
+<span class="nt">services</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">cassandra</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">image</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">cassandra:4.1.8</span>
+<span class="w">    </span><span class="nt">container_name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">cassandra</span>
+<span class="w">    </span><span class="nt">hostname</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">cassandra</span>
+<span class="w">    </span><span class="nt">ports</span><span class="p">:</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&quot;9042:9042&quot;</span>
+<span class="w">    </span><span class="nt">environment</span><span class="p">:</span><span class="w"> </span><span class="nl">&amp;environment</span>
+<span class="w">      </span><span class="nt">CASSANDRA_USER</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">cassandra</span>
+<span class="w">      </span><span class="nt">CASSANDRA_PASSWORD</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">cassandra</span>
+<span class="w">    </span><span class="nt">volumes</span><span class="p">:</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">./data/cassandra:/var/lib/cassandra</span>
+<span class="w">    </span><span class="nt">networks</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">pedidos-net</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">ipv4_address</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">10.0.0.98</span>
+<span class="w">    </span><span class="nt">healthcheck</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">test</span><span class="p">:</span>
+<span class="w">        </span><span class="p p-Indicator">[</span>
+<span class="w">          </span><span class="s">&quot;CMD&quot;</span><span class="p p-Indicator">,</span>
+<span class="w">          </span><span class="s">&quot;cqlsh&quot;</span><span class="p p-Indicator">,</span>
+<span class="w">          </span><span class="s">&quot;-u</span><span class="nv"> </span><span class="s">cassandra&quot;</span><span class="p p-Indicator">,</span>
+<span class="w">          </span><span class="s">&quot;-p</span><span class="nv"> </span><span class="s">cassandra&quot;</span><span class="p p-Indicator">,</span>
+<span class="w">          </span><span class="s">&quot;-e</span><span class="nv"> </span><span class="s">describe</span><span class="nv"> </span><span class="s">keyspaces&quot;</span><span class="p p-Indicator">,</span>
+<span class="w">        </span><span class="p p-Indicator">]</span>
+<span class="w">      </span><span class="nt">interval</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">15s</span>
+<span class="w">      </span><span class="nt">timeout</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">10s</span>
+<span class="w">      </span><span class="nt">retries</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">8</span>
+<span class="w">  </span><span class="nt">cassandra-web</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">platform</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">linux/amd64</span>
+<span class="w">    </span><span class="nt">image</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">dcagatay/cassandra-web:latest</span>
+<span class="w">    </span><span class="nt">container_name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">cassandra-web</span>
+<span class="w">    </span><span class="nt">depends_on</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">cassandra</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">condition</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">service_healthy</span>
+<span class="w">    </span><span class="nt">ports</span><span class="p">:</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">4000:3000</span>
+<span class="w">    </span><span class="nt">networks</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">pedidos-net</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">ipv4_address</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">10.0.0.99</span>
+<span class="w">    </span><span class="nt">environment</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">CASSANDRA_HOST_IPS</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">10.0.0.98</span>
+<span class="w">      </span><span class="nt">CASSANDRA_PORT</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">9042</span>
+<span class="w">    </span><span class="nt">restart</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">unless-stopped</span>
+</pre></div>
+</div>
+<section id="servicios">
+<h3>Servicios<a class="headerlink" href="#servicios" title="Link to this heading">#</a></h3>
+<p>El archivo <code class="docutils literal notranslate"><span class="pre">docker-compose.yml</span></code> define tres servicios:</p>
+<ul class="simple">
+<li><p><em><strong>cassandra</strong></em>: Contenedor de Cassandra con la versión 4.1.8. Se asigna un puerto para la conexión CQL y se mapea un volumen local para persistir los datos de la base de datos.</p></li>
+<li><p><em><strong>cassandra-web</strong></em>: Contenedor de la interfaz web de Cassandra, que permite visualizar y explorar los datos de la base de datos. Se asigna un puerto para acceder a la interfaz desde el navegador.</p></li>
+</ul>
+</section>
+<section id="instrucciones-de-instalacion">
+<h3>Instrucciones de instalación<a class="headerlink" href="#instrucciones-de-instalacion" title="Link to this heading">#</a></h3>
+<p>Para instalar y ejecutar la aplicación, necesitas tener Docker, Docker Compose y Node.js instalados en tu sistema. Luego, sigue estos pasos:</p>
+<ol class="arabic">
+<li><p>Clona el repositorio:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>git<span class="w"> </span>clone<span class="w"> </span>https://github.com/ualmtorres/ExpressCassandraPedidos.git
+<span class="nb">cd</span><span class="w"> </span>ExpressCassandraPedidos
+</pre></div>
+</div>
+</li>
+<li><p>Ejecuta Docker Compose para levantar los servicios:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>docker-compose<span class="w"> </span>up<span class="w"> </span>-d
+</pre></div>
+</div>
+</li>
+<li><p>Instala las dependencias del proyecto:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>npm<span class="w"> </span>install
+</pre></div>
+</div>
+</li>
+<li><p>Inicia la aplicación:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>npm<span class="w"> </span>start
+</pre></div>
+</div>
+</li>
+<li><p>Accede a la interfaz web de Cassandra en <code class="docutils literal notranslate"><span class="pre">http://localhost:4000</span></code>.</p></li>
+<li><p>Accede a los endpoints de la API REST en <code class="docutils literal notranslate"><span class="pre">http://localhost:3000</span></code>.</p></li>
+</ol>
+<p>Con estos pasos, tendrás el entorno de desarrollo configurado y la API REST en funcionamiento.</p>
+</section>
+</section>
+<section id="cassandra">
+<h2>Cassandra<a class="headerlink" href="#cassandra" title="Link to this heading">#</a></h2>
+<p><a class="reference external" href="https://cassandra.apache.org/_/index.html">Apache Cassandra, window=”_blank”</a> es una base de datos NoSQL distribuida y altamente escalable, diseñada para manejar grandes volúmenes de datos en múltiples nodos sin un único punto de fallo. Su arquitectura descentralizada permite que cada nodo en el clúster sea igual, eliminando la dependencia de un nodo maestro y garantizando alta disponibilidad y tolerancia a fallos. Esto la convierte en una opción ideal para aplicaciones que requieren un rendimiento consistente y la capacidad de escalar horizontalmente sin interrupciones.</p>
+<p>Una de las características más destacadas de Cassandra es su modelo de datos flexible basado en tablas, que permite almacenar datos estructurados y semiestructurados. Sin embargo, a diferencia de las bases de datos relacionales tradicionales, en Cassandra es crucial diseñar las tablas teniendo en cuenta las consultas que se realizarán. Esto se debe a que Cassandra está optimizada para operaciones de escritura rápidas y consultas eficientes, pero impone ciertas restricciones en cómo se pueden usar las columnas en los filtros y ordenaciones.</p>
+<p>En Cassandra, las tablas se diseñan con una <em>clave de partición</em> que determina cómo se distribuyen los datos entre los nodos del clúster. Las consultas eficientes deben incluir la clave de partición para localizar rápidamente los datos en el nodo correcto. Además, las columnas que se utilizan en las cláusulas de filtro y ordenación deben ser parte de la clave de partición o de la <em>clave de clustering</em>. Las reglas básicas para diseñar tablas en Cassandra son:</p>
+<ul class="simple">
+<li><p>La clave de partición debe ser incluida en todas las consultas para garantizar una búsqueda eficiente.</p></li>
+<li><p>Las columnas utilizadas en las cláusulas <code class="docutils literal notranslate"><span class="pre">WHERE</span></code> deben ser parte de la clave de partición o de la clave de clustering. Además, deben aparecer en el mismo orden que en la definición de la tabla sin saltos. Es decir, si la clave de partición es <code class="docutils literal notranslate"><span class="pre">(a,</span> <span class="pre">b)</span></code>, las consultas podrían incluir <code class="docutils literal notranslate"><span class="pre">WHERE</span> <span class="pre">a</span> <span class="pre">=</span> <span class="pre">...</span> <span class="pre">AND</span> <span class="pre">b</span> <span class="pre">=</span> <span class="pre">...</span></code>, <code class="docutils literal notranslate"><span class="pre">WHERE</span> <span class="pre">a</span></code>, pero no <code class="docutils literal notranslate"><span class="pre">WHERE</span> <span class="pre">b</span></code>.</p></li>
+<li><p>Las columnas utilizadas en las cláusulas <code class="docutils literal notranslate"><span class="pre">ORDER</span> <span class="pre">BY</span></code> deben ser parte de la clave de clustering y deben seguir el orden definido en la tabla.</p></li>
+</ul>
+<p>Estas reglas aseguran que las consultas sean rápidas y escalables, evitando operaciones costosas como los <code class="docutils literal notranslate"><span class="pre">joins</span></code> y los escaneos completos de tablas, que no son eficientes en un entorno distribuido como Cassandra. Al diseñar las tablas de acuerdo con las consultas previstas, se puede aprovechar al máximo el rendimiento y la escalabilidad que ofrece Cassandra, garantizando una experiencia de usuario óptima incluso bajo cargas de trabajo intensivas. No obstante, esto implica un enfoque diferente al de las bases de datos relacionales, donde las consultas pueden ser más flexibles y adaptarse a diferentes esquemas de tablas, lo que requiere un análisis cuidadoso de los requisitos y patrones de acceso a los datos. Además, supone un fuerte acoplamiento entre el modelo de datos y las consultas, lo que puede dificultar la evolución del sistema a medida que cambian los requisitos.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>En <a class="reference external" href="https://ualmtorres.github.io/SeminarioCassandra">este tutorial, window=”_blank”</a> se presentan los conceptos y características de Cassandra, así como en las mejores prácticas para diseñar esquemas de tablas eficientes. También, se exploran las operaciones CRUD básicas y algunas consultas avanzadas en Cassandra. Además, se muestra cómo crear una API REST con Express y Cassandra para gestionar usuarios a modo de ejemplo práctico.</p>
+</div>
+</section>
+<section id="uso-basico-del-driver-de-cassandra">
+<h2>Uso básico del driver de Cassandra<a class="headerlink" href="#uso-basico-del-driver-de-cassandra" title="Link to this heading">#</a></h2>
+<p>Para interactuar con Cassandra desde una aplicación Node.js, es necesario utilizar un driver que permita establecer la conexión, enviar consultas y recibir respuestas. En este caso, se utilizará el driver oficial <a class="reference external" href="https://github.com/datastax/nodejs-driver#readme"><code class="docutils literal notranslate"><span class="pre">cassandra-driver</span></code></a>, que proporciona una interfaz sencilla y eficiente para trabajar con la base de datos.</p>
+<p>Previamente, es necesario un proyecto base Express con Node.js. Si no tienes uno, puedes crearlo con el siguiente comando:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>npx<span class="w"> </span>express-generator<span class="w"> </span>--no-view<span class="w"> </span>ExpressCassandraPedidos
+<span class="nb">cd</span><span class="w"> </span>ExpressCassandraPedidos
+npm<span class="w"> </span>install
+</pre></div>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Puedes seguir este <a class="reference external" href="https://ualmtorres.github.io/howtos/ExpressNoSQLAPIREST/">tutorial para crear una API REST con Express, window=”_blank”</a> si necesitas más detalles sobre la creación de una aplicación Express.</p>
+</div>
+<p>Para instalar el driver, ejecuta el siguiente comando en la raíz del proyecto:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>npm<span class="w"> </span>install<span class="w"> </span>cassandra-driver
+</pre></div>
+</div>
+<section id="conexion-a-cassandra">
+<h3>Conexión a Cassandra<a class="headerlink" href="#conexion-a-cassandra" title="Link to this heading">#</a></h3>
+<p>En primer lugar, se creará un archivo <code class="docutils literal notranslate"><span class="pre">cassandra.js</span></code> en la carpeta <code class="docutils literal notranslate"><span class="pre">db</span></code> del proyecto para configurar la conexión a Cassandra y exportar el cliente de Cassandra para su uso en otras partes de la aplicación. En este archivo se configurará la conexión a Cassandra y se creará un cliente de Cassandra para interactuar con la base de datos. La ventaja de crear un módulo de conexión a Cassandra es que se puede reutilizar en toda la aplicación para realizar operaciones CRUD en la base de datos.</p>
+<p>El archivo <code class="docutils literal notranslate"><span class="pre">db/cassandra.js</span></code> podría tener el siguiente contenido:</p>
+<div class="highlight-javascript notranslate"><div class="highlight"><pre><span></span><span class="kd">const</span><span class="w"> </span><span class="nx">cassandra</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">require</span><span class="p">(</span><span class="s1">&#39;cassandra-driver&#39;</span><span class="p">);</span>
+
+<span class="kd">const</span><span class="w"> </span><span class="nx">client</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="ow">new</span><span class="w"> </span><span class="nx">cassandra</span><span class="p">.</span><span class="nx">Client</span><span class="p">({</span>
+<span class="w">    </span><span class="nx">contactPoints</span><span class="o">:</span><span class="w"> </span><span class="p">[</span><span class="s1">&#39;192.168.1.132&#39;</span><span class="p">],</span><span class="w"> </span><span class="o">&lt;</span><span class="mf">1</span><span class="o">&gt;</span><span class="w"> </span><span class="c1">// Cambiar por la IP del equipo donde se ejecuta Cassandra</span>
+<span class="w">    </span><span class="nx">localDataCenter</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;datacenter1&#39;</span><span class="p">,</span><span class="w"> </span><span class="err">②</span>
+<span class="w">    </span><span class="nx">keyspace</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;ecommerce&#39;</span><span class="p">,</span><span class="w"> </span><span class="err">③</span>
+<span class="w">    </span><span class="nx">authProvider</span><span class="o">:</span><span class="w"> </span><span class="ow">new</span><span class="w"> </span><span class="nx">cassandra</span><span class="p">.</span><span class="nx">auth</span><span class="p">.</span><span class="nx">PlainTextAuthProvider</span><span class="p">(</span><span class="s1">&#39;cassandra&#39;</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;cassandra&#39;</span><span class="p">)</span><span class="w"> </span><span class="err">④</span>
+<span class="p">});</span>
+
+<span class="nx">module</span><span class="p">.</span><span class="nx">exports</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">client</span><span class="p">;</span>
+</pre></div>
+</div>
+<ol class="arabic simple">
+<li><p>Dirección IP del nodo en que se ejecuta Cassandra, no la del contenedor.</p></li>
+<li><p>Nombre del centro de datos configurado en Cassandra.</p></li>
+<li><p>Nombre del keyspace que se utilizará en la aplicación.</p></li>
+<li><p>Credenciales de acceso a Cassandra.</p></li>
+</ol>
+<p>En este archivo, se importa la biblioteca <code class="docutils literal notranslate"><span class="pre">cassandra-driver</span></code> y se crea un cliente de Cassandra con la configuración necesaria para conectarse a Cassandra en el centro de datos <code class="docutils literal notranslate"><span class="pre">datacenter1</span></code> (el predeterminado) y el keyspace <code class="docutils literal notranslate"><span class="pre">ecommerce</span></code>. Se utilizan las credenciales <code class="docutils literal notranslate"><span class="pre">cassandra</span></code>/<code class="docutils literal notranslate"><span class="pre">cassandra</span></code> para autenticarse en la base de datos, que son las que se han configurado en el contenedor de Cassandra.</p>
+<p>La conexión se cerrará automáticamente al finalizar cada operación de la API, por lo que no será necesario cerrarla explícitamente. Este enfoque permite reutilizar la conexión a Cassandra en todas las operaciones CRUD de la API REST y simplifica la gestión de la conexión en la aplicación.</p>
+</section>
+<section id="operaciones-basicas">
+<h3>Operaciones básicas<a class="headerlink" href="#operaciones-basicas" title="Link to this heading">#</a></h3>
+<p>Para realizar operaciones CRUD en Cassandra, se pueden utilizar las funciones proporcionadas por el driver <code class="docutils literal notranslate"><span class="pre">cassandra-driver</span></code>. Normalmente, las operaciones se realizan mediante el método <code class="docutils literal notranslate"><span class="pre">execute</span></code> del cliente de Cassandra, que permite enviar consultas CQL y recibir los resultados correspondientes.</p>
+<section id="el-metodo-execute">
+<h4>El método <code class="docutils literal notranslate"><span class="pre">execute</span></code><a class="headerlink" href="#el-metodo-execute" title="Link to this heading">#</a></h4>
+<p>La clave para interactuar con una base de datos Cassandra utilizando el driver para Node.js es el método <code class="docutils literal notranslate"><span class="pre">execute()</span></code>. Este método permite ejecutar consultas CQL en la base de datos y obtener los resultados. Devuelve un objeto <code class="docutils literal notranslate"><span class="pre">Promise</span></code> que se puede manejar de forma asíncrona con <code class="docutils literal notranslate"><span class="pre">async/await</span></code> o con <code class="docutils literal notranslate"><span class="pre">then/catch</span></code>. Dentro de esa promesa, se pueden acceder a los resultados de la consulta y manejar los errores si los hubiera.</p>
+<p>El método <code class="docutils literal notranslate"><span class="pre">execute()</span></code> tiene la siguiente sintaxis:</p>
+<div class="highlight-javascript notranslate"><div class="highlight"><pre><span></span><span class="nx">client</span><span class="p">.</span><span class="nx">execute</span><span class="p">(</span><span class="nx">query</span><span class="p">,</span><span class="w"> </span><span class="nx">params</span><span class="p">,</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">prepare</span><span class="o">:</span><span class="w"> </span><span class="kc">true</span><span class="w"> </span><span class="p">});</span>
+</pre></div>
+</div>
+<p>Donde:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">query</span></code>: Es la consulta CQL que se desea ejecutar. Puede contener marcadores de posición para los parámetros. Por ejemplo, <code class="docutils literal notranslate"><span class="pre">SELECT</span> <span class="pre">*</span> <span class="pre">FROM</span> <span class="pre">users</span> <span class="pre">WHERE</span> <span class="pre">id</span> <span class="pre">=</span> <span class="pre">?</span></code>.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">params</span></code>: Son los parámetros de la consulta, si los hubiera. Se pasan como un array en el mismo orden en que aparecen los marcadores de posición en la consulta. Por ejemplo, <code class="docutils literal notranslate"><span class="pre">[123]</span></code>.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">{</span> <span class="pre">prepare:</span> <span class="pre">true</span> <span class="pre">}</span></code>: Indica que la consulta debe ser preparada antes de ejecutarse. Esto mejora el rendimiento de las consultas repetitivas.</p></li>
+</ul>
+</section>
+<section id="lanzando-consultas">
+<h4>Lanzando consultas<a class="headerlink" href="#lanzando-consultas" title="Link to this heading">#</a></h4>
+<p>A continuación, se muestra un ejemplo de cómo lanzar una consulta <code class="docutils literal notranslate"><span class="pre">SELECT</span></code> en Cassandra utilizando el método <code class="docutils literal notranslate"><span class="pre">execute()</span></code>:</p>
+<div class="highlight-javascript notranslate"><div class="highlight"><pre><span></span><span class="k">try</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="kd">const</span><span class="w"> </span><span class="nx">result</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">await</span><span class="w"> </span><span class="nx">client</span><span class="p">.</span><span class="nx">execute</span><span class="p">(</span><span class="s1">&#39;SELECT * FROM orders_by_status WHERE status = ?&#39;</span><span class="p">,</span><span class="w"> </span><span class="p">[</span><span class="nx">status</span><span class="p">],</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">prepare</span><span class="o">:</span><span class="w"> </span><span class="kc">true</span><span class="w"> </span><span class="p">});</span><span class="w"> </span><span class="o">&lt;</span><span class="mf">1</span><span class="o">&gt;</span>
+<span class="w">    </span><span class="nx">res</span><span class="p">.</span><span class="nx">status</span><span class="p">(</span><span class="mf">200</span><span class="p">).</span><span class="nx">send</span><span class="p">(</span><span class="nx">result</span><span class="p">.</span><span class="nx">rows</span><span class="p">);</span><span class="w"> </span><span class="o">&lt;</span><span class="mf">2</span><span class="o">&gt;</span>
+<span class="p">}</span><span class="w"> </span><span class="k">catch</span><span class="w"> </span><span class="p">(</span><span class="nx">error</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nx">res</span><span class="p">.</span><span class="nx">status</span><span class="p">(</span><span class="mf">500</span><span class="p">).</span><span class="nx">send</span><span class="p">({</span><span class="w"> </span><span class="nx">error</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;Failed to fetch orders by status&#39;</span><span class="w"> </span><span class="p">});</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>&lt;1&gt; Se ejecuta la consulta CQL con el estado como parámetro.
+&lt;2&gt; Se envían los resultados de la consulta al cliente. Los resultados se encuentran en <code class="docutils literal notranslate"><span class="pre">result.rows</span></code>.</p>
+<p><strong>El objeto <code class="docutils literal notranslate"><span class="pre">rows</span></code></strong></p>
+<p>El objeto <code class="docutils literal notranslate"><span class="pre">rows</span></code> contiene los resultados de la consulta en forma de un array de objetos. Cada objeto representa una fila de la tabla y contiene las columnas correspondientes a los campos seleccionados en la consulta. Cada fila es accedida por su índice en el array, y los campos de la fila se acceden por su nombre. Por ejemplo, si la consulta selecciona los campos <code class="docutils literal notranslate"><span class="pre">id</span></code>, <code class="docutils literal notranslate"><span class="pre">name</span></code> y <code class="docutils literal notranslate"><span class="pre">email</span></code>, se puede acceder a ellos de la siguiente manera:</p>
+<div class="highlight-javascript notranslate"><div class="highlight"><pre><span></span><span class="kd">const</span><span class="w"> </span><span class="nx">id</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">result</span><span class="p">.</span><span class="nx">rows</span><span class="p">[</span><span class="mf">0</span><span class="p">].</span><span class="nx">id</span><span class="p">;</span>
+<span class="kd">const</span><span class="w"> </span><span class="nx">name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">result</span><span class="p">.</span><span class="nx">rows</span><span class="p">[</span><span class="mf">0</span><span class="p">].</span><span class="nx">name</span><span class="p">;</span>
+<span class="kd">const</span><span class="w"> </span><span class="nx">email</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">result</span><span class="p">.</span><span class="nx">rows</span><span class="p">[</span><span class="mf">0</span><span class="p">].</span><span class="nx">email</span><span class="p">;</span>
+</pre></div>
+</div>
+<p>Este objeto ofrece un método <code class="docutils literal notranslate"><span class="pre">.rowLength</span></code> para obtener el número de filas devueltas por la consulta, y un método <code class="docutils literal notranslate"><span class="pre">.first()</span></code> para obtener la primera fila de los resultados. Además, se pueden acceder a las columnas de cada fila por su nombre, como se muestra en el ejemplo anterior.</p>
+</section>
+<section id="el-metodo-batch">
+<h4>El método <code class="docutils literal notranslate"><span class="pre">batch</span></code><a class="headerlink" href="#el-metodo-batch" title="Link to this heading">#</a></h4>
+<p>El método <code class="docutils literal notranslate"><span class="pre">batch()</span></code> permite agrupar varias operaciones de escritura en una única transacción atómica. Esto es útil cuando se necesita garantizar la consistencia de los datos en varias tablas y se quiere asegurar que todas las operaciones se realicen correctamente o ninguna de ellas. El método <code class="docutils literal notranslate"><span class="pre">batch()</span></code> tiene la siguiente sintaxis:</p>
+<div class="highlight-javascript notranslate"><div class="highlight"><pre><span></span><span class="kd">const</span><span class="w"> </span><span class="nx">queries</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span>
+<span class="w">    </span><span class="p">{</span><span class="w"> </span><span class="nx">query</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;INSERT INTO users (id, name) VALUES (?, ?)&#39;</span><span class="p">,</span><span class="w"> </span><span class="nx">params</span><span class="o">:</span><span class="w"> </span><span class="p">[</span><span class="mf">123</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;Alice&#39;</span><span class="p">]</span><span class="w"> </span><span class="p">},</span>
+<span class="w">    </span><span class="p">{</span><span class="w"> </span><span class="nx">query</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;INSERT INTO orders (id, user_id, total) VALUES (?, ?, ?)&#39;</span><span class="p">,</span><span class="w"> </span><span class="nx">params</span><span class="o">:</span><span class="w"> </span><span class="p">[</span><span class="mf">456</span><span class="p">,</span><span class="w"> </span><span class="mf">123</span><span class="p">,</span><span class="w"> </span><span class="mf">100.0</span><span class="p">]</span><span class="w"> </span><span class="p">}</span>
+<span class="p">];</span>
+
+<span class="nx">client</span><span class="p">.</span><span class="nx">batch</span><span class="p">(</span><span class="nx">queries</span><span class="p">,</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">prepare</span><span class="o">:</span><span class="w"> </span><span class="kc">true</span><span class="w"> </span><span class="p">});</span>
+</pre></div>
+</div>
+</section>
+</section>
+</section>
+<section id="estructura-de-la-base-de-datos">
+<h2>Estructura de la base de datos<a class="headerlink" href="#estructura-de-la-base-de-datos" title="Link to this heading">#</a></h2>
+<p>Para gestionar los pedidos en una plataforma de comercio electrónico, es necesario diseñar una estructura de base de datos eficiente que permita almacenar los pedidos de forma escalable y permita consultar los datos de forma rápida. En Cassandra, el diseño de las tablas es fundamental para garantizar un rendimiento óptimo y una alta disponibilidad de los datos. En este caso, se propondrá un esquema de base de datos para almacenar los pedidos y los productos asociados, teniendo en cuenta las consultas que se realizarán con mayor frecuencia.</p>
+<section id="creacion-del-keyspace">
+<h3>Creación del keyspace<a class="headerlink" href="#creacion-del-keyspace" title="Link to this heading">#</a></h3>
+<p>El primer paso es crear un keyspace en Cassandra para almacenar las tablas relacionadas con los pedidos. El keyspace es el contenedor lógico de las tablas y define la replicación y las estrategias de compresión que se aplicarán a los datos. En este caso, se creará un keyspace llamado <code class="docutils literal notranslate"><span class="pre">ecommerce</span></code> con una replicación de red simple y una estrategia de compresión de datos por defecto.</p>
+<p>Para crear el keyspace <code class="docutils literal notranslate"><span class="pre">ecommerce</span></code>, se puede utilizar la siguiente consulta CQL:</p>
+<div class="highlight-sql notranslate"><div class="highlight"><pre><span></span><span class="k">CREATE</span><span class="w"> </span><span class="n">KEYSPACE</span><span class="w"> </span><span class="k">IF</span><span class="w"> </span><span class="k">NOT</span><span class="w"> </span><span class="k">EXISTS</span><span class="w"> </span><span class="n">ecommerce</span>
+<span class="k">WITH</span><span class="w"> </span><span class="n">replication</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="err">{</span>
+<span class="w">    </span><span class="s1">&#39;class&#39;</span><span class="p">:</span><span class="w"> </span><span class="s1">&#39;SimpleStrategy&#39;</span><span class="p">,</span>
+<span class="w">    </span><span class="s1">&#39;replication_factor&#39;</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="w"> </span><span class="o">&lt;</span><span class="mi">1</span><span class="o">&gt;</span>
+<span class="err">}</span><span class="p">;</span>
+</pre></div>
+</div>
+<p>&lt;1&gt; Factor de replicación para garantizar la disponibilidad de los datos.</p>
+<p>En este caso se utiliza una replicación de red simple con un factor de replicación de 1, lo que significa que los datos se replicarán en un único nodo. Esto se debe a que estamos en un entorno de desarrollo local y no necesitamos replicación para tolerancia a fallos. En un entorno de producción, se debería ajustar el factor de replicación en función de los requisitos de disponibilidad y tolerancia a fallos del sistema.</p>
+</section>
+<section id="creacion-de-las-tablas">
+<h3>Creación de las tablas<a class="headerlink" href="#creacion-de-las-tablas" title="Link to this heading">#</a></h3>
+<p>A continuación, se crearán las tablas necesarias para almacenar los pedidos y los productos asociados. Se utilizarán tres tablas para gestionar los pedidos: <code class="docutils literal notranslate"><span class="pre">orders</span></code>, <code class="docutils literal notranslate"><span class="pre">orders_by_user</span></code> y <code class="docutils literal notranslate"><span class="pre">orders_by_status</span></code>. Estas tablas permitirán almacenar los pedidos, consultar los pedidos de un usuario específico y buscar los pedidos por estado, respectivamente.</p>
+<section id="tabla-orders">
+<h4>Tabla <code class="docutils literal notranslate"><span class="pre">orders</span></code><a class="headerlink" href="#tabla-orders" title="Link to this heading">#</a></h4>
+<p>La tabla <code class="docutils literal notranslate"><span class="pre">orders</span></code> almacenará los detalles de los pedidos, incluyendo el ID del pedido, el ID del usuario, la fecha del pedido, el estado del pedido, el total y los productos asociados. Para crear la tabla <code class="docutils literal notranslate"><span class="pre">orders</span></code>, se puede utilizar la siguiente consulta CQL:</p>
+<div class="highlight-sql notranslate"><div class="highlight"><pre><span></span><span class="k">CREATE</span><span class="w"> </span><span class="k">TABLE</span><span class="w"> </span><span class="n">ecommerce</span><span class="p">.</span><span class="n">orders</span><span class="w"> </span><span class="p">(</span>
+<span class="w">    </span><span class="n">order_id</span><span class="w"> </span><span class="n">UUID</span><span class="w"> </span><span class="k">PRIMARY</span><span class="w"> </span><span class="k">KEY</span><span class="p">,</span>
+<span class="w">    </span><span class="n">user_id</span><span class="w"> </span><span class="n">UUID</span><span class="p">,</span>
+<span class="w">    </span><span class="n">order_date</span><span class="w"> </span><span class="k">TIMESTAMP</span><span class="p">,</span>
+<span class="w">    </span><span class="n">status</span><span class="w"> </span><span class="nb">TEXT</span><span class="p">,</span>
+<span class="w">    </span><span class="n">total</span><span class="w"> </span><span class="nb">DECIMAL</span><span class="p">,</span>
+<span class="w">    </span><span class="n">items</span><span class="w"> </span><span class="n">LIST</span><span class="o">&lt;</span><span class="n">FROZEN</span><span class="o">&lt;</span><span class="k">map</span><span class="o">&lt;</span><span class="nb">TEXT</span><span class="p">,</span><span class="w"> </span><span class="nb">INT</span><span class="o">&gt;&gt;&gt;</span><span class="p">,</span><span class="w"> </span><span class="c1">-- Lista de productos con cantidad { &quot;product_id&quot;: cantidad }</span>
+<span class="p">);</span>
+</pre></div>
+</div>
+<p>Como la clave de partición es <code class="docutils literal notranslate"><span class="pre">order_id</span></code>, los pedidos se distribuirán por ID de pedido en los nodos de Cassandra. Esto permitirá realizar consultas eficientes por ID de pedido, ya que Cassandra puede localizar rápidamente los datos en el nodo correcto. La tabla <code class="docutils literal notranslate"><span class="pre">orders</span></code> también incluye un campo <code class="docutils literal notranslate"><span class="pre">items</span></code> que almacena los productos del pedido en forma de lista de mapas. Cada mapa contiene el ID del producto y la cantidad asociada. Este diseño permite almacenar múltiples productos en un solo pedido y facilita la consulta de los productos asociados a un pedido específico.</p>
+<p>Esta tabla sólo permite realizar consultas eficientes por ID de pedido, por lo que se crearán tablas adicionales para permitir consultas por usuario y por estado.</p>
+</section>
+<section id="tabla-orders-by-user">
+<h4>Tabla <code class="docutils literal notranslate"><span class="pre">orders_by_user</span></code><a class="headerlink" href="#tabla-orders-by-user" title="Link to this heading">#</a></h4>
+<p>La API ofrece funcionalidad para que los usuarios puedan consultar sus pedidos. Para ello, se creará una tabla <code class="docutils literal notranslate"><span class="pre">orders_by_user</span></code> que permita buscar los pedidos de un usuario específico. La tabla <code class="docutils literal notranslate"><span class="pre">orders_by_user</span></code> tendrá el ID del usuario como clave de partición y el ID del pedido como clave de clustering. De esta forma, se podrán recuperar los pedidos de un usuario en orden cronológico inverso. La tabla <code class="docutils literal notranslate"><span class="pre">orders_by_user</span></code> se puede crear con la siguiente consulta CQL:</p>
+<div class="highlight-sql notranslate"><div class="highlight"><pre><span></span><span class="k">CREATE</span><span class="w"> </span><span class="k">TABLE</span><span class="w"> </span><span class="n">ecommerce</span><span class="p">.</span><span class="n">orders_by_user</span><span class="w"> </span><span class="p">(</span>
+<span class="w">    </span><span class="n">user_id</span><span class="w"> </span><span class="n">UUID</span><span class="p">,</span>
+<span class="w">    </span><span class="n">order_id</span><span class="w"> </span><span class="n">UUID</span><span class="p">,</span>
+<span class="w">    </span><span class="n">order_date</span><span class="w"> </span><span class="k">TIMESTAMP</span><span class="p">,</span>
+<span class="w">    </span><span class="n">status</span><span class="w"> </span><span class="nb">TEXT</span><span class="p">,</span>
+<span class="w">    </span><span class="n">total</span><span class="w"> </span><span class="nb">DECIMAL</span><span class="p">,</span>
+<span class="w">    </span><span class="k">PRIMARY</span><span class="w"> </span><span class="k">KEY</span><span class="w"> </span><span class="p">(</span><span class="n">user_id</span><span class="p">,</span><span class="w"> </span><span class="n">order_date</span><span class="p">,</span><span class="w"> </span><span class="n">order_id</span><span class="p">)</span>
+<span class="p">)</span><span class="w"> </span><span class="k">WITH</span><span class="w"> </span><span class="n">CLUSTERING</span><span class="w"> </span><span class="k">ORDER</span><span class="w"> </span><span class="k">BY</span><span class="w"> </span><span class="p">(</span><span class="n">order_date</span><span class="w"> </span><span class="k">DESC</span><span class="p">);</span>
+</pre></div>
+</div>
+<p>En esta tabla, la clave de partición es <code class="docutils literal notranslate"><span class="pre">user_id</span></code>, lo que permite localizar rápidamente los pedidos de un usuario específico. La clave de clustering está compuesta por <code class="docutils literal notranslate"><span class="pre">order_date</span></code> y <code class="docutils literal notranslate"><span class="pre">order_id</span></code>, lo que garantiza que los pedidos se devuelvan en orden cronológico inverso. De esta forma, los pedidos más recientes aparecerán primero en las consultas.</p>
+</section>
+<section id="tabla-orders-by-status">
+<h4>Tabla <code class="docutils literal notranslate"><span class="pre">orders_by_status</span></code><a class="headerlink" href="#tabla-orders-by-status" title="Link to this heading">#</a></h4>
+<p>La API también permite buscar pedidos por estado, por lo que se creará una tabla <code class="docutils literal notranslate"><span class="pre">orders_by_status</span></code> que permita consultar los pedidos según su estado. La tabla <code class="docutils literal notranslate"><span class="pre">orders_by_status</span></code> tendrá el estado del pedido como clave de partición y el ID del pedido como clave de clustering. De esta forma, se podrán recuperar los pedidos por estado en orden cronológico inverso. La tabla <code class="docutils literal notranslate"><span class="pre">orders_by_status</span></code> se puede crear con la siguiente consulta CQL:</p>
+<div class="highlight-sql notranslate"><div class="highlight"><pre><span></span><span class="k">CREATE</span><span class="w"> </span><span class="k">TABLE</span><span class="w"> </span><span class="n">ecommerce</span><span class="p">.</span><span class="n">orders_by_status</span><span class="w"> </span><span class="p">(</span>
+<span class="w">    </span><span class="n">status</span><span class="w"> </span><span class="nb">TEXT</span><span class="p">,</span>
+<span class="w">    </span><span class="n">order_date</span><span class="w"> </span><span class="k">TIMESTAMP</span><span class="p">,</span>
+<span class="w">    </span><span class="n">order_id</span><span class="w"> </span><span class="n">UUID</span><span class="p">,</span>
+<span class="w">    </span><span class="n">user_id</span><span class="w"> </span><span class="n">UUID</span><span class="p">,</span>
+<span class="w">    </span><span class="n">total</span><span class="w"> </span><span class="nb">DECIMAL</span><span class="p">,</span>
+<span class="w">    </span><span class="k">PRIMARY</span><span class="w"> </span><span class="k">KEY</span><span class="w"> </span><span class="p">(</span><span class="n">status</span><span class="p">,</span><span class="w"> </span><span class="n">order_date</span><span class="p">,</span><span class="w"> </span><span class="n">order_id</span><span class="p">)</span>
+<span class="p">)</span><span class="w"> </span><span class="k">WITH</span><span class="w"> </span><span class="n">CLUSTERING</span><span class="w"> </span><span class="k">ORDER</span><span class="w"> </span><span class="k">BY</span><span class="w"> </span><span class="p">(</span><span class="n">order_date</span><span class="w"> </span><span class="k">DESC</span><span class="p">);</span>
+</pre></div>
+</div>
+<p>En esta tabla, la clave de partición es <code class="docutils literal notranslate"><span class="pre">status</span></code>, lo que permite localizar rápidamente los pedidos por estado. La clave de clustering está compuesta por <code class="docutils literal notranslate"><span class="pre">order_date</span></code> y <code class="docutils literal notranslate"><span class="pre">order_id</span></code>, lo que garantiza que los pedidos se devuelvan en orden cronológico inverso. De esta forma, los pedidos más recientes aparecerán primero en las consultas.</p>
+</section>
+</section>
+</section>
+<section id="desarrollo-de-la-api">
+<h2>Desarrollo de la API<a class="headerlink" href="#desarrollo-de-la-api" title="Link to this heading">#</a></h2>
+<p>En esta sección vamos a desarrollar una API REST para la gestión de pedidos en una plataforma de comercio electrónico utilizando Express y Cassandra. La API permitirá crear nuevos pedidos, obtener detalles de un pedido, consultar pedidos por usuario o estado y actualizar el estado de los mismos. Seguiremos un enfoque incremental, comenzando con la configuración general y luego desarrollando cada endpoint paso a paso. Antes, vamos a describir los endpoints disponibles en la API REST.</p>
+<section id="especificacion-de-los-endpoints-de-la-api">
+<h3>Especificación de los endpoints de la API<a class="headerlink" href="#especificacion-de-los-endpoints-de-la-api" title="Link to this heading">#</a></h3>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">POST</span> <span class="pre">api/orders</span></code>: Crea un nuevo pedido.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">GET</span> <span class="pre">api/orders</span></code>: Obtener todos los pedidos o los pedidos de un usuario específico.</p>
+<ul>
+<li><p>Parámetros opcionales:</p>
+<ul>
+<li><p><code class="docutils literal notranslate"><span class="pre">user_id</span></code>: Filtra los pedidos por el ID del usuario y los devuelve en orden cronológico inverso.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">status</span></code>: Filtra los pedidos por el estado y los devuelve en orden cronológico inverso.</p></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p><code class="docutils literal notranslate"><span class="pre">GET</span> <span class="pre">api/orders/:order_id</span></code>: Obtener los detalles de un pedido específico y sus productos.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">PUT</span> <span class="pre">api/orders/:order_id</span></code>: Actualizar el estado de un pedido.</p></li>
+</ul>
+</section>
+<section id="ejemplo-de-json-de-un-pedido">
+<h3>Ejemplo de JSON de un pedido<a class="headerlink" href="#ejemplo-de-json-de-un-pedido" title="Link to this heading">#</a></h3>
+<div class="highlight-json notranslate"><div class="highlight"><pre><span></span><span class="p">{</span>
+<span class="w">   </span><span class="nt">&quot;order_id&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;123e4567-e89b-12d3-a456-426614174000&quot;</span><span class="p">,</span>
+<span class="w">   </span><span class="nt">&quot;user_id&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;550e8400-e29b-41d4-a716-446655440000&quot;</span><span class="p">,</span>
+<span class="w">   </span><span class="nt">&quot;order_date&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;2023-10-10T10:00:00Z&quot;</span><span class="p">,</span>
+<span class="w">   </span><span class="nt">&quot;status&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;pending&quot;</span><span class="p">,</span>
+<span class="w">   </span><span class="nt">&quot;total&quot;</span><span class="p">:</span><span class="w"> </span><span class="mf">100.0</span><span class="p">,</span>
+<span class="w">   </span><span class="nt">&quot;items&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">      </span><span class="p">{</span>
+<span class="w">         </span><span class="nt">&quot;product_id&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;product1&quot;</span><span class="p">,</span>
+<span class="w">         </span><span class="nt">&quot;quantity&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">2</span><span class="p">,</span>
+<span class="w">         </span><span class="nt">&quot;price&quot;</span><span class="p">:</span><span class="w"> </span><span class="mf">10.0</span>
+<span class="w">      </span><span class="p">},</span>
+<span class="w">      </span><span class="p">{</span>
+<span class="w">         </span><span class="nt">&quot;product_id&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;product2&quot;</span><span class="p">,</span>
+<span class="w">         </span><span class="nt">&quot;quantity&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span>
+<span class="w">         </span><span class="nt">&quot;price&quot;</span><span class="p">:</span><span class="w"> </span><span class="mf">20.0</span>
+<span class="w">      </span><span class="p">}</span>
+<span class="w">   </span><span class="p">]</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</section>
+<section id="ejemplo-de-json-del-estado-de-un-pedido">
+<h3>Ejemplo de JSON del estado de un pedido<a class="headerlink" href="#ejemplo-de-json-del-estado-de-un-pedido" title="Link to this heading">#</a></h3>
+<div class="highlight-json notranslate"><div class="highlight"><pre><span></span><span class="p">{</span>
+<span class="w">   </span><span class="nt">&quot;status&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;delivered&quot;</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</section>
+<section id="crear-la-aplicacion-express">
+<h3>Crear la aplicación Express<a class="headerlink" href="#crear-la-aplicacion-express" title="Link to this heading">#</a></h3>
+<p>Tal y como se ha mencionado anteriormente, tras la inicialización del proyecto, crear un archivo <code class="docutils literal notranslate"><span class="pre">db/cassandra.js</span></code> para la conexión a Cassandra.</p>
+<p>A continuación haremos un pequeño cambio para presentar la descripción de la API en la ruta raíz.</p>
+<section id="descripcion-de-la-api">
+<h4>Descripción de la API<a class="headerlink" href="#descripcion-de-la-api" title="Link to this heading">#</a></h4>
+<p>Express utiliza Jade/Pug como motor de plantillas para separar la presentación de los datos. Este enfoque permite mantener el código de la aplicación más limpio y modular, facilitando la gestión y el mantenimiento del proyecto. Vamos a seguir este enfoque para estructurar nuestra aplicación, utilizando Jade/Pug para definir las vistas y mantener la lógica de negocio separada.</p>
+<p>Para ello, en el archivo <code class="docutils literal notranslate"><span class="pre">views/index.jade</span></code> (o <code class="docutils literal notranslate"><span class="pre">views/index.pug</span></code> si se ha utilizado la opción <code class="docutils literal notranslate"><span class="pre">--view=pug</span></code> al crear el proyecto con Express Generator) añadir el siguiente código. Este código define la estructura de la página principal de la aplicación y muestra una descripción de la API REST en la ruta raíz:</p>
+<div class="highlight-jade notranslate"><div class="highlight"><pre><span></span><span class="nt">extends</span> layout
+
+<span class="nt">block</span> content
+<span class="w">  </span><span class="nt">h1</span> API REST para gestión de pedidos y seguimiento en tiempo real
+
+<span class="w">  </span><span class="nt">table</span><span class="nc">.table</span>
+<span class="w">    </span><span class="nt">thead</span>
+<span class="w">      </span><span class="nt">tr</span>
+<span class="w">        </span><span class="nt">th</span> Método
+<span class="w">        </span><span class="nt">th</span> Endpoint
+<span class="w">        </span><span class="nt">th</span> Descripción
+<span class="w">    </span><span class="nt">tbody</span>
+<span class="w">      </span><span class="nt">tr</span>
+<span class="w">        </span><span class="nt">td</span>
+<span class="w">            </span><span class="nt">code</span> POST
+<span class="w">        </span><span class="nt">td</span>
+<span class="w">            </span><span class="nt">code</span> /api/orders
+<span class="w">        </span><span class="nt">td</span> Crear un nuevo pedido
+<span class="w">      </span><span class="nt">tr</span>
+<span class="w">        </span><span class="nt">td</span>
+<span class="w">            </span><span class="nt">code</span> GET
+<span class="w">        </span><span class="nt">td</span>
+<span class="w">            </span><span class="nt">code</span> /api/orders
+<span class="w">        </span><span class="nt">td</span> Obtener todos los pedidos. Parámetros opcionales: 
+<span class="w">            </span><span class="nt">code</span> user_id y code status
+<span class="w">      </span><span class="nt">tr</span>
+<span class="w">        </span><span class="nt">td</span>
+<span class="w">            </span><span class="nt">code</span> GET
+<span class="w">        </span><span class="nt">td</span>
+<span class="w">            </span><span class="nt">code</span> /api/orders/:id
+<span class="w">        </span><span class="nt">td</span> Obtener los detalles de un pedido
+<span class="w">      </span><span class="nt">tr</span>
+<span class="w">        </span><span class="nt">td</span>
+<span class="w">            </span><span class="nt">code</span> PUT
+<span class="w">        </span><span class="nt">td</span>
+<span class="w">            </span><span class="nt">code</span> /api/orders/:id
+<span class="w">        </span><span class="nt">td</span> Actualizar el estado de un pedido
+
+<span class="w">  </span><span class="nc">.container</span>
+<span class="w">    </span><span class="nt">h2</span> Ejemplo de JSON de un pedido
+<span class="w">    </span><span class="nt">pre</span>
+<span class="w">      </span><span class="nt">code</span>.
+<span class="w">        </span><span class="err">{</span>
+<span class="w">            </span><span class="err">&quot;</span><span class="nt">order_id</span>&quot;: &quot;123e4567-e89b-12d3-a456-426614174000&quot;,
+<span class="w">            </span><span class="err">&quot;</span><span class="nt">user_id</span>&quot;: &quot;550e8400-e29b-41d4-a716-446655440000&quot;,
+<span class="w">            </span><span class="err">&quot;</span><span class="nt">order_date</span>&quot;: &quot;2023-10-10T10:00:00Z&quot;,
+<span class="w">            </span><span class="err">&quot;</span><span class="nt">status</span>&quot;: &quot;pending&quot;,
+<span class="w">            </span><span class="err">&quot;</span><span class="nt">total</span>&quot;: 100.0,
+<span class="w">            </span><span class="err">&quot;</span><span class="nt">items</span>&quot;: [
+<span class="w">                </span><span class="err">{</span>
+<span class="w">                    </span><span class="err">&quot;</span><span class="nt">product_id</span>&quot;: &quot;product1&quot;,
+<span class="w">                    </span><span class="err">&quot;</span><span class="nt">quantity</span>&quot;: 2,
+<span class="w">                    </span><span class="err">&quot;</span><span class="nt">price</span>&quot;: 10.0
+<span class="w">                </span><span class="err">},</span>
+<span class="w">                </span><span class="err">{</span>
+<span class="w">                    </span><span class="err">&quot;</span><span class="nt">product_id</span>&quot;: &quot;product2&quot;,
+<span class="w">                    </span><span class="err">&quot;</span><span class="nt">quantity</span>&quot;: 1,
+<span class="w">                    </span><span class="err">&quot;</span><span class="nt">price</span>&quot;: 20.0
+<span class="w">                </span><span class="err">}</span>
+<span class="w">            </span><span class="err">]</span>
+<span class="w">        </span><span class="err">}</span>
+
+<span class="w">  </span><span class="nc">.container</span>
+<span class="w">    </span><span class="nt">h2</span> Ejemplo de JSON de un cambio de estado de un pedido
+<span class="w">    </span><span class="nt">pre</span>
+<span class="w">      </span><span class="nt">code</span>.
+<span class="w">        </span><span class="err">{</span>
+<span class="w">            </span><span class="err">&quot;</span><span class="nt">status</span>&quot;: &quot;delivered&quot;
+<span class="w">        </span><span class="err">}</span>
+</pre></div>
+</div>
+<p>A continuación, en el archivo <code class="docutils literal notranslate"><span class="pre">routes/index.js</span></code> añadir el siguiente código para mostrar la descripción de la API en la ruta raíz:</p>
+<div class="highlight-javascript notranslate"><div class="highlight"><pre><span></span><span class="kd">var</span><span class="w"> </span><span class="nx">express</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">require</span><span class="p">(</span><span class="s1">&#39;express&#39;</span><span class="p">);</span>
+<span class="kd">var</span><span class="w"> </span><span class="nx">router</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">express</span><span class="p">.</span><span class="nx">Router</span><span class="p">();</span>
+
+<span class="cm">/* GET home page. */</span>
+<span class="nx">router</span><span class="p">.</span><span class="nx">get</span><span class="p">(</span><span class="s1">&#39;/&#39;</span><span class="p">,</span><span class="w"> </span><span class="kd">function</span><span class="p">(</span><span class="nx">req</span><span class="p">,</span><span class="w"> </span><span class="nx">res</span><span class="p">,</span><span class="w"> </span><span class="nx">next</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="nx">res</span><span class="p">.</span><span class="nx">render</span><span class="p">(</span><span class="s1">&#39;index&#39;</span><span class="p">,</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">title</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;Documentación API Pedidos&#39;</span><span class="w"> </span><span class="p">});</span><span class="w"> </span><span class="err">①</span>
+<span class="p">}</span>
+<span class="p">);</span>
+</pre></div>
+</div>
+<ol class="arabic simple">
+<li><p>Renderizar la vista <code class="docutils literal notranslate"><span class="pre">index</span></code> con el título <code class="docutils literal notranslate"><span class="pre">Documentación</span> <span class="pre">API</span> <span class="pre">Pedidos</span></code>.</p></li>
+</ol>
+</section>
+</section>
+<section id="endpoint-de-prueba">
+<h3>Endpoint de prueba<a class="headerlink" href="#endpoint-de-prueba" title="Link to this heading">#</a></h3>
+<p>Añadiremos un endpoint de prueba para verificar que la API está funcionando correctamente. Para ello, en el archivo <code class="docutils literal notranslate"><span class="pre">routes/index.js</span></code> añadir el siguiente código:</p>
+<div class="highlight-javascript notranslate"><div class="highlight"><pre><span></span><span class="kd">var</span><span class="w"> </span><span class="nx">express</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">require</span><span class="p">(</span><span class="s1">&#39;express&#39;</span><span class="p">);</span>
+<span class="kd">var</span><span class="w"> </span><span class="nx">router</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">express</span><span class="p">.</span><span class="nx">Router</span><span class="p">();</span>
+
+<span class="p">...</span>
+
+<span class="c1">// Crear un endpoint para testear la conexión</span>
+<span class="nx">router</span><span class="p">.</span><span class="nx">get</span><span class="p">(</span><span class="s1">&#39;/api/health&#39;</span><span class="p">,</span><span class="w"> </span><span class="p">(</span><span class="nx">req</span><span class="p">,</span><span class="w"> </span><span class="nx">res</span><span class="p">)</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="nx">res</span><span class="p">.</span><span class="nx">status</span><span class="p">(</span><span class="mf">200</span><span class="p">).</span><span class="nx">send</span><span class="p">({</span><span class="w"> </span><span class="nx">message</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;API is working&#39;</span><span class="w"> </span><span class="p">});</span>
+<span class="p">});</span>
+
+<span class="nx">module</span><span class="p">.</span><span class="nx">exports</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">router</span><span class="p">;</span>
+</pre></div>
+</div>
+<p>A continuación crear un archivo <code class="docutils literal notranslate"><span class="pre">routes/orders.js</span></code> para definir los endpoints de la API. Este archivo contendrá la lógica para manejar las peticiones HTTP y realizar las operaciones CRUD en la base de datos de Cassandra. Lo incializaremos con el siguiente contenido:</p>
+<div class="highlight-javascript notranslate"><div class="highlight"><pre><span></span><span class="kd">var</span><span class="w"> </span><span class="nx">express</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">require</span><span class="p">(</span><span class="s1">&#39;express&#39;</span><span class="p">);</span>
+<span class="kd">var</span><span class="w"> </span><span class="nx">router</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">express</span><span class="p">.</span><span class="nx">Router</span><span class="p">();</span>
+
+<span class="kd">const</span><span class="w"> </span><span class="nx">client</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">require</span><span class="p">(</span><span class="s1">&#39;../db/cassandra&#39;</span><span class="p">);</span>
+
+<span class="cm">/*</span>
+<span class="cm"> ****************************************************</span>
+<span class="cm"> * Aquí se implementarán los endpoints de la API REST</span>
+<span class="cm"> ****************************************************</span>
+<span class="cm"> */</span>
+
+<span class="nx">module</span><span class="p">.</span><span class="nx">exports</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">router</span><span class="p">;</span>
+</pre></div>
+</div>
+<p>Finalmente, importar el archivo <code class="docutils literal notranslate"><span class="pre">orders.js</span></code> en el archivo <code class="docutils literal notranslate"><span class="pre">app.js</span></code> para que los endpoints de la API estén disponibles en la aplicación Express. Para ello, haremos dos modificaciones en el archivo <code class="docutils literal notranslate"><span class="pre">app.js</span></code>, uno para importar el archivo <code class="docutils literal notranslate"><span class="pre">orders.js</span></code> y otro para definir la ruta base de la parte de la API de pedidos:</p>
+<div class="highlight-javascript notranslate"><div class="highlight"><pre><span></span><span class="p">...</span>
+<span class="kd">var</span><span class="w"> </span><span class="nx">indexRouter</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">require</span><span class="p">(</span><span class="s1">&#39;./routes/index&#39;</span><span class="p">);</span>
+<span class="kd">var</span><span class="w"> </span><span class="nx">ordersRouter</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">require</span><span class="p">(</span><span class="s1">&#39;./routes/orders&#39;</span><span class="p">);</span><span class="w"> </span><span class="err">①</span>
+
+<span class="nx">app</span><span class="p">.</span><span class="nx">use</span><span class="p">(</span><span class="s1">&#39;/&#39;</span><span class="p">,</span><span class="w"> </span><span class="nx">indexRouter</span><span class="p">);</span>
+<span class="nx">app</span><span class="p">.</span><span class="nx">use</span><span class="p">(</span><span class="s1">&#39;/api/orders&#39;</span><span class="p">,</span><span class="w"> </span><span class="nx">ordersRouter</span><span class="p">);</span><span class="w"> </span><span class="err">②</span>
+<span class="p">...</span>
+</pre></div>
+</div>
+<ol class="arabic simple">
+<li><p>Importar el archivo <code class="docutils literal notranslate"><span class="pre">orders.js</span></code>.</p></li>
+<li><p>Definir la ruta base de la parte de la API de pedidos.</p></li>
+</ol>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Si se desea modificar el comportamiento predeterminado de Express a la hora de mostrar errores cuando no se encuentra una ruta, se puede añadir un middleware al final de la aplicación para manejar las rutas no encontradas. Por ejemplo:</p>
+<div class="highlight-javascript notranslate"><div class="highlight"><pre><span></span><span class="nx">app</span><span class="p">.</span><span class="nx">use</span><span class="p">((</span><span class="nx">req</span><span class="p">,</span><span class="w"> </span><span class="nx">res</span><span class="p">,</span><span class="w"> </span><span class="nx">next</span><span class="p">)</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="nx">res</span><span class="p">.</span><span class="nx">status</span><span class="p">(</span><span class="mf">404</span><span class="p">).</span><span class="nx">send</span><span class="p">({</span><span class="w"> </span><span class="nx">error</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;Route not found&#39;</span><span class="w"> </span><span class="p">});</span>
+<span class="p">});</span>
+</pre></div>
+</div>
+</div>
+</section>
+<section id="endpoints-de-la-api">
+<h3>Endpoints de la API<a class="headerlink" href="#endpoints-de-la-api" title="Link to this heading">#</a></h3>
+<p>En esta sección vamos a implementar los endpoints de la API REST para la gestión de pedidos. Comenzaremos con el endpoint para crear un nuevo pedido y luego desarrollaremos los demás endpoints paso a paso.</p>
+<section id="crear-un-nuevo-pedido">
+<h4>Crear un nuevo pedido<a class="headerlink" href="#crear-un-nuevo-pedido" title="Link to this heading">#</a></h4>
+<p>El endpoint <code class="docutils literal notranslate"><span class="pre">POST</span> <span class="pre">/orders</span></code> permite crear un nuevo pedido en la base de datos. Este endpoint recibe un JSON con la información del pedido y los productos asociados, y guarda los datos en las tablas <code class="docutils literal notranslate"><span class="pre">orders</span></code>, <code class="docutils literal notranslate"><span class="pre">orders_by_user</span></code> y <code class="docutils literal notranslate"><span class="pre">orders_by_status</span></code>.</p>
+<p><strong>Request</strong></p>
+<div class="highlight-json notranslate"><div class="highlight"><pre><span></span><span class="err">POST</span><span class="w"> </span><span class="err">/orders</span>
+<span class="err">Co</span><span class="kc">ntent</span><span class="mi">-</span><span class="err">Type</span><span class="p">:</span><span class="w"> </span><span class="err">applica</span><span class="kc">t</span><span class="err">io</span><span class="kc">n</span><span class="err">/jso</span><span class="kc">n</span>
+
+<span class="p">{</span>
+<span class="w">   </span><span class="nt">&quot;order_id&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;123e4567-e89b-12d3-a456-426614174000&quot;</span><span class="p">,</span>
+<span class="w">   </span><span class="nt">&quot;user_id&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;550e8400-e29b-41d4-a716-446655440000&quot;</span><span class="p">,</span>
+<span class="w">   </span><span class="nt">&quot;order_date&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;2023-10-10T10:00:00Z&quot;</span><span class="p">,</span>
+<span class="w">   </span><span class="nt">&quot;status&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;pending&quot;</span><span class="p">,</span>
+<span class="w">   </span><span class="nt">&quot;total&quot;</span><span class="p">:</span><span class="w"> </span><span class="mf">100.0</span><span class="p">,</span>
+<span class="w">   </span><span class="nt">&quot;items&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">      </span><span class="p">{</span>
+<span class="w">         </span><span class="nt">&quot;product_id&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;product1&quot;</span><span class="p">,</span>
+<span class="w">         </span><span class="nt">&quot;quantity&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">2</span><span class="p">,</span>
+<span class="w">         </span><span class="nt">&quot;price&quot;</span><span class="p">:</span><span class="w"> </span><span class="mf">10.0</span>
+<span class="w">      </span><span class="p">},</span>
+<span class="w">      </span><span class="p">{</span>
+<span class="w">         </span><span class="nt">&quot;product_id&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;product2&quot;</span><span class="p">,</span>
+<span class="w">         </span><span class="nt">&quot;quantity&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span>
+<span class="w">         </span><span class="nt">&quot;price&quot;</span><span class="p">:</span><span class="w"> </span><span class="mf">20.0</span>
+<span class="w">      </span><span class="p">}</span>
+<span class="w">   </span><span class="p">]</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p><strong>Response</strong></p>
+<div class="highlight-json notranslate"><div class="highlight"><pre><span></span><span class="err">HTTP/</span><span class="mf">1.1</span><span class="w"> </span><span class="mi">201</span><span class="w"> </span><span class="err">Crea</span><span class="kc">te</span><span class="err">d</span>
+<span class="err">Co</span><span class="kc">ntent</span><span class="mi">-</span><span class="err">Type</span><span class="p">:</span><span class="w"> </span><span class="err">applica</span><span class="kc">t</span><span class="err">io</span><span class="kc">n</span><span class="err">/jso</span><span class="kc">n</span>
+
+<span class="p">{</span>
+<span class="w">   </span><span class="nt">&quot;message&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Order created successfully&quot;</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>El código para manejar este endpoint en el archivo <code class="docutils literal notranslate"><span class="pre">routes/orders.js</span></code> es el siguiente:</p>
+<div class="highlight-javascript notranslate"><div class="highlight"><pre><span></span><span class="nx">router</span><span class="p">.</span><span class="nx">post</span><span class="p">(</span><span class="s1">&#39;/&#39;</span><span class="p">,</span><span class="w"> </span><span class="k">async</span><span class="w"> </span><span class="p">(</span><span class="nx">req</span><span class="p">,</span><span class="w"> </span><span class="nx">res</span><span class="p">)</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="kd">const</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">order_id</span><span class="p">,</span><span class="w"> </span><span class="nx">user_id</span><span class="p">,</span><span class="w"> </span><span class="nx">order_date</span><span class="p">,</span><span class="w"> </span><span class="nx">status</span><span class="p">,</span><span class="w"> </span><span class="nx">total</span><span class="p">,</span><span class="w"> </span><span class="nx">items</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">req</span><span class="p">.</span><span class="nx">body</span><span class="p">;</span>
+
+<span class="w">    </span><span class="c1">// Transformar items en una lista de mapas congelados</span>
+<span class="w">    </span><span class="kd">const</span><span class="w"> </span><span class="nx">transformedItems</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">items</span><span class="p">.</span><span class="nx">map</span><span class="p">(</span><span class="nx">item</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="p">({</span>
+<span class="w">        </span><span class="p">[</span><span class="nx">item</span><span class="p">.</span><span class="nx">product_id</span><span class="p">]</span><span class="o">:</span><span class="w"> </span><span class="nx">item</span><span class="p">.</span><span class="nx">quantity</span>
+<span class="w">    </span><span class="p">}));</span>
+
+<span class="w">    </span><span class="kd">const</span><span class="w"> </span><span class="nx">queries</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span>
+<span class="w">        </span><span class="p">{</span>
+<span class="w">            </span><span class="nx">query</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;INSERT INTO orders (order_id, user_id, order_date, status, total, items) VALUES (?, ?, ?, ?, ?, ?)&#39;</span><span class="p">,</span>
+<span class="w">            </span><span class="nx">params</span><span class="o">:</span><span class="w"> </span><span class="p">[</span><span class="nx">order_id</span><span class="p">,</span><span class="w"> </span><span class="nx">user_id</span><span class="p">,</span><span class="w"> </span><span class="nx">order_date</span><span class="p">,</span><span class="w"> </span><span class="nx">status</span><span class="p">,</span><span class="w"> </span><span class="nx">total</span><span class="p">,</span><span class="w"> </span><span class="nx">transformedItems</span><span class="p">]</span>
+<span class="w">        </span><span class="p">},</span>
+<span class="w">        </span><span class="p">{</span>
+<span class="w">            </span><span class="nx">query</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;INSERT INTO orders_by_user (user_id, order_date, order_id, status, total) VALUES (?, ?, ?, ?, ?)&#39;</span><span class="p">,</span>
+<span class="w">            </span><span class="nx">params</span><span class="o">:</span><span class="w"> </span><span class="p">[</span><span class="nx">user_id</span><span class="p">,</span><span class="w"> </span><span class="nx">order_date</span><span class="p">,</span><span class="w"> </span><span class="nx">order_id</span><span class="p">,</span><span class="w"> </span><span class="nx">status</span><span class="p">,</span><span class="w"> </span><span class="nx">total</span><span class="p">]</span>
+<span class="w">        </span><span class="p">},</span>
+<span class="w">        </span><span class="p">{</span>
+<span class="w">            </span><span class="nx">query</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;INSERT INTO orders_by_status (status, order_date, order_id, user_id, total) VALUES (?, ?, ?, ?, ?)&#39;</span><span class="p">,</span>
+<span class="w">            </span><span class="nx">params</span><span class="o">:</span><span class="w"> </span><span class="p">[</span><span class="nx">status</span><span class="p">,</span><span class="w"> </span><span class="nx">order_date</span><span class="p">,</span><span class="w"> </span><span class="nx">order_id</span><span class="p">,</span><span class="w"> </span><span class="nx">user_id</span><span class="p">,</span><span class="w"> </span><span class="nx">total</span><span class="p">]</span>
+<span class="w">        </span><span class="p">}</span>
+<span class="w">    </span><span class="p">];</span>
+
+<span class="w">    </span><span class="k">try</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="k">await</span><span class="w"> </span><span class="nx">client</span><span class="p">.</span><span class="nx">batch</span><span class="p">(</span><span class="nx">queries</span><span class="p">,</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">prepare</span><span class="o">:</span><span class="w"> </span><span class="kc">true</span><span class="w"> </span><span class="p">});</span>
+<span class="w">        </span><span class="nx">res</span><span class="p">.</span><span class="nx">status</span><span class="p">(</span><span class="mf">201</span><span class="p">).</span><span class="nx">send</span><span class="p">({</span><span class="w"> </span><span class="nx">message</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;Order created successfully&#39;</span><span class="w"> </span><span class="p">});</span>
+<span class="w">    </span><span class="p">}</span><span class="w"> </span><span class="k">catch</span><span class="w"> </span><span class="p">(</span><span class="nx">error</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="nx">res</span><span class="p">.</span><span class="nx">status</span><span class="p">(</span><span class="mf">500</span><span class="p">).</span><span class="nx">send</span><span class="p">({</span><span class="w"> </span><span class="nx">error</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;Failed to create order&quot;</span><span class="w"> </span><span class="p">});</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="p">});</span>
+</pre></div>
+</div>
+<p>En este código, se extraen los datos del pedido del cuerpo de la petición y se transforman los productos en una lista de mapas congelados para almacenarlos en la tabla <code class="docutils literal notranslate"><span class="pre">orders</span></code>. Luego, se crean las consultas CQL necesarias para insertar los datos en las tablas <code class="docutils literal notranslate"><span class="pre">orders</span></code>, <code class="docutils literal notranslate"><span class="pre">orders_by_user</span></code> y <code class="docutils literal notranslate"><span class="pre">orders_by_status</span></code> y se agrupan en un batch para garantizar la atomicidad de las operaciones. Finalmente, se ejecuta el batch y se envía una respuesta con el código de estado 201 si la operación se realiza correctamente, o un código de estado 500 si se produce un error.</p>
+</section>
+<section id="obtener-todos-los-pedidos">
+<h4>Obtener todos los pedidos<a class="headerlink" href="#obtener-todos-los-pedidos" title="Link to this heading">#</a></h4>
+<p>El endpoint <code class="docutils literal notranslate"><span class="pre">GET</span> <span class="pre">/orders</span></code> permite obtener todos los pedidos almacenados en la base de datos. Este endpoint también permite filtrar los pedidos por usuario o por estado utilizando parámetros opcionales en la URL.</p>
+<p><strong>Request</strong></p>
+<div class="highlight-http notranslate"><div class="highlight"><pre><span></span><span class="err">GET /orders</span>
+<span class="err">GET /orders?user_id=&lt;user_id&gt;</span>
+<span class="err">GET /orders?status=&lt;status&gt;</span>
+</pre></div>
+</div>
+<p><strong>Response</strong></p>
+<div class="highlight-json notranslate"><div class="highlight"><pre><span></span><span class="err">HTTP/</span><span class="mf">1.1</span><span class="w"> </span><span class="mi">200</span><span class="w"> </span><span class="err">OK</span>
+<span class="err">Co</span><span class="kc">ntent</span><span class="mi">-</span><span class="err">Type</span><span class="p">:</span><span class="w"> </span><span class="err">applica</span><span class="kc">t</span><span class="err">io</span><span class="kc">n</span><span class="err">/jso</span><span class="kc">n</span>
+
+<span class="p">[</span>
+<span class="w">   </span><span class="p">{</span>
+<span class="w">      </span><span class="nt">&quot;order_id&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;123e4567-e89b-12d3-a456-426614174000&quot;</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">&quot;user_id&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;550e8400-e29b-41d4-a716-446655440000&quot;</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">&quot;order_date&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;2023-10-10T10:00:00Z&quot;</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">&quot;status&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;pending&quot;</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">&quot;total&quot;</span><span class="p">:</span><span class="w"> </span><span class="mf">100.0</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">&quot;items&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">         </span><span class="p">{</span>
+<span class="w">            </span><span class="nt">&quot;product_id&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;product1&quot;</span><span class="p">,</span>
+<span class="w">            </span><span class="nt">&quot;quantity&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">2</span><span class="p">,</span>
+<span class="w">            </span><span class="nt">&quot;price&quot;</span><span class="p">:</span><span class="w"> </span><span class="mf">10.0</span>
+<span class="w">         </span><span class="p">},</span>
+<span class="w">         </span><span class="p">{</span>
+<span class="w">            </span><span class="nt">&quot;product_id&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;product2&quot;</span><span class="p">,</span>
+<span class="w">            </span><span class="nt">&quot;quantity&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span>
+<span class="w">            </span><span class="nt">&quot;price&quot;</span><span class="p">:</span><span class="w"> </span><span class="mf">20.0</span>
+<span class="w">         </span><span class="p">}</span>
+<span class="w">      </span><span class="p">]</span>
+<span class="w">   </span><span class="p">},</span>
+<span class="w">   </span><span class="err">...</span>
+<span class="p">]</span>
+</pre></div>
+</div>
+<p>El código para manejar este endpoint en el archivo <code class="docutils literal notranslate"><span class="pre">routes/orders.js</span></code> es el siguiente:</p>
+<div class="highlight-javascript notranslate"><div class="highlight"><pre><span></span><span class="nx">router</span><span class="p">.</span><span class="nx">get</span><span class="p">(</span><span class="s1">&#39;/&#39;</span><span class="p">,</span><span class="w"> </span><span class="k">async</span><span class="w"> </span><span class="p">(</span><span class="nx">req</span><span class="p">,</span><span class="w"> </span><span class="nx">res</span><span class="p">)</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="kd">const</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">user_id</span><span class="p">,</span><span class="w"> </span><span class="nx">status</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">req</span><span class="p">.</span><span class="nx">query</span><span class="p">;</span>
+
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nx">status</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="k">try</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="kd">const</span><span class="w"> </span><span class="nx">result</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">await</span><span class="w"> </span><span class="nx">client</span><span class="p">.</span><span class="nx">execute</span><span class="p">(</span><span class="s1">&#39;SELECT * FROM orders_by_status WHERE status = ?&#39;</span><span class="p">,</span><span class="w"> </span><span class="p">[</span><span class="nx">status</span><span class="p">],</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">prepare</span><span class="o">:</span><span class="w"> </span><span class="kc">true</span><span class="w"> </span><span class="p">});</span>
+<span class="w">            </span><span class="nx">res</span><span class="p">.</span><span class="nx">status</span><span class="p">(</span><span class="mf">200</span><span class="p">).</span><span class="nx">send</span><span class="p">(</span><span class="nx">result</span><span class="p">.</span><span class="nx">rows</span><span class="p">);</span>
+<span class="w">        </span><span class="p">}</span><span class="w"> </span><span class="k">catch</span><span class="w"> </span><span class="p">(</span><span class="nx">error</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="nx">res</span><span class="p">.</span><span class="nx">status</span><span class="p">(</span><span class="mf">500</span><span class="p">).</span><span class="nx">send</span><span class="p">({</span><span class="w"> </span><span class="nx">error</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;Failed to fetch orders by status&#39;</span><span class="w"> </span><span class="p">});</span>
+<span class="w">        </span><span class="p">}</span>
+<span class="w">        </span><span class="k">return</span><span class="p">;</span>
+<span class="w">    </span><span class="p">}</span>
+
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nx">user_id</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="k">try</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="kd">const</span><span class="w"> </span><span class="nx">result</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">await</span><span class="w"> </span><span class="nx">client</span><span class="p">.</span><span class="nx">execute</span><span class="p">(</span><span class="s1">&#39;SELECT * FROM orders_by_user WHERE user_id = ?&#39;</span><span class="p">,</span><span class="w"> </span><span class="p">[</span><span class="nx">user_id</span><span class="p">],</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">prepare</span><span class="o">:</span><span class="w"> </span><span class="kc">true</span><span class="w"> </span><span class="p">});</span>
+<span class="w">            </span><span class="nx">res</span><span class="p">.</span><span class="nx">status</span><span class="p">(</span><span class="mf">200</span><span class="p">).</span><span class="nx">send</span><span class="p">(</span><span class="nx">result</span><span class="p">.</span><span class="nx">rows</span><span class="p">);</span>
+<span class="w">        </span><span class="p">}</span><span class="w"> </span><span class="k">catch</span><span class="w"> </span><span class="p">(</span><span class="nx">error</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="nx">res</span><span class="p">.</span><span class="nx">status</span><span class="p">(</span><span class="mf">500</span><span class="p">).</span><span class="nx">send</span><span class="p">({</span><span class="w"> </span><span class="nx">error</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;Failed to fetch orders for user&#39;</span><span class="w"> </span><span class="p">});</span>
+<span class="w">        </span><span class="p">}</span>
+<span class="w">        </span><span class="k">return</span><span class="p">;</span>
+<span class="w">    </span><span class="p">}</span>
+
+<span class="w">    </span><span class="k">try</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="kd">const</span><span class="w"> </span><span class="nx">result</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">await</span><span class="w"> </span><span class="nx">client</span><span class="p">.</span><span class="nx">execute</span><span class="p">(</span><span class="s1">&#39;SELECT * FROM orders&#39;</span><span class="p">,</span><span class="w"> </span><span class="p">[],</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">prepare</span><span class="o">:</span><span class="w"> </span><span class="kc">true</span><span class="w"> </span><span class="p">});</span>
+<span class="w">        </span><span class="nx">res</span><span class="p">.</span><span class="nx">status</span><span class="p">(</span><span class="mf">200</span><span class="p">).</span><span class="nx">send</span><span class="p">(</span><span class="nx">result</span><span class="p">.</span><span class="nx">rows</span><span class="p">);</span>
+<span class="w">    </span><span class="p">}</span><span class="w"> </span><span class="k">catch</span><span class="w"> </span><span class="p">(</span><span class="nx">error</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="nx">res</span><span class="p">.</span><span class="nx">status</span><span class="p">(</span><span class="mf">500</span><span class="p">).</span><span class="nx">send</span><span class="p">({</span><span class="w"> </span><span class="nx">error</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;Failed to fetch orders&#39;</span><span class="w"> </span><span class="p">});</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="p">});</span>
+</pre></div>
+</div>
+<p>En este código, se extraen los parámetros de la URL y se realizan consultas a las tablas <code class="docutils literal notranslate"><span class="pre">orders</span></code>, <code class="docutils literal notranslate"><span class="pre">orders_by_user</span></code> y <code class="docutils literal notranslate"><span class="pre">orders_by_status</span></code> según los parámetros proporcionados. Si se proporciona un <code class="docutils literal notranslate"><span class="pre">user_id</span></code>, se devuelven los pedidos del usuario correspondiente. Si se proporciona un <code class="docutils literal notranslate"><span class="pre">status</span></code>, se devuelven los pedidos con ese estado. Si no se proporcionan parámetros, se devuelven todos los pedidos. Se envía una respuesta con los pedidos correspondientes o un código de estado 500 si se produce un error.</p>
+</section>
+<section id="obtener-los-detalles-de-un-pedido">
+<h4>Obtener los detalles de un pedido<a class="headerlink" href="#obtener-los-detalles-de-un-pedido" title="Link to this heading">#</a></h4>
+<p>El endpoint <code class="docutils literal notranslate"><span class="pre">GET</span> <span class="pre">/orders/:order_id</span></code> permite obtener los detalles de un pedido específico y sus productos asociados.</p>
+<p><strong>Request</strong></p>
+<div class="highlight-http notranslate"><div class="highlight"><pre><span></span><span class="err">GET /orders/:order_id</span>
+</pre></div>
+</div>
+<p><strong>Response</strong></p>
+<div class="highlight-json notranslate"><div class="highlight"><pre><span></span><span class="err">HTTP/</span><span class="mf">1.1</span><span class="w"> </span><span class="mi">200</span><span class="w"> </span><span class="err">OK</span>
+<span class="err">Co</span><span class="kc">ntent</span><span class="mi">-</span><span class="err">Type</span><span class="p">:</span><span class="w"> </span><span class="err">applica</span><span class="kc">t</span><span class="err">io</span><span class="kc">n</span><span class="err">/jso</span><span class="kc">n</span>
+
+<span class="p">{</span>
+<span class="w">   </span><span class="nt">&quot;order_id&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;123e4567-e89b-12d3-a456-426614174000&quot;</span><span class="p">,</span>
+<span class="w">   </span><span class="nt">&quot;user_id&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;550e8400-e29b-41d4-a716-446655440000&quot;</span><span class="p">,</span>
+<span class="w">   </span><span class="nt">&quot;order_date&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;2023-10-10T10:00:00Z&quot;</span><span class="p">,</span>
+<span class="w">   </span><span class="nt">&quot;status&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;pending&quot;</span><span class="p">,</span>
+<span class="w">   </span><span class="nt">&quot;total&quot;</span><span class="p">:</span><span class="w"> </span><span class="mf">100.0</span><span class="p">,</span>
+<span class="w">   </span><span class="nt">&quot;items&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">      </span><span class="p">{</span>
+<span class="w">         </span><span class="nt">&quot;product_id&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;product1&quot;</span><span class="p">,</span>
+<span class="w">         </span><span class="nt">&quot;quantity&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">2</span><span class="p">,</span>
+<span class="w">         </span><span class="nt">&quot;price&quot;</span><span class="p">:</span><span class="w"> </span><span class="mf">10.0</span>
+<span class="w">      </span><span class="p">},</span>
+<span class="w">      </span><span class="p">{</span>
+<span class="w">         </span><span class="nt">&quot;product_id&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;product2&quot;</span><span class="p">,</span>
+<span class="w">         </span><span class="nt">&quot;quantity&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span>
+<span class="w">         </span><span class="nt">&quot;price&quot;</span><span class="p">:</span><span class="w"> </span><span class="mf">20.0</span>
+<span class="w">      </span><span class="p">}</span>
+<span class="w">   </span><span class="p">]</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>El código para manejar este endpoint en el archivo <code class="docutils literal notranslate"><span class="pre">routes/orders.js</span></code> es el siguiente:</p>
+<div class="highlight-javascript notranslate"><div class="highlight"><pre><span></span><span class="nx">router</span><span class="p">.</span><span class="nx">get</span><span class="p">(</span><span class="s1">&#39;/:order_id&#39;</span><span class="p">,</span><span class="w"> </span><span class="k">async</span><span class="w"> </span><span class="p">(</span><span class="nx">req</span><span class="p">,</span><span class="w"> </span><span class="nx">res</span><span class="p">)</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="kd">const</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">order_id</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">req</span><span class="p">.</span><span class="nx">params</span><span class="p">;</span>
+
+<span class="w">    </span><span class="k">try</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="kd">const</span><span class="w"> </span><span class="nx">orderResult</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">await</span><span class="w"> </span><span class="nx">client</span><span class="p">.</span><span class="nx">execute</span><span class="p">(</span><span class="s1">&#39;SELECT * FROM orders WHERE order_id = ?&#39;</span><span class="p">,</span><span class="w"> </span><span class="p">[</span><span class="nx">order_id</span><span class="p">],</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">prepare</span><span class="o">:</span><span class="w"> </span><span class="kc">true</span><span class="w"> </span><span class="p">});</span>
+
+<span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nx">orderResult</span><span class="p">.</span><span class="nx">rowLength</span><span class="w"> </span><span class="o">===</span><span class="w"> </span><span class="mf">0</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="k">return</span><span class="w"> </span><span class="nx">res</span><span class="p">.</span><span class="nx">status</span><span class="p">(</span><span class="mf">404</span><span class="p">).</span><span class="nx">send</span><span class="p">({</span><span class="w"> </span><span class="nx">error</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;Order not found&#39;</span><span class="w"> </span><span class="p">});</span>
+<span class="w">        </span><span class="p">}</span>
+
+<span class="w">        </span><span class="nx">res</span><span class="p">.</span><span class="nx">status</span><span class="p">(</span><span class="mf">200</span><span class="p">).</span><span class="nx">send</span><span class="p">(</span><span class="nx">orderResult</span><span class="p">.</span><span class="nx">rows</span><span class="p">[</span><span class="mf">0</span><span class="p">]);</span>
+<span class="w">    </span><span class="p">}</span><span class="w"> </span><span class="k">catch</span><span class="w"> </span><span class="p">(</span><span class="nx">error</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="nx">res</span><span class="p">.</span><span class="nx">status</span><span class="p">(</span><span class="mf">500</span><span class="p">).</span><span class="nx">send</span><span class="p">({</span><span class="w"> </span><span class="nx">error</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;Failed to fetch order details&#39;</span><span class="w"> </span><span class="p">});</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="p">});</span>
+</pre></div>
+</div>
+<p>En este código, se extrae el ID del pedido de los parámetros de la URL y se realiza una consulta a la tabla <code class="docutils literal notranslate"><span class="pre">orders</span></code> para obtener los detalles del pedido. Si el pedido no se encuentra, se envía una respuesta con el código de estado 404. Si se encuentra, se envía una respuesta con los detalles del pedido o un código de estado 500 si se produce un error.</p>
+</section>
+<section id="actualizar-el-estado-de-un-pedido">
+<h4>Actualizar el estado de un pedido<a class="headerlink" href="#actualizar-el-estado-de-un-pedido" title="Link to this heading">#</a></h4>
+<p>El endpoint <code class="docutils literal notranslate"><span class="pre">PUT</span> <span class="pre">/orders/:order_id</span></code> permite actualizar el estado de un pedido específico.</p>
+<p><strong>Request</strong></p>
+<div class="highlight-json notranslate"><div class="highlight"><pre><span></span><span class="err">PUT</span><span class="w"> </span><span class="err">/orders/</span><span class="p">:</span><span class="err">order_id</span>
+<span class="err">Co</span><span class="kc">ntent</span><span class="mi">-</span><span class="err">Type</span><span class="p">:</span><span class="w"> </span><span class="err">applica</span><span class="kc">t</span><span class="err">io</span><span class="kc">n</span><span class="err">/jso</span><span class="kc">n</span>
+
+<span class="p">{</span>
+<span class="w">   </span><span class="nt">&quot;status&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;delivered&quot;</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p><strong>Response</strong></p>
+<div class="highlight-json notranslate"><div class="highlight"><pre><span></span><span class="err">HTTP/</span><span class="mf">1.1</span><span class="w"> </span><span class="mi">200</span><span class="w"> </span><span class="err">OK</span>
+<span class="err">Co</span><span class="kc">ntent</span><span class="mi">-</span><span class="err">Type</span><span class="p">:</span><span class="w"> </span><span class="err">applica</span><span class="kc">t</span><span class="err">io</span><span class="kc">n</span><span class="err">/jso</span><span class="kc">n</span>
+
+<span class="p">{</span>
+<span class="w">   </span><span class="nt">&quot;message&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Order updated successfully&quot;</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>El código para manejar este endpoint en el archivo <code class="docutils literal notranslate"><span class="pre">routes/orders.js</span></code> es el siguiente:</p>
+<div class="highlight-javascript notranslate"><div class="highlight"><pre><span></span><span class="nx">router</span><span class="p">.</span><span class="nx">put</span><span class="p">(</span><span class="s1">&#39;/:order_id&#39;</span><span class="p">,</span><span class="w"> </span><span class="k">async</span><span class="w"> </span><span class="p">(</span><span class="nx">req</span><span class="p">,</span><span class="w"> </span><span class="nx">res</span><span class="p">)</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="kd">const</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">order_id</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">req</span><span class="p">.</span><span class="nx">params</span><span class="p">;</span>
+<span class="w">    </span><span class="kd">const</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">status</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">req</span><span class="p">.</span><span class="nx">body</span><span class="p">;</span>
+
+<span class="w">    </span><span class="k">try</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="kd">const</span><span class="w"> </span><span class="nx">orderResult</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">await</span><span class="w"> </span><span class="nx">client</span><span class="p">.</span><span class="nx">execute</span><span class="p">(</span><span class="s1">&#39;SELECT * FROM orders WHERE order_id = ?&#39;</span><span class="p">,</span><span class="w"> </span><span class="p">[</span><span class="nx">order_id</span><span class="p">],</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">prepare</span><span class="o">:</span><span class="w"> </span><span class="kc">true</span><span class="w"> </span><span class="p">});</span>
+
+<span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nx">orderResult</span><span class="p">.</span><span class="nx">rowLength</span><span class="w"> </span><span class="o">===</span><span class="w"> </span><span class="mf">0</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="k">return</span><span class="w"> </span><span class="nx">res</span><span class="p">.</span><span class="nx">status</span><span class="p">(</span><span class="mf">404</span><span class="p">).</span><span class="nx">send</span><span class="p">({</span><span class="w"> </span><span class="nx">error</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;Order not found&#39;</span><span class="w"> </span><span class="p">});</span>
+<span class="w">        </span><span class="p">}</span>
+
+<span class="w">        </span><span class="kd">const</span><span class="w"> </span><span class="nx">order</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">orderResult</span><span class="p">.</span><span class="nx">rows</span><span class="p">[</span><span class="mf">0</span><span class="p">];</span>
+
+<span class="w">        </span><span class="kd">const</span><span class="w"> </span><span class="nx">queries</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span>
+<span class="w">            </span><span class="p">{</span>
+<span class="w">                </span><span class="nx">query</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;UPDATE orders SET status = ? WHERE order_id = ?&#39;</span><span class="p">,</span>
+<span class="w">                </span><span class="nx">params</span><span class="o">:</span><span class="w"> </span><span class="p">[</span><span class="nx">status</span><span class="p">,</span><span class="w"> </span><span class="nx">order_id</span><span class="p">]</span>
+<span class="w">            </span><span class="p">},</span>
+<span class="w">            </span><span class="p">{</span>
+<span class="w">                </span><span class="nx">query</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;UPDATE orders_by_user SET status = ? WHERE user_id = ? AND order_date = ? AND order_id = ?&#39;</span><span class="p">,</span>
+<span class="w">                </span><span class="nx">params</span><span class="o">:</span><span class="w"> </span><span class="p">[</span><span class="nx">status</span><span class="p">,</span><span class="w"> </span><span class="nx">order</span><span class="p">.</span><span class="nx">user_id</span><span class="p">,</span><span class="w"> </span><span class="nx">order</span><span class="p">.</span><span class="nx">order_date</span><span class="p">,</span><span class="w"> </span><span class="nx">order_id</span><span class="p">]</span>
+<span class="w">            </span><span class="p">},</span>
+<span class="w">            </span><span class="p">{</span>
+<span class="w">                </span><span class="nx">query</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;INSERT INTO orders_by_status (status, order_date, order_id, user_id, total) VALUES (?, ?, ?, ?, ?)&#39;</span><span class="p">,</span>
+<span class="w">                </span><span class="nx">params</span><span class="o">:</span><span class="w"> </span><span class="p">[</span><span class="nx">status</span><span class="p">,</span><span class="w"> </span><span class="nx">order</span><span class="p">.</span><span class="nx">order_date</span><span class="p">,</span><span class="w"> </span><span class="nx">order_id</span><span class="p">,</span><span class="w"> </span><span class="nx">order</span><span class="p">.</span><span class="nx">user_id</span><span class="p">,</span><span class="w"> </span><span class="nx">order</span><span class="p">.</span><span class="nx">total</span><span class="p">]</span>
+<span class="w">            </span><span class="p">},</span>
+<span class="w">            </span><span class="p">{</span>
+<span class="w">                </span><span class="nx">query</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;DELETE FROM orders_by_status WHERE status = ? AND order_date = ? AND order_id = ?&#39;</span><span class="p">,</span>
+<span class="w">                </span><span class="nx">params</span><span class="o">:</span><span class="w"> </span><span class="p">[</span><span class="nx">order</span><span class="p">.</span><span class="nx">status</span><span class="p">,</span><span class="w"> </span><span class="nx">order</span><span class="p">.</span><span class="nx">order_date</span><span class="p">,</span><span class="w"> </span><span class="nx">order</span><span class="p">.</span><span class="nx">order_id</span><span class="p">]</span>
+<span class="w">            </span><span class="p">}</span>
+<span class="w">        </span><span class="p">];</span>
+
+<span class="w">        </span><span class="k">await</span><span class="w"> </span><span class="nx">client</span><span class="p">.</span><span class="nx">batch</span><span class="p">(</span><span class="nx">queries</span><span class="p">,</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">prepare</span><span class="o">:</span><span class="w"> </span><span class="kc">true</span><span class="w"> </span><span class="p">});</span>
+<span class="w">        </span><span class="nx">res</span><span class="p">.</span><span class="nx">status</span><span class="p">(</span><span class="mf">200</span><span class="p">).</span><span class="nx">send</span><span class="p">({</span><span class="w"> </span><span class="nx">message</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;Order updated successfully&#39;</span><span class="w"> </span><span class="p">});</span>
+<span class="w">    </span><span class="p">}</span><span class="w"> </span><span class="k">catch</span><span class="w"> </span><span class="p">(</span><span class="nx">error</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="nx">res</span><span class="p">.</span><span class="nx">status</span><span class="p">(</span><span class="mf">500</span><span class="p">).</span><span class="nx">send</span><span class="p">({</span><span class="w"> </span><span class="nx">error</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;Failed to update order&#39;</span><span class="w"> </span><span class="p">});</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="p">});</span>
+</pre></div>
+</div>
+<p>En este código, se extrae el ID del pedido de los parámetros de la URL y el nuevo estado del cuerpo de la petición. Se realiza una consulta a la tabla <code class="docutils literal notranslate"><span class="pre">orders</span></code> para obtener los detalles del pedido y se actualiza el estado en las tablas <code class="docutils literal notranslate"><span class="pre">orders</span></code>, <code class="docutils literal notranslate"><span class="pre">orders_by_user</span></code> y <code class="docutils literal notranslate"><span class="pre">orders_by_status</span></code>. Se agrupan las consultas en un batch para garantizar la atomicidad de las operaciones. Finalmente, se envía una respuesta con el código de estado 200 si la operación se realiza correctamente, o un código de estado 500 si se produce un error.</p>
+</section>
+</section>
+</section>
+<section id="pruebas-de-la-api">
+<h2>Pruebas de la API<a class="headerlink" href="#pruebas-de-la-api" title="Link to this heading">#</a></h2>
+<p>Una vez que hemos desarrollado la API con Express, podemos probarla utilizando herramientas como Postman o cURL. A continuación, se presentan algunos ejemplos de cómo probar los endpoints de la API REST para la gestión de pedidos.</p>
+<ul>
+<li><p>Crear un nuevo pedido:</p>
+<ul>
+<li><p>Método: <code class="docutils literal notranslate"><span class="pre">POST</span></code></p></li>
+<li><p>URL: <code class="docutils literal notranslate"><span class="pre">http://localhost:3000/api/orders</span></code></p></li>
+<li><p>Cuerpo:</p>
+<div class="highlight-json notranslate"><div class="highlight"><pre><span></span><span class="p">{</span>
+<span class="w">    </span><span class="nt">&quot;order_id&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;123e4567-e89b-12d3-a456-426614174001&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;user_id&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;550e8400-e29b-41d4-a716-446655440001&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;order_date&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;2023-10-11T10:00:00Z&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;status&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;pending&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;total&quot;</span><span class="p">:</span><span class="w"> </span><span class="mf">150.0</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;items&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">        </span><span class="p">{</span>
+<span class="w">        </span><span class="nt">&quot;product_id&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;product1&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="nt">&quot;quantity&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">2</span><span class="p">,</span>
+<span class="w">        </span><span class="nt">&quot;price&quot;</span><span class="p">:</span><span class="w"> </span><span class="mf">10.0</span>
+<span class="w">        </span><span class="p">},</span>
+<span class="w">        </span><span class="p">{</span>
+<span class="w">        </span><span class="nt">&quot;product_id&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;product2&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="nt">&quot;quantity&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span>
+<span class="w">        </span><span class="nt">&quot;price&quot;</span><span class="p">:</span><span class="w"> </span><span class="mf">20.0</span>
+<span class="w">        </span><span class="p">}</span>
+<span class="w">    </span><span class="p">]</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</li>
+<li><p>Respuesta esperada:</p>
+<div class="highlight-json notranslate"><div class="highlight"><pre><span></span><span class="p">{</span>
+<span class="w">   </span><span class="nt">&quot;message&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Order created successfully&quot;</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p><img alt="postman-create-order" src="../../../_images/postman-create-order.png" /></p>
+</li>
+</ul>
+</li>
+<li><p>Obtener todos los pedidos:</p>
+<ul>
+<li><p>Método: <code class="docutils literal notranslate"><span class="pre">GET</span></code></p></li>
+<li><p>URL: <code class="docutils literal notranslate"><span class="pre">http://localhost:3000/api/orders</span></code></p></li>
+<li><p>Respuesta esperada:</p>
+<div class="highlight-json notranslate"><div class="highlight"><pre><span></span><span class="p">[</span>
+<span class="w">    </span><span class="p">{</span>
+<span class="w">        </span><span class="nt">&quot;order_id&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;123e4567-e89b-12d3-a456-426614174001&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="nt">&quot;items&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">            </span><span class="p">{</span>
+<span class="w">                </span><span class="nt">&quot;product1&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">3</span>
+<span class="w">            </span><span class="p">},</span>
+<span class="w">            </span><span class="p">{</span>
+<span class="w">                </span><span class="nt">&quot;product3&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">2</span>
+<span class="w">            </span><span class="p">}</span>
+<span class="w">        </span><span class="p">],</span>
+<span class="w">        </span><span class="nt">&quot;order_date&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;2023-10-11T10:00:00.000Z&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="nt">&quot;status&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;pending&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="nt">&quot;total&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;150&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="nt">&quot;user_id&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;550e8400-e29b-41d4-a716-446655440001&quot;</span>
+<span class="w">    </span><span class="p">},</span>
+<span class="w">    </span><span class="p">{</span>
+<span class="w">        </span><span class="nt">&quot;order_id&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;...&quot;</span>
+<span class="w">        </span><span class="err">...</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="p">]</span>
+</pre></div>
+</div>
+<p><img alt="postman-get-orders" src="../../../_images/postman-get-orders.png" /></p>
+</li>
+</ul>
+</li>
+<li><p>Obtener los detalles de un pedido:</p>
+<ul>
+<li><p>Método: <code class="docutils literal notranslate"><span class="pre">GET</span></code></p></li>
+<li><p>URL: <code class="docutils literal notranslate"><span class="pre">http://localhost:3000/api/orders/123e4567-e89b-12d3-a456-426614174001</span></code></p></li>
+<li><p>Respuesta esperada:</p>
+<div class="highlight-json notranslate"><div class="highlight"><pre><span></span><span class="p">{</span>
+<span class="w">    </span><span class="nt">&quot;order_id&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;123e4567-e89b-12d3-a456-426614174001&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;items&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">        </span><span class="p">{</span>
+<span class="w">            </span><span class="nt">&quot;product1&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">3</span>
+<span class="w">        </span><span class="p">},</span>
+<span class="w">        </span><span class="p">{</span>
+<span class="w">            </span><span class="nt">&quot;product3&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">2</span>
+<span class="w">        </span><span class="p">}</span>
+<span class="w">    </span><span class="p">],</span>
+<span class="w">    </span><span class="nt">&quot;order_date&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;2023-10-11T10:00:00.000Z&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;status&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;pending&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;total&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;150&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;user_id&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;550e8400-e29b-41d4-a716-446655440001&quot;</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p><img alt="postman-get-order" src="../../../_images/postman-get-order.png" /></p>
+</li>
+</ul>
+</li>
+<li><p>Actualizar el estado de un pedido:</p>
+<ul>
+<li><p>Método: <code class="docutils literal notranslate"><span class="pre">PUT</span></code></p></li>
+<li><p>URL: <code class="docutils literal notranslate"><span class="pre">http://localhost:3000/api/orders/123e4567-e89b-12d3-a456-426614174001</span></code></p></li>
+<li><p>Cuerpo:</p>
+<div class="highlight-json notranslate"><div class="highlight"><pre><span></span><span class="p">{</span>
+<span class="w">   </span><span class="nt">&quot;status&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;delivered&quot;</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</li>
+<li><p>Respuesta esperada:</p>
+<div class="highlight-json notranslate"><div class="highlight"><pre><span></span><span class="p">{</span>
+<span class="w">   </span><span class="nt">&quot;message&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Order updated successfully&quot;</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p><img alt="postman-update-order" src="../../../_images/postman-update-order.png" /></p>
+</li>
+</ul>
+</li>
+<li><p>Obtener los pedidos de un usuario:</p>
+<ul>
+<li><p>Método: <code class="docutils literal notranslate"><span class="pre">GET</span></code></p></li>
+<li><p>URL: <code class="docutils literal notranslate"><span class="pre">http://localhost:3000/api/orders?user_id=550e8400-e29b-41d4-a716-446655440001</span></code></p></li>
+<li><p>Respuesta esperada:</p>
+<div class="highlight-json notranslate"><div class="highlight"><pre><span></span><span class="p">[</span>
+<span class="w">    </span><span class="err">...</span>
+<span class="w">    </span><span class="p">{</span>
+<span class="w">        </span><span class="nt">&quot;user_id&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;550e8400-e29b-41d4-a716-446655440001&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="nt">&quot;order_date&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;2023-10-11T10:00:00.000Z&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="nt">&quot;order_id&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;123e4567-e89b-12d3-a456-426614174001&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="nt">&quot;status&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;delivered&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="nt">&quot;total&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;150&quot;</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="p">]</span>
+</pre></div>
+</div>
+<p><img alt="postman-get-orders-by-user" src="../../../_images/postman-get-orders-by-user.png" /></p>
+</li>
+</ul>
+</li>
+<li><p>Obtener los pedidos por estado:</p>
+<ul>
+<li><p>Método: <code class="docutils literal notranslate"><span class="pre">GET</span></code></p></li>
+<li><p>URL: <code class="docutils literal notranslate"><span class="pre">http://localhost:3000/api/orders?status=delivered</span></code></p></li>
+<li><p>Respuesta esperada:</p>
+<div class="highlight-json notranslate"><div class="highlight"><pre><span></span><span class="p">[</span>
+<span class="w">    </span><span class="err">...</span>
+<span class="w">    </span><span class="p">{</span>
+<span class="w">        </span><span class="nt">&quot;status&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;delivered&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="nt">&quot;order_date&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;2023-10-11T10:00:00.000Z&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="nt">&quot;order_id&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;123e4567-e89b-12d3-a456-426614174001&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="nt">&quot;total&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;150&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="nt">&quot;user_id&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;550e8400-e29b-41d4-a716-446655440001&quot;</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="p">]</span>
+</pre></div>
+</div>
+<p><img alt="postman-get-orders-by-status" src="../../../_images/postman-get-orders-by-status.png" /></p>
+</li>
+</ul>
+</li>
+</ul>
+</section>
+<section id="conclusiones">
+<h2>Conclusiones<a class="headerlink" href="#conclusiones" title="Link to this heading">#</a></h2>
+<p>A lo largo de este tutorial se ha viso cómo diseñar y desarrollar una API REST Express eficiente para la gestión de pedidos en una plataforma de comercio electrónico, aprovechando la capacidad de Apache Cassandra para manejar grandes volúmenes de datos con alta disponibilidad y escalabilidad. Se ha visto que en este tipo de bases de datos NoSQL, el diseño del esquema de datos es fundamental para garantizar un rendimiento óptimo y una alta disponibilidad de los datos. Se realiza un diseño orientado a consultas, en el que el esquema de datos debe diseñarse en función de las consultas más frecuentes. Esto puede implicar crear varias tablas con redundancia controlada para garantizar accesos rápidos sin necesidad de joins. Ese diseño exige definir a priori las claves de partición para mejorar la eficiencia de las consultas.</p>
+<p>Cassandra es una gran alternativa a las bases de datos relacionales cuando se requiere manejar grandes volúmenes de datos con baja latencia. Su enfoque distribuido permite construir APIs altamente disponibles, resilientes y preparadas para crecer sin comprometer el rendimiento.</p>
+<p>Este proyecto no sólo proporciona una solución funcional para la gestión de pedidos en una plataforma de comercio electrónico, sino que también sirve como punto de partida para el desarrollo de aplicaciones más complejas que requieran una base de datos NoSQL escalable y de alto rendimiento. Además, este conocimiento es aplicable a múltiples dominios más allá del e-commerce, como sistemas de recomendación, monitorización de eventos en tiempo real y plataformas de contenido de alta concurrencia.</p>
+</section>
+<section id="licencia">
+<h2>Licencia<a class="headerlink" href="#licencia" title="Link to this heading">#</a></h2>
+<p>Licencia CC BY-NC-ND 4.0</p>
+<p>Copyright (c) 2025 [Manuel Torres - Departamento de Informática - Universidad de Almería]</p>
+<p>Este proyecto está licenciado bajo la Licencia CC BY-NC-ND 4.0. Esto significa que puedes compartir el proyecto siempre que cites al autor, no lo uses para fines comerciales y no realices obras derivadas.</p>
+</section>
+</section>
+
+    <script type="text/x-thebe-config">
+    {
+        requestKernel: true,
+        binderOptions: {
+            repo: "binder-examples/jupyter-stacks-datascience",
+            ref: "master",
+        },
+        codeMirrorConfig: {
+            theme: "abcdef",
+            mode: "python"
+        },
+        kernelOptions: {
+            name: "python3",
+            path: "./notebooks/CasosDeUso/historialCassandra"
+        },
+        predefinedOutput: true
+    }
+    </script>
+    <script>kernelName = 'python3'</script>
+
+                </article>
+              
+
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="../recomendacionesNeo4j/index.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title">Desarrollo de una API REST para gestión de recomendaciones con Slim Framework y Neo4j</p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="../../ActividadesComplementarias/actividades.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">Actividades complementarias</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+  <div class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> Contents
+  </div>
+  <nav class="bd-toc-nav page-toc">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#resumen">Resumen</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#introduccion">Introducción</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#descripcion-del-problema">Descripción del problema</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#configuracion-del-entorno-de-base-de-datos">Configuración del entorno de base de datos</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#servicios">Servicios</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#instrucciones-de-instalacion">Instrucciones de instalación</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#cassandra">Cassandra</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#uso-basico-del-driver-de-cassandra">Uso básico del driver de Cassandra</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#conexion-a-cassandra">Conexión a Cassandra</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#operaciones-basicas">Operaciones básicas</a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#el-metodo-execute">El método <code class="docutils literal notranslate"><span class="pre">execute</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#lanzando-consultas">Lanzando consultas</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#el-metodo-batch">El método <code class="docutils literal notranslate"><span class="pre">batch</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#estructura-de-la-base-de-datos">Estructura de la base de datos</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#creacion-del-keyspace">Creación del keyspace</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#creacion-de-las-tablas">Creación de las tablas</a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#tabla-orders">Tabla <code class="docutils literal notranslate"><span class="pre">orders</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#tabla-orders-by-user">Tabla <code class="docutils literal notranslate"><span class="pre">orders_by_user</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#tabla-orders-by-status">Tabla <code class="docutils literal notranslate"><span class="pre">orders_by_status</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#desarrollo-de-la-api">Desarrollo de la API</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#especificacion-de-los-endpoints-de-la-api">Especificación de los endpoints de la API</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#ejemplo-de-json-de-un-pedido">Ejemplo de JSON de un pedido</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#ejemplo-de-json-del-estado-de-un-pedido">Ejemplo de JSON del estado de un pedido</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#crear-la-aplicacion-express">Crear la aplicación Express</a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#descripcion-de-la-api">Descripción de la API</a></li>
+</ul>
+</li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#endpoint-de-prueba">Endpoint de prueba</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#endpoints-de-la-api">Endpoints de la API</a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#crear-un-nuevo-pedido">Crear un nuevo pedido</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#obtener-todos-los-pedidos">Obtener todos los pedidos</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#obtener-los-detalles-de-un-pedido">Obtener los detalles de un pedido</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#actualizar-el-estado-de-un-pedido">Actualizar el estado de un pedido</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#pruebas-de-la-api">Pruebas de la API</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#conclusiones">Conclusiones</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#licencia">Licencia</a></li>
+</ul>
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
+  
+  <div class="footer-item">
+    
+<p class="component-author">
+By Manuel Torres
+</p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+
+  <p class="copyright">
+    
+      © Copyright 2023.
+      <br/>
+    
+  </p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+</div>
+          </footer>
+        
+
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="../../../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b"></script>
+<script src="../../../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+  <footer class="bd-footer">
+  </footer>
+  </body>
+</html>

@@ -1,0 +1,790 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="../" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Bases de datos a gran escala &#8212; Aprendiendo bases de datos con Jupyter</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../_static/styles/theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="../_static/styles/bootstrap.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="../_static/styles/pydata-sphinx-theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+
+  
+  <link href="../_static/vendor/fontawesome/6.5.2/css/all.min.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.2/webfonts/fa-solid-900.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.2/webfonts/fa-brands-400.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.2/webfonts/fa-regular-400.woff2" />
+
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=03e43079" />
+    <link rel="stylesheet" type="text/css" href="../_static/styles/sphinx-book-theme.css?v=eba8b062" />
+    <link rel="stylesheet" type="text/css" href="../_static/togglebutton.css?v=13237357" />
+    <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="../_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css?v=be8a1c11" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-thebe.css?v=4fa983c6" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-design.min.css?v=95c83b7e" />
+  
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b" />
+<link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b" />
+  <script src="../_static/vendor/fontawesome/6.5.2/js/all.min.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+    <script src="../_static/documentation_options.js?v=9eb32ce0"></script>
+    <script src="../_static/doctools.js?v=9a2dae69"></script>
+    <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="../_static/copybutton.js?v=f281be69"></script>
+    <script src="../_static/scripts/sphinx-book-theme.js?v=887ef09a"></script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="../_static/togglebutton.js?v=4a39c7ea"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="../_static/design-tabs.js?v=f930bc37"></script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script async="async" src="../_static/sphinx-thebe.js?v=c100c467"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'notebooks/intro';</script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Tema 1. Modelos de almacenamiento no relacionales. El fenómeno NoSQL" href="Docs/Tema1/tema1.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-primary-sidebar-checkbox"/>
+  <label class="overlay overlay-primary" for="pst-primary-sidebar-checkbox"></label>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-secondary-sidebar-checkbox"/>
+  <label class="overlay overlay-secondary" for="pst-secondary-sidebar-checkbox"></label>
+  
+  <div class="search-button__wrapper">
+    <div class="search-button__overlay"></div>
+    <div class="search-button__search-container">
+<form class="bd-search d-flex align-items-center"
+      action="../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         id="search-input"
+         placeholder="Search this book..."
+         aria-label="Search this book..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form></div>
+  </div>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+        
+      
+      <div class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+    
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="#">
+  
+  
+  
+  
+  
+    
+    
+      
+    
+    
+    <img src="../_static/di.png" class="logo__image only-light" alt="Aprendiendo bases de datos con Jupyter - Home"/>
+    <script>document.write(`<img src="../_static/di.png" class="logo__image only-dark" alt="Aprendiendo bases de datos con Jupyter - Home"/>`);</script>
+  
+  
+</a></div>
+        <div class="sidebar-primary-item">
+
+ <script>
+ document.write(`
+   <button class="btn search-button-field search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass"></i>
+    <span class="search-button__default-text">Search</span>
+    <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+   </button>
+ `);
+ </script></div>
+        <div class="sidebar-primary-item"><nav class="bd-links bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
+        
+        <ul class="nav bd-sidenav bd-sidenav__home-link">
+            <li class="toctree-l1 current active">
+                <a class="reference internal" href="#">
+                    Bases de datos a gran escala
+                </a>
+            </li>
+        </ul>
+        <p aria-level="2" class="caption" role="heading"><span class="caption-text">Temario</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="Docs/Tema1/tema1.html">Tema 1. Modelos de almacenamiento no relacionales. El fenómeno NoSQL</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Docs/Tema2/tema2.html">Tema 2. Bases de datos clave-valor</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Docs/Tema3/tema3.html">Tema 3. Bases de datos orientadas a documentos</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Docs/Tema4/tema4.html">Tema 4. Bases de datos orientadas a grafos</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Docs/Tema5/tema5.html">Tema 5. Bases de datos orientadas a columnas</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Labs</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="Labs/Lab01/lab01.html">Lab 01. Consultas en MongoDB</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Labs/Lab02/lab02.html">Lab 02. Indexación en MongoDB</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Labs/Lab03/lab03.html">Lab 03. Desarrollo de un Blog con PHP y MongoDB</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Labs/Lab04/lab04.html">Lab 04. Framework de Agregación de MongoDB</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Labs/Lab05/lab05.html">Lab 05. Consultas en Neo4j</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Labs/Lab06/lab06.html">Lab 06. Desarrollo de un aplicación PHP para la consulta de información cinematográfica almacenada en Neo4j</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Casos de uso</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="CasosDeUso/cuadroDeMandosParaFinnhub/index.html">Desarrollo de un cuadro de mandos para Finnhub Stock</a></li>
+<li class="toctree-l1"><a class="reference internal" href="CasosDeUso/ofertasFlashRedis/index.html">Desarrollo de una API REST para gestión de ofertas flash con Slim Framework y Redis</a></li>
+<li class="toctree-l1"><a class="reference internal" href="CasosDeUso/valoracionesMongoDB/index.html">Desarrollo de una API REST para gestión de productos y valoraciones con Slim Framework y MongoDB</a></li>
+<li class="toctree-l1"><a class="reference internal" href="CasosDeUso/recomendacionesNeo4j/index.html">Desarrollo de una API REST para gestión de recomendaciones con Slim Framework y Neo4j</a></li>
+<li class="toctree-l1"><a class="reference internal" href="CasosDeUso/historialCassandra/index.html">Desarrollo de una API REST para gestión historial de pedidos y seguimiento en tiempo real con Express y Cassandra</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Actividades complementarias</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="ActividadesComplementarias/actividades.html">Descripción</a></li>
+<li class="toctree-l1"><a class="reference internal" href="ActividadesComplementarias/gestionRedTransporteMovilidadUrbana.html">Actividad complementaria. Gestión de una red de transporte y movilidad urbana</a></li>
+<li class="toctree-l1"><a class="reference internal" href="ActividadesComplementarias/gestionEmergenciasDesastresNaturales.html">Actividad complementaria. Gestión de emergencias y desastres naturales</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Licencia</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../LICENSE.html">Licencia</a></li>
+</ul>
+
+    </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+  </div>
+  
+  <div id="rtd-footer-container"></div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><button class="sidebar-toggle primary-toggle btn btn-sm" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</button></div>
+      
+    </div>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+<a href="https://github.com/ualmtorres/AprendiendoBasesDeDatosConJupyter" target="_blank"
+   class="btn btn-sm btn-source-repository-button"
+   title="Source repository"
+   data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fab fa-github"></i>
+  </span>
+
+</a>
+
+
+
+
+
+
+<div class="dropdown dropdown-download-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Download this page">
+    <i class="fas fa-download"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="../_sources/notebooks/intro.md" target="_blank"
+   class="btn btn-sm btn-download-source-button dropdown-item"
+   title="Download source file"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="btn__text-container">.md</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li>
+<button onclick="window.print()"
+  class="btn btn-sm btn-download-pdf-button dropdown-item"
+  title="Print to PDF"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="btn__text-container">.pdf</span>
+</button>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+<button onclick="toggleFullScreen()"
+  class="btn btn-sm btn-fullscreen-button"
+  title="Fullscreen mode"
+  data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="theme-switch fa-solid fa-sun fa-lg" data-mode="light"></i>
+    <i class="theme-switch fa-solid fa-moon fa-lg" data-mode="dark"></i>
+    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"></i>
+  </button>
+`);
+</script>
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm pst-navbar-icon search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
+  </button>
+`);
+</script>
+<button class="sidebar-toggle secondary-toggle btn btn-sm" title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="fa-solid fa-list"></span>
+</button>
+</div></div>
+      
+    </div>
+  
+</div>
+</div>
+              
+              
+
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1>Bases de datos a gran escala</h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+            <div>
+                <h2> Contents </h2>
+            </div>
+            <nav aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#introduccion">Introducción</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#sobre-la-guia-docente">Sobre la Guía docente</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#materia-con-la-que-se-relaciona-en-el-plan-de-estudios">Materia con la que se relaciona en el Plan de estudios:</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#conocimientos-recomendables">Conocimientos recomendables</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#contenidos">Contenidos</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#horario-de-clase-y-de-tutorias">Horario de clase y de tutorías</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#como-seguir-la-asignatura">Cómo seguir la asignatura</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#como-superar-la-asignatura">Cómo superar la asignatura</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#encuesta-inicial">Encuesta inicial</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#recursos">Recursos</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#tema-1-modelos-de-almacenamiento-no-relacionales-el-fenomeno-nosql">Tema 1. Modelos de almacenamiento no relacionales. El fenómeno NoSQL</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#tema-2-bases-de-datos-clave-valor">Tema 2. Bases de datos clave-valor</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#tema-3-bases-de-datos-orientadas-a-documentos">Tema 3. Bases de datos orientadas a documentos</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#tema-4-bases-de-datos-orientadas-a-grafos">Tema 4. Bases de datos orientadas a grafos</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#tema-5-bases-de-datos-orientadas-a-columnas">Tema 5. Bases de datos orientadas a columnas</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#trabajo-autonomo">Trabajo autónomo</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#actividades-complementarias">Actividades complementarias</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#actividades-no-presenciales">Actividades no presenciales</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#licencia">Licencia</a></li>
+</ul>
+            </nav>
+        </div>
+    </div>
+</div>
+
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <section class="tex2jax_ignore mathjax_ignore" id="bases-de-datos-a-gran-escala">
+<h1>Bases de datos a gran escala<a class="headerlink" href="#bases-de-datos-a-gran-escala" title="Link to this heading">#</a></h1>
+<p>Manuel Torres</p>
+<p>Máster en Ingeniería Informática. Universidad de Almería</p>
+<hr class="docutils" />
+<p>La asignatura Bases de datos a gran escala es una asignatura optativa del módulo de Especialidad en Big Data del <a class="reference external" href="https://www.ual.es/estudios/masteres/presentacion/7114">Máster oficial en Ingeniería Informática</a> de la UAL. En la asignatura se hace una introducción a las bases de datos no relacionales (NoSQL) y a su uso en aplicaciones escalables.</p>
+<p><a class="reference external" href="https://ualmtorres.github.io/BDGEJupyterBook"><img alt="Jupyter Book Badge" src="https://jupyterbook.org/badge.svg" /></a>
+<a class="reference external" href="https://doi.org/10.5281/zenodo.15063708"><img alt="DOI" src="https://zenodo.org/badge/DOI/10.5281/zenodo.15063708.svg" /></a></p>
+<p><strong>Objetivos</strong></p>
+<ul class="simple">
+<li><p>Conocer los principales modos de almacenamiento NoSQL</p></li>
+<li><p>Realizar consultas basicas y de agregacion de datos</p></li>
+<li><p>Conocer modos de indexacion para mejorar el rendimiento de la base de datos</p></li>
+<li><p>Conocer las tecnicas de replicacion y sharding</p></li>
+<li><p>Desarrollar aplicaciones sobre bases de datos NoSQL</p></li>
+<li><p>Aplicar los conocimientos adquiridos y resolver problemas en entornos nuevos o poco conocidos dentro de contextos más amplios (o multidisciplinares) relacionados con su área de estudio</p></li>
+<li><p>Aplicar los conocimientos adquiridos y resolver problemas en entornos nuevos o poco conocidos dentro de contextos más amplios y multidisciplinares, siendo capaces de integrar estos conocimientos</p></li>
+<li><p>Modelar, diseñar, definir la arquitectura, implantar, gestionar, operar, administrar y mantener aplicaciones, redes, sistemas, servicios y contenidos informáticos</p></li>
+<li><p>Analizar las necesidades de información que se plantean en un entorno y llevar a cabo en todas sus etapas el proceso de construcción de un sistema de información</p></li>
+</ul>
+<section id="introduccion">
+<h2>Introducción<a class="headerlink" href="#introduccion" title="Link to this heading">#</a></h2>
+<p>El crecimiento en la produccion de los datos de usuario, sensores, sistemas GPS, y demas, han disparado el tamaño y el tipo de los datos generados, los cuales ademas pueden ser de naturaleza no estructurada. Estos grandes volumenes de datos suponen nuevos desafios en terminos de almacenamiento y procesamiento, por los que las tecnicas tradicionales de gestion de datos no son aplicables directamente en este contexto. Bajo el termino de NoSQL se encuentran los principales productos de bases de datos para tratar con este problema, como son las bases de datos orientadas a columnas, bases de datos clave-valor y bases de datos de documentos. En esta asignatura se estudian los conceptos fundamentales relacionados con NoSQL en el contexto de diferentes productos comerciales.</p>
+</section>
+<section id="sobre-la-guia-docente">
+<h2>Sobre la Guía docente<a class="headerlink" href="#sobre-la-guia-docente" title="Link to this heading">#</a></h2>
+<section id="materia-con-la-que-se-relaciona-en-el-plan-de-estudios">
+<h3>Materia con la que se relaciona en el Plan de estudios:<a class="headerlink" href="#materia-con-la-que-se-relaciona-en-el-plan-de-estudios" title="Link to this heading">#</a></h3>
+<p>La asignatura Bases de datos a gran escala está directamente relacionada con las asignaturas siguientes:</p>
+<ul class="simple">
+<li><p>Cloud computing</p></li>
+<li><p>Infraestructura Big Data</p></li>
+<li><p>Análisis de grandes volúmenes de datos</p></li>
+<li><p>Computación sobre datos masivos</p></li>
+<li><p>Visualización de datos</p></li>
+<li><p>Aplicaciones de Big data</p></li>
+</ul>
+</section>
+<section id="conocimientos-recomendables">
+<h3>Conocimientos recomendables<a class="headerlink" href="#conocimientos-recomendables" title="Link to this heading">#</a></h3>
+<ul class="simple">
+<li><p>Bases de datos</p></li>
+<li><p>Linux</p></li>
+<li><p>Git</p></li>
+<li><p>Desarrollo web</p></li>
+</ul>
+</section>
+</section>
+<section id="contenidos">
+<h2>Contenidos<a class="headerlink" href="#contenidos" title="Link to this heading">#</a></h2>
+<ul class="simple">
+<li><p>Modelos de almacenamiento no relacionales (4 horas)</p>
+<ul>
+<li><p>El fenomeno NoSQL</p></li>
+<li><p>Modelos de almacenamiento</p></li>
+</ul>
+</li>
+<li><p>Bases de datos no relacionales (14 horas)</p>
+<ul>
+<li><p>Bases de datos clave-valor</p></li>
+<li><p>Bases de datos orientadas a documentos</p></li>
+<li><p>Bases de datos orientadas a grafos</p></li>
+<li><p>Bases de datos orientadas a columnas</p></li>
+</ul>
+</li>
+<li><p>Escalabilidad de bases de datos</p>
+<ul>
+<li><p>Replicación</p></li>
+<li><p>Sharding</p></li>
+</ul>
+</li>
+<li><p>Desarrollo de aplicaciones para bases de datos a gran escala</p></li>
+</ul>
+<p><a class="reference internal" href="PlanificacionBDGE.html"><span class="doc std std-doc">Planificación de la asignatura</span></a></p>
+</section>
+<section id="horario-de-clase-y-de-tutorias">
+<h2>Horario de clase y de tutorías<a class="headerlink" href="#horario-de-clase-y-de-tutorias" title="Link to this heading">#</a></h2>
+<ul class="simple">
+<li><p>Clases: Aula 22 - Aulario V (Aulas de Informática)</p></li>
+<li><p>Sesiones presenciales (<a class="reference internal" href="PlanificacionBDGE.html"><span class="doc std std-doc">Planificación de la asignatura</span></a>)</p>
+<ul>
+<li><p>Horario: 16h a 18h</p></li>
+<li><p>8 sesiones presenciales = 16 horas.</p></li>
+<li><p>7 sesiones no presenciales = 14 horas</p></li>
+</ul>
+</li>
+<li><p>Profesores</p>
+<ul>
+<li><p>Manuel Torres Gil</p>
+<ul>
+<li><p>Tutorías: Lunes y Viernes de 11h a 13:30h. Martes de 12:30h a 13:30h. Cita previa y a través de Google Meet</p></li>
+<li><p>Despacho: 2.19.5 CITE III (2a planta)</p></li>
+<li><p>email: <a class="reference external" href="mailto:mtorres&#37;&#52;&#48;ual&#46;es">mailto:mtorres<span>&#64;</span>ual<span>&#46;</span>es</a>[mtorres&#64;ual.es]</p></li>
+<li><p>Twitter: <a class="reference external" href="https://twitter.com/ualmtorres">&#64;ualmtorres</a></p></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</section>
+<section id="como-seguir-la-asignatura">
+<h2>Cómo seguir la asignatura<a class="headerlink" href="#como-seguir-la-asignatura" title="Link to this heading">#</a></h2>
+<ul class="simple">
+<li><p>Material disponible en</p>
+<ul>
+<li><p>Aula Virtual UAL</p></li>
+<li><p><a class="reference external" href="https://ualmtorres.github.io/AsignaturaBasesDatosGranEscala/">Repositorio GitHub</a></p></li>
+</ul>
+</li>
+<li><p>Metodología docente</p>
+<ul>
+<li><p>Clases participativas</p></li>
+<li><p>Contenido práctico</p></li>
+<li><p>Elaboración de trabajos prácticos</p></li>
+<li><p>Actividades no presenciales</p></li>
+<li><p>Tutorías</p></li>
+</ul>
+</li>
+</ul>
+</section>
+<section id="como-superar-la-asignatura">
+<h2>Cómo superar la asignatura<a class="headerlink" href="#como-superar-la-asignatura" title="Link to this heading">#</a></h2>
+<ul class="simple">
+<li><p>Cada tema tiene una o varias actividades teórico/prácticas, que se entregarán de forma individual sobre:</p>
+<ul>
+<li><p>Consultas sobre bases de datos NoSQL</p></li>
+<li><p>Desarrollo de aplicaciones sobre bases de datos NoSQL</p></li>
+<li><p>Despliegue de aplicaciones</p></li>
+</ul>
+</li>
+</ul>
+<p><strong>Criterios e Instrumentos de evaluación</strong></p>
+<ul class="simple">
+<li><p>Los ejercicios y proyectos prácticos deberán ser presentados en la fecha indicada utilizando el Aula Virtual y/o las herramientas y servicios cloud, como repositorios de código, proveedores cloud, servicios en la nube, etc., donde quedan registradas la acciones realizadas.</p></li>
+<li><p>En las actividades en equipo, se tendrá en cuenta tanto el trabajo del equipo en su conjunto, como la aportación individual realizada por cada miembro del equipo.</p></li>
+</ul>
+</section>
+<section id="encuesta-inicial">
+<h2>Encuesta inicial<a class="headerlink" href="#encuesta-inicial" title="Link to this heading">#</a></h2>
+<p>Si eres alumno de la asignatura en la UAL completa esta <a class="reference external" href="https://forms.gle/V43eetd5r7D4KYuU9">pequeña encuesta</a> que permita valorar tus conocimientos iniciales y adaptar el desarrollo de la asignatura.</p>
+</section>
+<section id="recursos">
+<h2>Recursos<a class="headerlink" href="#recursos" title="Link to this heading">#</a></h2>
+<p><strong>Entorno básico de pruebas</strong></p>
+<p>Archivo <a class="reference external" href="https://gist.github.com/ualmtorres/c85c3caf61eb9db953ebd5bd9d77ab53">docker-compose.yml</a> para pruebas con las principales bases de datos NoSQL usadas.</p>
+<section id="tema-1-modelos-de-almacenamiento-no-relacionales-el-fenomeno-nosql">
+<h3>Tema 1. Modelos de almacenamiento no relacionales. El fenómeno NoSQL<a class="headerlink" href="#tema-1-modelos-de-almacenamiento-no-relacionales-el-fenomeno-nosql" title="Link to this heading">#</a></h3>
+<ul class="simple">
+<li><p><a class="reference external" href="https://docs.google.com/presentation/d/1jFvI2dYeVBPPnwzm8q4CmO2ABXXxSfThHPg33eHEHck/edit?usp=sharing">Presentación: El fenómeno NoSQL</a></p></li>
+<li><p><a class="reference internal" href="Docs/Tema1/Enlaces.html"><span class="doc std std-doc">Enlaces de interés</span></a></p></li>
+</ul>
+</section>
+<section id="tema-2-bases-de-datos-clave-valor">
+<h3>Tema 2. Bases de datos clave-valor<a class="headerlink" href="#tema-2-bases-de-datos-clave-valor" title="Link to this heading">#</a></h3>
+<ul class="simple">
+<li><p><a class="reference external" href="https://docs.google.com/presentation/d/1zzATSnpLQf2-7dmB-yRJkogC9e-HRd5YT5brjLgGiig/edit?usp=sharing">Presentación: Bases de datos clave-valor</a></p></li>
+<li><p><a class="reference internal" href="Docs/Tema2/redis.html"><span class="doc std std-doc">Bases de datos clave-valor</span></a></p></li>
+<li><p><a class="reference external" href="https://ualmtorres.github.io/SeminarioRedis">Código de ejemplos de la presentación</a></p></li>
+<li><p>Archivo <a class="reference external" href="https://gist.github.com/ualmtorres/102a65abc4fea2f3929b48d6803a6b87">docker-compose.yml</a> con Redis y Redis Commander</p></li>
+<li><p><a class="reference external" href="http://ualmtorres.github.io/howtos/RedisPHP/">Tutorial: Interacción con Redis desde PHP</a></p></li>
+<li><p><a class="reference external" href="http://ualmtorres.github.io/howtos/RedisJava/">Tutorial: Interacción con Redis desde Java</a></p></li>
+<li><p><a class="reference internal" href="CasosDeUso/ofertasFlashRedis/index.html"><span class="doc std std-doc">Desarrollo de una API REST para gestión de ofertas flash con Slim Framework y Redis</span></a></p></li>
+<li><p><a class="reference internal" href="Docs/Tema2/Enlaces.html"><span class="doc std std-doc">Enlaces de interés</span></a></p></li>
+</ul>
+</section>
+<section id="tema-3-bases-de-datos-orientadas-a-documentos">
+<h3>Tema 3. Bases de datos orientadas a documentos<a class="headerlink" href="#tema-3-bases-de-datos-orientadas-a-documentos" title="Link to this heading">#</a></h3>
+<ul class="simple">
+<li><p><a class="reference external" href="https://docs.google.com/presentation/d/1V4eY5CV23bNb1PBBmzR3We5LsQht496WcymFM-EKRbM/edit?usp=sharing">Presentación: Bases de datos orientadas a documentos</a></p></li>
+<li><p>Código de ejemplos de la presentación [<a class="reference external" href="https://gist.github.com/ualmtorres/c04eaaa15789bfef2ebec3f9bcf820a6">Introducción</a>] [<a class="reference external" href="https://gist.github.com/ualmtorres/7fc041515f8a74e5c6fdb289ed241e4f">Agregación</a>] [<a class="reference external" href="https://gist.github.com/ualmtorres/2f99fff89517687bcd87aaf8523fd112">Indexación</a>]</p></li>
+<li><p>Archivo <a class="reference external" href="https://gist.github.com/ualmtorres/48fd676d2e07cd9c905caf7fed3f5bbf">docker-compose.yml</a> con MongoDB y Mongo-express</p></li>
+<li><p><a class="reference external" href="http://ualmtorres.github.io/howtos/MongoDBPHP/">Tutorial: Interacción con MongoDB desde PHP</a></p></li>
+<li><p><a class="reference external" href="http://ualmtorres.github.io/howtos/MongoDBJava/">Tutorial: Interacción con MongoDB desde Java</a></p></li>
+<li><p><a class="reference internal" href="CasosDeUso/valoracionesMongoDB/index.html"><span class="doc std std-doc">Desarrollo de una API REST para gestión de productos y valoraciones con Slim Framework y MongoDB</span></a></p></li>
+<li><p><a class="reference internal" href="Docs/Tema3/Enlaces.html"><span class="doc std std-doc">Enlaces de interés</span></a></p></li>
+</ul>
+</section>
+<section id="tema-4-bases-de-datos-orientadas-a-grafos">
+<h3>Tema 4. Bases de datos orientadas a grafos<a class="headerlink" href="#tema-4-bases-de-datos-orientadas-a-grafos" title="Link to this heading">#</a></h3>
+<ul class="simple">
+<li><p><a class="reference external" href="https://docs.google.com/presentation/d/1Fgi6YYBOGAYAQWEyzLL8yGep22sMo0DR2RreYIZRyj4/edit?usp=sharing">Presentación: Bases de datos orientadas a grafos</a></p></li>
+<li><p><a class="reference internal" href="CasosDeUso/recomendacionesNeo4j/index.html"><span class="doc std std-doc">Desarrollo de una API REST para gestión de recomendaciones con Slim Framework y Neo4j</span></a></p></li>
+<li><p><a class="reference internal" href="Docs/Tema4/Enlaces.html"><span class="doc std std-doc">Enlaces de interés</span></a></p></li>
+</ul>
+</section>
+<section id="tema-5-bases-de-datos-orientadas-a-columnas">
+<h3>Tema 5. Bases de datos orientadas a columnas<a class="headerlink" href="#tema-5-bases-de-datos-orientadas-a-columnas" title="Link to this heading">#</a></h3>
+<ul class="simple">
+<li><p><a class="reference external" href="https://docs.google.com/presentation/d/1pHhOeKbeO4k2nzbZLoFeTx72kzUyDvhzGRCGfajk4no/edit?usp=sharing">Presentación: Bases de datos orientadas a columnas</a></p></li>
+<li><p><a class="reference external" href="https://gist.github.com/ualmtorres/ca414f89b11765a651e32f9f48b08d42">Cassandra con Docker</a></p></li>
+<li><p><a class="reference external" href="https://github.com/ualmtorres/CassandraDocker">Cassandra con Docker Compose</a></p></li>
+<li><p><a class="reference internal" href="Docs/Tema5/cassandra.html"><span class="doc std std-doc">Tutorial: Cassandra</span></a></p></li>
+<li><p><a class="reference external" href="https://gist.github.com/ualmtorres/0c3cb28cf35401d9ac984f2f02895dd4">Scripts Tutorial Cassandra</a></p></li>
+<li><p><a class="reference internal" href="CasosDeUso/historialCassandra/index.html"><span class="doc std std-doc">Desarrollo de una API REST para gestión historial de pedidos y seguimiento en tiempo real con Express y Cassandra</span></a></p></li>
+<li><p><a class="reference internal" href="Docs/Tema5/Enlaces.html"><span class="doc std std-doc">Enlaces de interés</span></a></p></li>
+</ul>
+</section>
+</section>
+<section id="trabajo-autonomo">
+<h2>Trabajo autónomo<a class="headerlink" href="#trabajo-autonomo" title="Link to this heading">#</a></h2>
+<ul class="simple">
+<li><p><a class="reference internal" href="Labs/Lab01/lab01.html"><span class="doc std std-doc">Lab 01. Consultas básicas en MongoDB</span></a></p></li>
+<li><p><a class="reference internal" href="Labs/Lab02/lab02.html"><span class="doc std std-doc">Lab 02. Manejo de índices en MongoDB</span></a></p></li>
+<li><p><a class="reference internal" href="Labs/Lab03/lab03.html"><span class="doc std std-doc">Lab 03. Desarrollo de un Blog con PHP y MongoDB</span></a></p></li>
+<li><p><a class="reference internal" href="Labs/Lab04/lab04.html"><span class="doc std std-doc">Lab 04. Framework de Agregación de MongoDB</span></a></p></li>
+<li><p><a class="reference internal" href="Labs/Lab05/lab05.html"><span class="doc std std-doc">Lab 05. Consultas en Neo4j</span></a></p></li>
+<li><p><a class="reference internal" href="Labs/Lab06/lab06.html"><span class="doc std std-doc">Lab 06. Desarrollo de un aplicación PHP para la consulta de información cinematográfica almacenada en Neo4j</span></a></p></li>
+</ul>
+</section>
+<section id="actividades-complementarias">
+<h2>Actividades complementarias<a class="headerlink" href="#actividades-complementarias" title="Link to this heading">#</a></h2>
+<p>Puedes profundizar en contenidos de la asignatura a través de estos recursos:</p>
+<ul class="simple">
+<li><p><a class="reference external" href="https://ualmtorres.github.io/posts/tutorial-api-rest-slim-redis-ofertas-flash">Desarrollo de una API REST para gestión de ofertas flash con Slim Framework y Redis</a></p></li>
+<li><p><a class="reference external" href="https://ualmtorres.github.io/posts/tutorial-api-rest-slim-mongodb-productos-valoraciones">Desarrollo de una API REST para gestión de productos y valoraciones con Slim Framework y MongoDB</a></p></li>
+<li><p><a class="reference external" href="https://ualmtorres.github.io/posts/tutorial-api-rest-slim-neo4j-recomendaciones">Desarrollo de una API REST para gestión de recomendaciones con Slim Framework y Neo4j</a></p></li>
+<li><p><a class="reference external" href="https://ualmtorres.github.io/posts/tutorial-api-rest-express-cassandra-pedidos">Desarrollo de una API REST para gestión historial de pedidos y seguimiento en tiempo real con Express y Cassandra</a></p></li>
+<li><p><a class="reference internal" href="#ActividadesComplementarias/actividadesComplementarias"><span class="xref myst">Actividades complementarias</span></a></p></li>
+</ul>
+</section>
+<section id="actividades-no-presenciales">
+<h2>Actividades no presenciales<a class="headerlink" href="#actividades-no-presenciales" title="Link to this heading">#</a></h2>
+<ul class="simple">
+<li><p>No disponible aún.</p></li>
+</ul>
+</section>
+<section id="licencia">
+<h2>Licencia<a class="headerlink" href="#licencia" title="Link to this heading">#</a></h2>
+<p>Licencia CC BY-NC-ND 4.0</p>
+<p>Copyright (c) 2025 [Manuel Torres - Departamento de Informática - Universidad de Almería]</p>
+<p>Este proyecto está licenciado bajo la Licencia CC BY-NC-ND 4.0. Esto significa que puedes compartir el proyecto siempre que cites al autor, no lo uses para fines comerciales y no realices obras derivadas.</p>
+</section>
+<div class="toctree-wrapper compound">
+</div>
+<div class="toctree-wrapper compound">
+</div>
+<div class="toctree-wrapper compound">
+</div>
+<div class="toctree-wrapper compound">
+</div>
+<div class="toctree-wrapper compound">
+</div>
+</section>
+
+    <script type="text/x-thebe-config">
+    {
+        requestKernel: true,
+        binderOptions: {
+            repo: "binder-examples/jupyter-stacks-datascience",
+            ref: "master",
+        },
+        codeMirrorConfig: {
+            theme: "abcdef",
+            mode: "python"
+        },
+        kernelOptions: {
+            name: "python3",
+            path: "./notebooks"
+        },
+        predefinedOutput: true
+    }
+    </script>
+    <script>kernelName = 'python3'</script>
+
+                </article>
+              
+
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+    <a class="right-next"
+       href="Docs/Tema1/tema1.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">Tema 1. Modelos de almacenamiento no relacionales. El fenómeno NoSQL</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+  <div class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> Contents
+  </div>
+  <nav class="bd-toc-nav page-toc">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#introduccion">Introducción</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#sobre-la-guia-docente">Sobre la Guía docente</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#materia-con-la-que-se-relaciona-en-el-plan-de-estudios">Materia con la que se relaciona en el Plan de estudios:</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#conocimientos-recomendables">Conocimientos recomendables</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#contenidos">Contenidos</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#horario-de-clase-y-de-tutorias">Horario de clase y de tutorías</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#como-seguir-la-asignatura">Cómo seguir la asignatura</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#como-superar-la-asignatura">Cómo superar la asignatura</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#encuesta-inicial">Encuesta inicial</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#recursos">Recursos</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#tema-1-modelos-de-almacenamiento-no-relacionales-el-fenomeno-nosql">Tema 1. Modelos de almacenamiento no relacionales. El fenómeno NoSQL</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#tema-2-bases-de-datos-clave-valor">Tema 2. Bases de datos clave-valor</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#tema-3-bases-de-datos-orientadas-a-documentos">Tema 3. Bases de datos orientadas a documentos</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#tema-4-bases-de-datos-orientadas-a-grafos">Tema 4. Bases de datos orientadas a grafos</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#tema-5-bases-de-datos-orientadas-a-columnas">Tema 5. Bases de datos orientadas a columnas</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#trabajo-autonomo">Trabajo autónomo</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#actividades-complementarias">Actividades complementarias</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#actividades-no-presenciales">Actividades no presenciales</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#licencia">Licencia</a></li>
+</ul>
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
+  
+  <div class="footer-item">
+    
+<p class="component-author">
+By Manuel Torres
+</p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+
+  <p class="copyright">
+    
+      © Copyright 2023.
+      <br/>
+    
+  </p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+</div>
+          </footer>
+        
+
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b"></script>
+<script src="../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+  <footer class="bd-footer">
+  </footer>
+  </body>
+</html>

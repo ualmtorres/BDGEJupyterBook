@@ -1,0 +1,1447 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="../../../" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Desarrollo de un cuadro de mandos para Finnhub Stock &#8212; Aprendiendo bases de datos con Jupyter</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../../../_static/styles/theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="../../../_static/styles/bootstrap.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="../../../_static/styles/pydata-sphinx-theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+
+  
+  <link href="../../../_static/vendor/fontawesome/6.5.2/css/all.min.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="../../../_static/vendor/fontawesome/6.5.2/webfonts/fa-solid-900.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../../../_static/vendor/fontawesome/6.5.2/webfonts/fa-brands-400.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../../../_static/vendor/fontawesome/6.5.2/webfonts/fa-regular-400.woff2" />
+
+    <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=03e43079" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/styles/sphinx-book-theme.css?v=eba8b062" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/togglebutton.css?v=13237357" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css?v=be8a1c11" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/sphinx-thebe.css?v=4fa983c6" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/sphinx-design.min.css?v=95c83b7e" />
+  
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../../../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b" />
+<link rel="preload" as="script" href="../../../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b" />
+  <script src="../../../_static/vendor/fontawesome/6.5.2/js/all.min.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+    <script src="../../../_static/documentation_options.js?v=9eb32ce0"></script>
+    <script src="../../../_static/doctools.js?v=9a2dae69"></script>
+    <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../../_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="../../../_static/copybutton.js?v=f281be69"></script>
+    <script src="../../../_static/scripts/sphinx-book-theme.js?v=887ef09a"></script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="../../../_static/togglebutton.js?v=4a39c7ea"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="../../../_static/design-tabs.js?v=f930bc37"></script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script async="async" src="../../../_static/sphinx-thebe.js?v=c100c467"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'notebooks/CasosDeUso/cuadroDeMandosParaFinnhub/index';</script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" />
+    <link rel="next" title="Desarrollo de una API REST para gestión de ofertas flash con Slim Framework y Redis" href="../ofertasFlashRedis/index.html" />
+    <link rel="prev" title="Lab 06. Desarrollo de un aplicación PHP para la consulta de información cinematográfica almacenada en Neo4j" href="../../Labs/Lab06/lab06.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-primary-sidebar-checkbox"/>
+  <label class="overlay overlay-primary" for="pst-primary-sidebar-checkbox"></label>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-secondary-sidebar-checkbox"/>
+  <label class="overlay overlay-secondary" for="pst-secondary-sidebar-checkbox"></label>
+  
+  <div class="search-button__wrapper">
+    <div class="search-button__overlay"></div>
+    <div class="search-button__search-container">
+<form class="bd-search d-flex align-items-center"
+      action="../../../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         id="search-input"
+         placeholder="Search this book..."
+         aria-label="Search this book..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form></div>
+  </div>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+      <div class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+    
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="../../intro.html">
+  
+  
+  
+  
+  
+    
+    
+      
+    
+    
+    <img src="../../../_static/di.png" class="logo__image only-light" alt="Aprendiendo bases de datos con Jupyter - Home"/>
+    <script>document.write(`<img src="../../../_static/di.png" class="logo__image only-dark" alt="Aprendiendo bases de datos con Jupyter - Home"/>`);</script>
+  
+  
+</a></div>
+        <div class="sidebar-primary-item">
+
+ <script>
+ document.write(`
+   <button class="btn search-button-field search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass"></i>
+    <span class="search-button__default-text">Search</span>
+    <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+   </button>
+ `);
+ </script></div>
+        <div class="sidebar-primary-item"><nav class="bd-links bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
+        
+        <ul class="nav bd-sidenav bd-sidenav__home-link">
+            <li class="toctree-l1">
+                <a class="reference internal" href="../../intro.html">
+                    Bases de datos a gran escala
+                </a>
+            </li>
+        </ul>
+        <p aria-level="2" class="caption" role="heading"><span class="caption-text">Temario</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../../Docs/Tema1/tema1.html">Tema 1. Modelos de almacenamiento no relacionales. El fenómeno NoSQL</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../Docs/Tema2/tema2.html">Tema 2. Bases de datos clave-valor</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../Docs/Tema3/tema3.html">Tema 3. Bases de datos orientadas a documentos</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../Docs/Tema4/tema4.html">Tema 4. Bases de datos orientadas a grafos</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../Docs/Tema5/tema5.html">Tema 5. Bases de datos orientadas a columnas</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Labs</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../../Labs/Lab01/lab01.html">Lab 01. Consultas en MongoDB</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../Labs/Lab02/lab02.html">Lab 02. Indexación en MongoDB</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../Labs/Lab03/lab03.html">Lab 03. Desarrollo de un Blog con PHP y MongoDB</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../Labs/Lab04/lab04.html">Lab 04. Framework de Agregación de MongoDB</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../Labs/Lab05/lab05.html">Lab 05. Consultas en Neo4j</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../Labs/Lab06/lab06.html">Lab 06. Desarrollo de un aplicación PHP para la consulta de información cinematográfica almacenada en Neo4j</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Casos de uso</span></p>
+<ul class="current nav bd-sidenav">
+<li class="toctree-l1 current active"><a class="current reference internal" href="#">Desarrollo de un cuadro de mandos para Finnhub Stock</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../ofertasFlashRedis/index.html">Desarrollo de una API REST para gestión de ofertas flash con Slim Framework y Redis</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../valoracionesMongoDB/index.html">Desarrollo de una API REST para gestión de productos y valoraciones con Slim Framework y MongoDB</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../recomendacionesNeo4j/index.html">Desarrollo de una API REST para gestión de recomendaciones con Slim Framework y Neo4j</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../historialCassandra/index.html">Desarrollo de una API REST para gestión historial de pedidos y seguimiento en tiempo real con Express y Cassandra</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Actividades complementarias</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../../ActividadesComplementarias/actividades.html">Descripción</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../ActividadesComplementarias/gestionRedTransporteMovilidadUrbana.html">Actividad complementaria. Gestión de una red de transporte y movilidad urbana</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../ActividadesComplementarias/gestionEmergenciasDesastresNaturales.html">Actividad complementaria. Gestión de emergencias y desastres naturales</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Licencia</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../../../LICENSE.html">Licencia</a></li>
+</ul>
+
+    </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+  </div>
+  
+  <div id="rtd-footer-container"></div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><button class="sidebar-toggle primary-toggle btn btn-sm" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</button></div>
+      
+    </div>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+<a href="https://github.com/ualmtorres/AprendiendoBasesDeDatosConJupyter" target="_blank"
+   class="btn btn-sm btn-source-repository-button"
+   title="Source repository"
+   data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fab fa-github"></i>
+  </span>
+
+</a>
+
+
+
+
+
+
+<div class="dropdown dropdown-download-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Download this page">
+    <i class="fas fa-download"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="../../../_sources/notebooks/CasosDeUso/cuadroDeMandosParaFinnhub/index.md" target="_blank"
+   class="btn btn-sm btn-download-source-button dropdown-item"
+   title="Download source file"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="btn__text-container">.md</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li>
+<button onclick="window.print()"
+  class="btn btn-sm btn-download-pdf-button dropdown-item"
+  title="Print to PDF"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="btn__text-container">.pdf</span>
+</button>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+<button onclick="toggleFullScreen()"
+  class="btn btn-sm btn-fullscreen-button"
+  title="Fullscreen mode"
+  data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="theme-switch fa-solid fa-sun fa-lg" data-mode="light"></i>
+    <i class="theme-switch fa-solid fa-moon fa-lg" data-mode="dark"></i>
+    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"></i>
+  </button>
+`);
+</script>
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm pst-navbar-icon search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
+  </button>
+`);
+</script>
+<button class="sidebar-toggle secondary-toggle btn btn-sm" title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="fa-solid fa-list"></span>
+</button>
+</div></div>
+      
+    </div>
+  
+</div>
+</div>
+              
+              
+
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1>Desarrollo de un cuadro de mandos para Finnhub Stock</h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+            <div>
+                <h2> Contents </h2>
+            </div>
+            <nav aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#introduccion">Introducción</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#configuracion-de-la-plataforma">Configuración de la plataforma</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#creacion-de-la-maquina-virtual-openstack-con-terraform">Creación de la máquina virtual OpenStack con Terraform</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#creacion-de-la-plataforma-de-data-streaming-y-visualizacion-con-docker">Creación de la plataforma de data streaming y visualización con Docker</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#configuracion-inicial-de-la-plataforma">Configuración inicial de la plataforma</a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#configuracion-de-kafka">Configuración de Kafka</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#configuracion-de-jupyter">Configuración de Jupyter</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#desarrollo-de-la-plataforma">Desarrollo de la plataforma</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#creacion-de-un-productor-de-datos-de-finnhub-stock">Creación de un productor de datos de Finnhub Stock</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#creacion-de-un-consumidor-de-datos-de-kafka">Creación de un consumidor de datos de Kafka</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#creacion-de-un-componente-spark-streaming">Creación de un componente Spark Streaming</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#visualizacion-de-los-datos-en-grafana">Visualización de los datos en Grafana</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#conclusiones">Conclusiones</a></li>
+</ul>
+            </nav>
+        </div>
+    </div>
+</div>
+
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <section class="tex2jax_ignore mathjax_ignore" id="desarrollo-de-un-cuadro-de-mandos-para-finnhub-stock">
+<h1>Desarrollo de un cuadro de mandos para Finnhub Stock<a class="headerlink" href="#desarrollo-de-un-cuadro-de-mandos-para-finnhub-stock" title="Link to this heading">#</a></h1>
+<p>José Antonio Martínez y Manuel Torres</p>
+<p>Bases de datos a gran escala. Máster en Ingeniería Informática. Universidad de Almería</p>
+<hr class="docutils" />
+<p>Finnhub Stock es una API que proporciona datos de acciones en tiempo real, noticias financieras y más. Es una herramienta útil para desarrolladores que desean crear aplicaciones financieras o realizar análisis de datos. En este tutorial vamos a ver cómo crear una plataforma alrededor de la API de Finnhub Stock. La plataforma ofrecerá un cuadro de mandos con información en tiempo real sobre las acciones bursátiles de una empresa. Los datos obtenidos de la API de Finnhub Stock se enviarán a un servidor Kafka para su procesamiento posterior mediante Spark Streaming. Los datos procesados se almacenarán en una base de datos Cassandra para su consulta y visualización en un cuadro de mandos en Grafana. Con estos componentes, podremos crear una plataforma completa para visualizar los precios en tiempo real de las acciones de una empresa. La plataforma nos permitirá realizar análisis de datos sobre las acciones y tomar decisiones informadas sobre inversiones financieras. La plataforma se instalará en un entorno de pruebas con Docker y se ejecutará sobre una máquina virtual OpenStack, la cual crearemos con Terraform.</p>
+<p><strong>Objetivos</strong></p>
+<ul class="simple">
+<li><p>Aprender a utilizar la API de Finnhub Stock para obtener datos de acciones en tiempo real.</p></li>
+<li><p>Desarrollar una plataforma de data streaming y visualización de Finnhub Stock con Apache Kafka, Apache Spark, Cassandra y Grafana.</p></li>
+<li><p>Crear un cuadro de mandos interactivo con Grafana para visualizar los precios en tiempo real de las acciones de una empresa.</p></li>
+<li><p>Destacar la importancia de la infraestructura como código (IaC) para despliegues automatizados.</p></li>
+</ul>
+<div class="admonition tip">
+<p class="admonition-title">Tip</p>
+<p>Disponibles en GitHub los siguientes repositorios:</p>
+<ul class="simple">
+<li><p><a class="reference external" href="https://github.com/ualmtorres/finnhub-data-streaming-terraform">Repositorio de creación de la máquina virtual OpenStack con Terraform</a></p></li>
+<li><p><a class="reference external" href="https://github.com/ualmtorres/finnhub-data-streaming-docker-compose">Repositorio de la plataforma de data streaming y visualización con Docker</a></p></li>
+<li><p><a class="reference external" href="https://github.com/ualmtorres/finnhub-data-streaming-workload-simulator">Repositorio de los productores, consumidores y procesadores de datos de Finnhub Stock</a></p></li>
+</ul>
+</div>
+<p>:numbered:</p>
+<section id="introduccion">
+<h2>Introducción<a class="headerlink" href="#introduccion" title="Link to this heading">#</a></h2>
+<p><a class="reference external" href="https://finnhub.io/">Finnhub Stock</a> es una API que proporciona datos de acciones en tiempo real, noticias financieras y más. Es una herramienta útil para desarrolladores que desean crear aplicaciones financieras o realizar análisis de datos. Actualmente, Finnhub Stock ofrece una API gratuita con una amplia gama de funcionalidades. Entre estas funcionalidades se incluyen la obtención de precios en tiempo real, datos históricos, información sobre empresas y más. Algunas de estas funcionalidades están disponibles en el plan gratuito, mientras que otras requieren una suscripción de pago. Los servicios están disponibles como API REST y Websocket, lo que permite a los desarrolladores elegir la forma de acceder a los datos. La API de Finnhub Stock es fácil de usar y proporciona una gran cantidad de datos para ayudarte a desarrollar tus aplicaciones financieras.</p>
+<p>En este tutorial vamos a ver cómo crear una plataforma alrededor de la API de Finnhub Stock. La plataforma creada ofrecerá un cuadro de mandos con información en tiempo real sobre las acciones de una empresa. Para ello, desarrollaremos los siguientes componentes:</p>
+<ul class="simple">
+<li><p>Un componente para consumir de la API de Finnhub Stock y obtener los datos de las acciones de una empresa. Este componente realizará solicitudes Websocket a la API para obtener los precios en tiempo real de las acciones. Los datos serán enviados a un servidor Kafka para su procesamiento posterior. Este componente actuará como <em>productor</em> de datos a la plataforma.</p></li>
+<li><p>Un componente Spark Streaming para procesar los datos de las acciones en tiempo real. Este componente leerá los datos del servidor Kafka y realizará cálculos sobre los precios de las acciones.</p></li>
+<li><p>Una base de datos para almacenar los datos procesados por el componente Spark Streaming. Utilizaremos una base de datos NoSQL como Cassandra para almacenar los datos de las acciones. Los datos se almacenarán en tablas que permitan realizar consultas eficientes sobre los precios de las acciones. Esta base de datos será el repositorio de datos de la plataforma.</p></li>
+<li><p>Un cuadro de mandos en Grafana para visualizar los datos de las acciones de una empresa. Utilizaremos Grafana para crear gráficos interactivos que muestren los precios en tiempo real de las acciones. Los gráficos se actualizarán automáticamente a medida que se reciban nuevos datos de la API de Finnhub Stock.</p></li>
+</ul>
+<p>La figura siguiente muestra la arquitectura de la plataforma que vamos a desarrollar.</p>
+<p><img alt="Arquitectura de la plataforma" src="../../../_images/architecture.png" /></p>
+<p>Con estos componentes, podremos crear una plataforma completa para visualizar los precios en tiempo real de las acciones de una empresa. La plataforma nos permitirá realizar análisis de datos sobre las acciones y tomar decisiones informadas sobre inversiones financieras.</p>
+<p>La figura siguiente muestra un ejemplo del cuadro de mandos que vamos a crear con Grafana. En el cuadro de mandos, podremos ver los precios en tiempo real de las acciones de una empresa. Los gráficos se actualizarán automáticamente a medida que se reciban nuevos datos de la API de Finnhub Stock y se procesen en la plataforma.</p>
+<p><img alt="Cuadro de mandos de Grafana" src="../../../_images/dashboard.png" /></p>
+</section>
+<section id="configuracion-de-la-plataforma">
+<h2>Configuración de la plataforma<a class="headerlink" href="#configuracion-de-la-plataforma" title="Link to this heading">#</a></h2>
+<p>Para configurar la plataforma, necesitaremos instalar y configurar los siguientes componentes:</p>
+<ul class="simple">
+<li><p>Apache Kafka: Utilizaremos <a class="reference external" href="https://kafka.apache.org/">Apache Kafka</a> como servidor de mensajería para guardar los datos recibidos de la API de Finnhub Stock y enviar los datos de las acciones al componente Spark Streaming.</p></li>
+<li><p>Apache Spark: Utilizaremos <a class="reference external" href="https://spark.apache.org/">Apache Spark</a> para procesar los datos de las acciones en tiempo real y realizar cálculos sobre los precios de las acciones.</p></li>
+<li><p>Apache Cassandra: Utilizaremos <a class="reference external" href="https://cassandra.apache.org/_/index.html">Apache Cassandra</a> como base de datos NoSQL para almacenar los datos de las acciones procesados por el componente Spark Streaming.</p></li>
+<li><p>Grafana: Utilizaremos <a class="reference external" href="https://grafana.com/">Grafana</a> para crear un cuadro de mandos interactivo que muestre los precios en tiempo real de las acciones de una empresa.</p></li>
+</ul>
+<p>En los siguientes pasos, veremos cómo instalar y configurar cada uno de estos componentes en nuestra plataforma.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Los scripts del tutorial para producir, consumir y procesar datos están programdos en Python.</p>
+</div>
+<p>Esta plataforma se instalará en un entorno de pruebas con Docker. Dicha plataforma se ejecutará sobre una máquina virtual en un cloud OpenStack, la cual crearemos con Infraestructura como Código (IaC) con Terraform.</p>
+<section id="creacion-de-la-maquina-virtual-openstack-con-terraform">
+<h3>Creación de la máquina virtual OpenStack con Terraform<a class="headerlink" href="#creacion-de-la-maquina-virtual-openstack-con-terraform" title="Link to this heading">#</a></h3>
+<p><a class="reference external" href="https://www.terraform.io/">Terraform</a> es una herramienta de código abierto que permite definir y configurar la infraestructura mediante programación, con código. Con Terraform, podemos definir nuestra infraestructura como código y desplegarla de forma automatizada. Para más información sobre Terraform, puedes consultar este <a class="reference external" href="https://ualmtorres.github.io/SeminarioTerraform/">tutorial sobre despliegue de infraestructura con Terraform</a>.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Para instalar Terraform, puedes seguir las instrucciones de la <a class="reference external" href="https://learn.hashicorp.com/tutorials/terraform/install-cli">documentación oficial de Terraform</a>.</p>
+</div>
+<p>En este caso, vamos a utilizar Terraform para crear una máquina virtual en OpenStack. La máquina virtual será el lugar donde desplegaremos nuestra plataforma de data streaming y visualización de Finnhub Stock. Cabe destacar lo siguiente:</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>El código de Terraform se encuentra en este <a class="reference external" href="https://github.com/ualmtorres/finnhub-data-streaming-terraform">repositorio de GitHub</a>.</p>
+</div>
+<ul>
+<li><p>Archivo <a class="reference external" href="https://github.com/ualmtorres/finnhub-data-streaming-terraform/blob/main/variables.tf"><code class="docutils literal notranslate"><span class="pre">variables.tf</span></code></a>: Define las variables necesarias para la configuración de la máquina virtual, como el nombre de la máquina, la imagen base, el sabor, la red, etc.</p>
+<div class="highlight-terraform notranslate"><div class="highlight"><pre><span></span><span class="kr">variable</span><span class="w"> </span><span class="nv">&quot;openstack_user_name&quot;</span><span class="w"> </span><span class="p">{}</span><span class="w"> </span><span class="err">①</span>
+<span class="kr">variable</span><span class="w"> </span><span class="nv">&quot;openstack_tenant_name&quot;</span><span class="w"> </span><span class="p">{}</span><span class="w"> </span><span class="err">②</span>
+<span class="kr">variable</span><span class="w"> </span><span class="nv">&quot;PASSWORD&quot;</span><span class="w"> </span><span class="p">{}</span><span class="w"> </span><span class="err">③</span>
+<span class="kr">variable</span><span class="w"> </span><span class="nv">&quot;openstack_auth_url&quot;</span><span class="w"> </span><span class="p">{}</span><span class="w"> </span><span class="err">④</span>
+<span class="kr">variable</span><span class="w"> </span><span class="nv">&quot;openstack_keypair&quot;</span><span class="w"> </span><span class="p">{}</span><span class="w"> </span><span class="err">⑤</span>
+<span class="kr">variable</span><span class="w"> </span><span class="nv">&quot;cidr&quot;</span><span class="w"> </span><span class="p">{}</span><span class="w"> </span><span class="err">⑥</span>
+
+<span class="kr">variable</span><span class="w"> </span><span class="nv">&quot;image_name&quot;</span><span class="w"> </span><span class="p">{}</span><span class="w"> </span><span class="err">⑦</span>
+<span class="kr">variable</span><span class="w"> </span><span class="nv">&quot;availability_zone&quot;</span><span class="w"> </span><span class="p">{}</span><span class="w"> </span><span class="err">⑧</span>
+<span class="kr">variable</span><span class="w"> </span><span class="nv">&quot;flavor_name&quot;</span><span class="w"> </span><span class="p">{}</span><span class="w"> </span><span class="err">⑨</span>
+<span class="kr">variable</span><span class="w"> </span><span class="nv">&quot;network_name&quot;</span><span class="w"> </span><span class="p">{}</span><span class="w"> </span><span class="err">⑩</span>
+<span class="kr">variable</span><span class="w"> </span><span class="nv">&quot;floating_ip&quot;</span><span class="w"> </span><span class="p">{}</span><span class="w">  </span><span class="err">⑪</span>
+
+<span class="kr">variable</span><span class="w"> </span><span class="nv">&quot;openstack_private_key_file&quot;</span><span class="w"> </span><span class="p">{}</span><span class="w"> </span><span class="err">⑫</span>
+</pre></div>
+</div>
+<ol class="arabic simple">
+<li><p>Nombre de usuario de OpenStack.</p></li>
+<li><p>Nombre del proyecto de OpenStack donde se creará la máquina virtual.</p></li>
+<li><p>Contraseña del usuario de OpenStack.</p></li>
+<li><p>URL de autenticación de OpenStack.</p></li>
+<li><p>Nombre del par de claves de OpenStack (contiene la clave pública).</p></li>
+<li><p>Rango de direcciones IP para la red de la máquina virtual.</p></li>
+<li><p>Nombre de la imagen base de la máquina virtual.</p></li>
+<li><p>Zona de disponibilidad de la máquina virtual.</p></li>
+<li><p>Sabor de la máquina virtual (tamaño de la instancia).</p></li>
+<li><p>Nombre de la red donde se conectará la máquina virtual.</p></li>
+<li><p>Dirección IP flotante para la máquina virtual.</p></li>
+<li><p>Ruta al archivo local de clave privada para conectarse a la máquina virtual.</p></li>
+</ol>
+</li>
+<li><p>Archivo <a class="reference external" href="https://github.com/ualmtorres/finnhub-data-streaming-terraform/blob/main/terraform.tfvars.example"><code class="docutils literal notranslate"><span class="pre">terraform.tfvars</span></code></a>: Define los valores de las variables necesarias para la configuración de la máquina virtual.</p>
+<div class="highlight-terraform notranslate"><div class="highlight"><pre><span></span><span class="na">openstack_user_name</span><span class="w">   </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;********&quot;</span>
+<span class="na">openstack_tenant_name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;********&quot;</span>
+<span class="na">openstack_auth_url</span><span class="w">    </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;********&quot;</span>
+<span class="na">openstack_keypair</span><span class="w">     </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;********&quot;</span>
+<span class="na">cidr</span><span class="w">                  </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;********&quot;</span>
+
+<span class="na">image_name</span><span class="w">            </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;********&quot;</span>
+<span class="na">availability_zone</span><span class="w">     </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;********&quot;</span>
+<span class="na">flavor_name</span><span class="w">           </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;********&quot;</span><span class="w"> </span><span class="err">①</span>
+<span class="na">network_name</span><span class="w">          </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;********&quot;</span>
+<span class="na">floating_ip</span><span class="w">           </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;********&quot;</span>
+
+<span class="na">openstack_private_key_file</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;********&quot;</span>
+</pre></div>
+</div>
+<ol class="arabic">
+<li><p>El tamaño de la instancia será de al menos 32 GB de RAM y 8 CPUs por la cantidad de servicios que se van a ejecutar y las necesidades de Spark Streaming.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>No se ha incluido la contraseña de OpenStack en el archivo <code class="docutils literal notranslate"><span class="pre">terraform.tfvars</span></code> por motivos de seguridad. Se puede definir la contraseña como una variable de entorno o introducirla manualmente al ejecutar Terraform.</p>
+</div>
+</li>
+</ol>
+</li>
+<li><p>Archivo <a class="reference external" href="https://github.com/ualmtorres/finnhub-data-streaming-terraform/blob/main/providers.tf"><code class="docutils literal notranslate"><span class="pre">provider.tf</span></code></a>: Define el proveedor de OpenStack y las credenciales necesarias para autenticarse en OpenStack.</p>
+<div class="highlight-terraform notranslate"><div class="highlight"><pre><span></span><span class="nb">terraform</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="na">required_version</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;&gt;= 0.14.0&quot;</span>
+<span class="w">  </span><span class="nb">required_providers</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nb">openstack</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span>
+<span class="w">      </span><span class="na">source</span><span class="w">  </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;terraform-provider-openstack/openstack&quot;</span>
+<span class="w">      </span><span class="na">version</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;~&gt; 1.53.0&quot;</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="p">}</span>
+<span class="kr">provider</span><span class="w"> </span><span class="nv">&quot;openstack&quot;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="na">user_name</span><span class="w">   </span><span class="o">=</span><span class="w"> </span><span class="nv">var.openstack_user_name</span>
+<span class="w">  </span><span class="na">tenant_name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">var.openstack_tenant_name</span>
+<span class="w">  </span><span class="na">password</span><span class="w">    </span><span class="o">=</span><span class="w"> </span><span class="nv">var.PASSWORD</span>
+<span class="w">  </span><span class="na">auth_url</span><span class="w">    </span><span class="o">=</span><span class="w"> </span><span class="nv">var.openstack_auth_url</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</li>
+<li><p>Archivo <a class="reference external" href="https://github.com/ualmtorres/finnhub-data-streaming-terraform/blob/main/security-groups.tf"><code class="docutils literal notranslate"><span class="pre">security-groups.tf</span></code></a>: Define el grupo de seguridad de OpenStack y las reglas necesarias para acceder a los componentes expuestos de la plataforma.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Se necesitan reglas de seguridad al menos para los puertos 22 (SSH), 443 (HTTPS), 19000 (Kafdrop), 4000 (Cassandra Web), 3000 (Grafana) y 8080 (Spark Master).</p>
+</div>
+<div class="highlight-terraform notranslate"><div class="highlight"><pre><span></span><span class="c1"># Create tradedataprocessing security group</span>
+<span class="kr">resource</span><span class="w"> </span><span class="nc">&quot;openstack_networking_secgroup_v2&quot;</span><span class="w"> </span><span class="nv">&quot;tradedataprocessing&quot;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="na">name</span><span class="w">        </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;tradedataprocessing&quot;</span>
+<span class="w">  </span><span class="na">description</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;data processing security group&quot;</span>
+<span class="p">}</span>
+
+<span class="kr">resource</span><span class="w"> </span><span class="nc">&quot;openstack_networking_secgroup_rule_v2&quot;</span><span class="w"> </span><span class="nv">&quot;ssh&quot;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="na">description</span><span class="w">       </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;SSH&quot;</span>
+<span class="w">  </span><span class="na">direction</span><span class="w">         </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;ingress&quot;</span>
+<span class="w">  </span><span class="na">ethertype</span><span class="w">         </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;IPv4&quot;</span>
+<span class="w">  </span><span class="na">protocol</span><span class="w">          </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;tcp&quot;</span>
+<span class="w">  </span><span class="na">port_range_max</span><span class="w">    </span><span class="o">=</span><span class="w"> </span><span class="m">22</span>
+<span class="w">  </span><span class="na">port_range_min</span><span class="w">    </span><span class="o">=</span><span class="w"> </span><span class="m">22</span>
+<span class="w">  </span><span class="na">security_group_id</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">openstack_networking_secgroup_v2.tradedataprocessing.id</span>
+<span class="p">}</span>
+
+<span class="kr">resource</span><span class="w"> </span><span class="nc">&quot;openstack_networking_secgroup_rule_v2&quot;</span><span class="w"> </span><span class="nv">&quot;https&quot;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="na">description</span><span class="w">       </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;HTTPS&quot;</span>
+<span class="w">  </span><span class="na">direction</span><span class="w">         </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;ingress&quot;</span>
+<span class="w">  </span><span class="na">ethertype</span><span class="w">         </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;IPv4&quot;</span>
+<span class="w">  </span><span class="na">protocol</span><span class="w">          </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;tcp&quot;</span>
+<span class="w">  </span><span class="na">port_range_max</span><span class="w">    </span><span class="o">=</span><span class="w"> </span><span class="m">443</span>
+<span class="w">  </span><span class="na">port_range_min</span><span class="w">    </span><span class="o">=</span><span class="w"> </span><span class="m">443</span>
+<span class="w">  </span><span class="na">security_group_id</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">openstack_networking_secgroup_v2.tradedataprocessing.id</span>
+<span class="p">}</span>
+
+<span class="kr">resource</span><span class="w"> </span><span class="nc">&quot;openstack_networking_secgroup_rule_v2&quot;</span><span class="w"> </span><span class="nv">&quot;kafdrop&quot;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="na">description</span><span class="w">       </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;kafdrop&quot;</span>
+<span class="w">  </span><span class="na">direction</span><span class="w">         </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;ingress&quot;</span>
+<span class="w">  </span><span class="na">ethertype</span><span class="w">         </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;IPv4&quot;</span>
+<span class="w">  </span><span class="na">protocol</span><span class="w">          </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;tcp&quot;</span>
+<span class="w">  </span><span class="na">port_range_max</span><span class="w">    </span><span class="o">=</span><span class="w"> </span><span class="m">19000</span>
+<span class="w">  </span><span class="na">port_range_min</span><span class="w">    </span><span class="o">=</span><span class="w"> </span><span class="m">19000</span>
+<span class="w">  </span><span class="na">security_group_id</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">openstack_networking_secgroup_v2.tradedataprocessing.id</span>
+<span class="p">}</span>
+
+<span class="kr">resource</span><span class="w"> </span><span class="nc">&quot;openstack_networking_secgroup_rule_v2&quot;</span><span class="w"> </span><span class="nv">&quot;cassandraweb&quot;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="na">description</span><span class="w">       </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;cassandraweb&quot;</span>
+<span class="w">  </span><span class="na">direction</span><span class="w">         </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;ingress&quot;</span>
+<span class="w">  </span><span class="na">ethertype</span><span class="w">         </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;IPv4&quot;</span>
+<span class="w">  </span><span class="na">protocol</span><span class="w">          </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;tcp&quot;</span>
+<span class="w">  </span><span class="na">port_range_max</span><span class="w">    </span><span class="o">=</span><span class="w"> </span><span class="m">4000</span>
+<span class="w">  </span><span class="na">port_range_min</span><span class="w">    </span><span class="o">=</span><span class="w"> </span><span class="m">4000</span>
+<span class="w">  </span><span class="na">security_group_id</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">openstack_networking_secgroup_v2.tradedataprocessing.id</span>
+<span class="p">}</span>
+
+<span class="kr">resource</span><span class="w"> </span><span class="nc">&quot;openstack_networking_secgroup_rule_v2&quot;</span><span class="w"> </span><span class="nv">&quot;grafana&quot;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="na">description</span><span class="w">       </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;grafana&quot;</span>
+<span class="w">  </span><span class="na">direction</span><span class="w">         </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;ingress&quot;</span>
+<span class="w">  </span><span class="na">ethertype</span><span class="w">         </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;IPv4&quot;</span>
+<span class="w">  </span><span class="na">protocol</span><span class="w">          </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;tcp&quot;</span>
+<span class="w">  </span><span class="na">port_range_max</span><span class="w">    </span><span class="o">=</span><span class="w"> </span><span class="m">3000</span>
+<span class="w">  </span><span class="na">port_range_min</span><span class="w">    </span><span class="o">=</span><span class="w"> </span><span class="m">3000</span>
+<span class="w">  </span><span class="na">security_group_id</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">openstack_networking_secgroup_v2.tradedataprocessing.id</span>
+<span class="p">}</span>
+
+<span class="kr">resource</span><span class="w"> </span><span class="nc">&quot;openstack_networking_secgroup_rule_v2&quot;</span><span class="w"> </span><span class="nv">&quot;sparkmaster&quot;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="na">description</span><span class="w">       </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;sparkmaster&quot;</span>
+<span class="w">  </span><span class="na">direction</span><span class="w">         </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;ingress&quot;</span>
+<span class="w">  </span><span class="na">ethertype</span><span class="w">         </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;IPv4&quot;</span>
+<span class="w">  </span><span class="na">protocol</span><span class="w">          </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;tcp&quot;</span>
+<span class="w">  </span><span class="na">port_range_max</span><span class="w">    </span><span class="o">=</span><span class="w"> </span><span class="m">8080</span>
+<span class="w">  </span><span class="na">port_range_min</span><span class="w">    </span><span class="o">=</span><span class="w"> </span><span class="m">8080</span>
+<span class="w">  </span><span class="na">security_group_id</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">openstack_networking_secgroup_v2.tradedataprocessing.id</span>
+<span class="p">}</span>
+
+<span class="kr">resource</span><span class="w"> </span><span class="nc">&quot;openstack_networking_secgroup_rule_v2&quot;</span><span class="w"> </span><span class="nv">&quot;sparkhistoryserver&quot;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="na">description</span><span class="w">       </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;sparkhistoryserver&quot;</span>
+<span class="w">  </span><span class="na">direction</span><span class="w">         </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;ingress&quot;</span>
+<span class="w">  </span><span class="na">ethertype</span><span class="w">         </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;IPv4&quot;</span>
+<span class="w">  </span><span class="na">protocol</span><span class="w">          </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;tcp&quot;</span>
+<span class="w">  </span><span class="na">port_range_max</span><span class="w">    </span><span class="o">=</span><span class="w"> </span><span class="m">18080</span>
+<span class="w">  </span><span class="na">port_range_min</span><span class="w">    </span><span class="o">=</span><span class="w"> </span><span class="m">18080</span>
+<span class="w">  </span><span class="na">security_group_id</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">openstack_networking_secgroup_v2.tradedataprocessing.id</span>
+<span class="p">}</span>
+
+<span class="kr">resource</span><span class="w"> </span><span class="nc">&quot;openstack_networking_secgroup_rule_v2&quot;</span><span class="w"> </span><span class="nv">&quot;hadoopjobhistory&quot;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="na">description</span><span class="w">       </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;hadoopjobhistory&quot;</span>
+<span class="w">  </span><span class="na">direction</span><span class="w">         </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;ingress&quot;</span>
+<span class="w">  </span><span class="na">ethertype</span><span class="w">         </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;IPv4&quot;</span>
+<span class="w">  </span><span class="na">protocol</span><span class="w">          </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;tcp&quot;</span>
+<span class="w">  </span><span class="na">port_range_max</span><span class="w">    </span><span class="o">=</span><span class="w"> </span><span class="m">19888</span>
+<span class="w">  </span><span class="na">port_range_min</span><span class="w">    </span><span class="o">=</span><span class="w"> </span><span class="m">19888</span>
+<span class="w">  </span><span class="na">security_group_id</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">openstack_networking_secgroup_v2.tradedataprocessing.id</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</li>
+<li><p>Archivo <a class="reference external" href="https://github.com/ualmtorres/finnhub-data-streaming-terraform/blob/main/main.tf"><code class="docutils literal notranslate"><span class="pre">main.tf</span></code></a>: Define los recursos de Terraform necesarios para crear la máquina virtual en OpenStack.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>La máquina virtual creada se aprovisionará con Docker y otros componentes necesarios para instalar la plataforma de data streaming y visualización de Finnhub Stock. Esto se hará mediante un script de inicialización que se ejecutará al crear la máquina virtual.</p>
+</div>
+</li>
+</ul>
+<ul class="simple">
+<li></li>
+</ul>
+<div class="highlight-terraform notranslate"><div class="highlight"><pre><span></span><span class="kr">resource</span><span class="w"> </span><span class="nc">&quot;openstack_compute_instance_v2&quot;</span><span class="w"> </span><span class="nv">&quot;tradedataprocessing_instance&quot;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="na">name</span><span class="w">              </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;tradedataprocessing&quot;</span>
+<span class="w">  </span><span class="na">image_name</span><span class="w">        </span><span class="o">=</span><span class="w"> </span><span class="nv">var.image_name</span>
+<span class="w">  </span><span class="na">availability_zone</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">var.availability_zone</span>
+<span class="w">  </span><span class="na">flavor_name</span><span class="w">       </span><span class="o">=</span><span class="w"> </span><span class="nv">var.flavor_name</span>
+<span class="w">  </span><span class="na">key_pair</span><span class="w">          </span><span class="o">=</span><span class="w"> </span><span class="nv">var.openstack_keypair</span>
+<span class="w">  </span><span class="na">security_groups</span><span class="w">   </span><span class="o">=</span><span class="w"> </span><span class="p">[</span><span class="nv">openstack_networking_secgroup_v2.tradedataprocessing.id</span><span class="p">]</span>
+<span class="w">  </span><span class="nb">network</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="na">name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">var.network_name</span>
+<span class="w">  </span><span class="p">}</span>
+
+<span class="w">  </span><span class="na">user_data</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">file</span><span class="p">(</span><span class="s2">&quot;tradedataprocessing-setup.sh&quot;</span><span class="p">)</span><span class="w"> </span><span class="err">①</span>
+<span class="p">}</span>
+
+<span class="kr">resource</span><span class="w"> </span><span class="nc">&quot;openstack_compute_floatingip_associate_v2&quot;</span><span class="w"> </span><span class="nv">&quot;ip_assoc&quot;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="na">floating_ip</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">var.floating_ip</span>
+<span class="w">  </span><span class="na">instance_id</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">openstack_compute_instance_v2.tradedataprocessing_instance.id</span>
+
+<span class="w">  </span><span class="na">depends_on</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span>
+<span class="w">    </span><span class="nv">openstack_compute_instance_v2.tradedataprocessing_instance</span>
+<span class="w">  </span><span class="p">]</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<ol class="arabic">
+<li><p>Archivo <code class="docutils literal notranslate"><span class="pre">tradedataprocessing-setup.sh</span></code>: Script de inicialización de la máquina virtual.</p>
+<ul>
+<li><p>Archivo <a class="reference external" href="https://github.com/ualmtorres/finnhub-data-streaming-terraform/blob/main/tradedataprocessing-setup.sh"><code class="docutils literal notranslate"><span class="pre">tradedataprocessing-setup.sh</span></code></a>: Script de inicializació de la máquina virtual para la instalación de Docker y otros componentes necesarios (p.e. <code class="docutils literal notranslate"><span class="pre">curl</span></code>, <code class="docutils literal notranslate"><span class="pre">make</span></code>).</p>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span><span class="ch">#!/bin/bash</span>
+
+<span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;Add Docker&#39;s official GPG key&quot;</span>
+apt-get<span class="w"> </span>update
+apt-get<span class="w"> </span>install<span class="w"> </span>-y<span class="w"> </span>ca-certificates<span class="w"> </span>curl<span class="w"> </span>make
+install<span class="w"> </span>-m<span class="w"> </span><span class="m">0755</span><span class="w"> </span>-d<span class="w"> </span>/etc/apt/keyrings
+curl<span class="w"> </span>-fsSL<span class="w"> </span>https://download.docker.com/linux/ubuntu/gpg<span class="w"> </span>-o<span class="w"> </span>/etc/apt/keyrings/docker.asc
+chmod<span class="w"> </span>a+r<span class="w"> </span>/etc/apt/keyrings/docker.asc
+
+<span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;Add the repository to Apt sources&quot;</span>
+<span class="nb">echo</span><span class="w"> </span><span class="se">\</span>
+<span class="w">  </span><span class="s2">&quot;deb [arch=</span><span class="k">$(</span>dpkg<span class="w"> </span>--print-architecture<span class="k">)</span><span class="s2"> signed-by=/etc/apt/keyrings/docker.asc] https://download.docker.com/linux/ubuntu \</span>
+<span class="s2">  </span><span class="k">$(</span>.<span class="w"> </span>/etc/os-release<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;</span><span class="nv">$VERSION_CODENAME</span><span class="s2">&quot;</span><span class="k">)</span><span class="s2"> stable&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>sudo<span class="w"> </span>tee<span class="w"> </span>/etc/apt/sources.list.d/docker.list<span class="w"> </span>&gt;<span class="w"> </span>/dev/null
+apt-get<span class="w"> </span>update
+
+<span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;Install Docker packages&quot;</span>
+apt-get<span class="w"> </span>install<span class="w"> </span>-y<span class="w"> </span>docker-ce<span class="w"> </span>docker-ce-cli<span class="w"> </span>containerd.io<span class="w"> </span>docker-buildx-plugin<span class="w"> </span>docker-compose-plugin
+
+usermod<span class="w"> </span>-aG<span class="w"> </span>docker<span class="w"> </span>ubuntu
+systemctl<span class="w"> </span><span class="nb">enable</span><span class="w"> </span>docker
+
+<span class="nb">exit</span><span class="w"> </span><span class="m">0</span>
+</pre></div>
+</div>
+</li>
+</ul>
+</li>
+</ol>
+<p>Para crear la máquina virtual en OpenStack, ejecutamos los siguientes comandos:</p>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>$<span class="w"> </span>terraform<span class="w"> </span>init
+$<span class="w"> </span>terraform<span class="w"> </span>apply
+</pre></div>
+</div>
+<p>Tras unos minutos, la máquina virtual estará creada y configurada con Docker y el resto de componentes necesarios para instalar la plataforma de data streaming y visualización de Finnhub Stock.</p>
+</section>
+<section id="creacion-de-la-plataforma-de-data-streaming-y-visualizacion-con-docker">
+<h3>Creación de la plataforma de data streaming y visualización con Docker<a class="headerlink" href="#creacion-de-la-plataforma-de-data-streaming-y-visualizacion-con-docker" title="Link to this heading">#</a></h3>
+<p>Una vez creada la máquina virtual en OpenStack, podemos proceder a instalar la plataforma de data streaming y visualización de Finnhub Stock con Docker. Para ello, utilizaremos Docker Compose para definir y ejecutar los servicios necesarios para la plataforma. El código de Docker Compose se encuentra en este <a class="reference external" href="https://github.com/ualmtorres/finnhub-data-streaming-docker-compose">repositorio de GitHub</a>. En el archivo <code class="docutils literal notranslate"><span class="pre">docker-compose.yml</span></code> se definen los servicios necesarios para la plataforma:</p>
+<ul class="simple">
+<li><p><strong>Kafka</strong></p>
+<ul>
+<li><p><strong>Zookeeper</strong>: Servidor de coordinación distribuida para *Apache Kafka.</p></li>
+<li><p><strong>Kafka</strong>: Servidor de mensajería para enviar los datos de *las acciones al componente Spark Streaming.</p></li>
+<li><p><strong>Kafdrop</strong>: Interfaz web para visualizar los temas y los mensajes de Kafka.</p></li>
+</ul>
+</li>
+<li><p><strong>Spark</strong></p>
+<ul>
+<li><p><strong>Spark Master</strong>: Servidor maestro de Apache Spark.</p></li>
+<li><p><strong>Spark Worker</strong>: Servidor esclavo de Apache Spark.</p></li>
+<li><p><strong>Spark History Server</strong>: Servidor de historial de Apache Spark para visualizar los trabajos y las etapas de Spark.</p></li>
+</ul>
+</li>
+<li><p><strong>Cassandra</strong></p>
+<ul>
+<li><p><strong>Cassandra</strong>: Cluster de Cassandra para almacenar los datos de las acciones.</p></li>
+<li><p><strong>Cassandra init</strong>: Componenete de inicialización de Cassandra para crear las tablas necesarias.</p></li>
+<li><p><strong>Cassandra Web</strong>: Interfaz web para visualizar y gestionar la base de datos Cassandra.</p></li>
+</ul>
+</li>
+<li><p><strong>Grafana</strong>: Servidor de Grafana para visualizar los datos de las acciones en tiempo real.</p></li>
+<li><p><strong>Jupyter</strong>: Servidor de Jupyter para ejecutar y visualizar el código Python de los componentes de la plataforma.</p></li>
+</ul>
+<p>La mayoría de estos componentes se comunicarán mediante su nombre de servicio en la red interna de Docker. Sin embargo, hay algunos componentes que necesitan hacerlo a través de la dirección IP de la máquina virtual. Para ello, definiremos la dirección IP de la máquina virtual en una variable de entorno en el archivo <code class="docutils literal notranslate"><span class="pre">.env</span></code>:</p>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span><span class="nv">EXTERNAL_IP</span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;********&quot;</span>
+</pre></div>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>El script de inicialización de la máquina virtual ha creado un archivo <code class="docutils literal notranslate"><span class="pre">.env</span></code> con la dirección IP flotante de la máquina virtual. El archivo se encuentra en el directorio <code class="docutils literal notranslate"><span class="pre">/home/ubuntu</span></code> de la máquina virtual. A la hora de ejecutar Docker Compose, se podrá usar ese archivo para definir la dirección IP de la máquina virtual en los servicios que lo necesiten (p.e. Kafka y Cassandra Web).</p>
+</div>
+<p>Para algunos servicios, como Zookeper, Kafka, Kafdrop, Cassandra, Cassandra Web, Cassandra init y Grafana, usaremos imágenes de Docker que se encuentran en el Docker Hub. Sin embargo, para los servicios de Spark y Jupyter, construiremos las imágenes en el momento de la ejecución. Para ello, definimos los Dockerfiles correspondientes. Todos los archivos necesarios para construir las imágenes de Docker se encuentran en el <a class="reference external" href="https://github.com/ualmtorres/finnhub-data-streaming-docker-compose">repositorio</a>.</p>
+<p>Para ejecutar la plataforma de data streaming y visualización de Finnhub Stock, utilizamos el siguiente comando cargando las variables de entorno del archivo <code class="docutils literal notranslate"><span class="pre">/home/ubuntu/.env</span></code>. Este archivo contiene la dirección IP de la máquina virtual que necesitan algunos servicios para comunicarse entre sí y ha sido creado por el script de inicialización de la máquina virtual.</p>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>$<span class="w"> </span>docker-compose<span class="w"> </span>up<span class="w"> </span>-d<span class="w"> </span>--env-file<span class="w"> </span>/home/ubuntu/.env
+</pre></div>
+</div>
+<p>Tras unos minutos, la plataforma estará desplegada y lista para su uso. Docker Compose habrá creado los siguientes servicios en la máquina virtual. Algunos de ellos serán accesibles a través de la dirección IP de la máquina virtual en los puertos correspondientes. Otros no es necesario que sean accesibles desde el exterior, y simplemente se comunicarán entre sí por la red interna de Docker. Y otros, simplemente habrán sido creados para la configuración de la plataforma. A continuación, se muestra un resumen de los servicios creados:</p>
+<ul class="simple">
+<li><p><strong>Kafka</strong></p>
+<ul>
+<li><p><strong>Zookeeper</strong>: No es necesario acceder a este servicio directamente por lo que no se tiene que exponer ningún puerto.</p></li>
+<li><p><strong>Kafka</strong>: Instalación de un solo nodo. No es necesario acceder a este servicio directamente por lo que no se tiene que exponer ningún puerto.</p></li>
+<li><p><strong>Kafdrop</strong>: Accesible a través de la dirección IP de la máquina virtual en el puerto 19000.</p></li>
+</ul>
+</li>
+<li><p><strong>Spark</strong></p>
+<ul>
+<li><p><strong>Spark Master</strong>: Accesible a través de la dirección IP de la máquina virtual en el puerto 8080.</p></li>
+<li><p><strong>Spark Worker</strong>: No es necesario acceder a este servicio directamente por lo que no se tiene que exponer ningún puerto.</p></li>
+<li><p><strong>Spark History Server</strong>: Accesible a través de la dirección IP de la máquina virtual en los puertos 18080 y 19888.</p></li>
+</ul>
+</li>
+<li><p><strong>Cassandra</strong></p>
+<ul>
+<li><p><strong>Cassandra</strong>: Instalación de tres nodos en modo cluster. No es necesario acceder a este servicio directamente por lo que no se tiene que exponer ningún puerto.</p></li>
+<li><p><strong>Cassandra init</strong>: Su cometido es inicializar la base de datos Cassandra. Una vez finalizada su tarea, se detiene automáticamente. Por tanto, no tiene que exponer ningún puerto.</p></li>
+<li><p><strong>Cassandra Web</strong>: Accesible a través de la dirección IP de la máquina virtual en el puerto 4000.</p></li>
+</ul>
+</li>
+<li><p><strong>Grafana</strong>: Accesible a través de la dirección IP de la máquina virtual en el puerto 3000.</p></li>
+<li><p><strong>Jupyter</strong>: Accesible a través de la dirección IP de la máquina virtual en el puerto 443.</p></li>
+</ul>
+<p>De esta forma, podremos acceder a los servicios de la plataforma a través de la dirección IP de la máquina virtual en los puertos correspondientes:</p>
+<ul class="simple">
+<li><p>Grafana: http://EXTERNAL_IP:3000</p></li>
+<li><p>Spark Master: http://EXTERNAL_IP:8080</p></li>
+<li><p>Kafdrop: http://EXTERNAL_IP:19000</p></li>
+<li><p>Cassandra Web: http://EXTERNAL_IP:4000</p></li>
+<li><p>Jupyter: https://EXTERNAL_IP:443</p></li>
+</ul>
+<p>Con estos componentes, podremos crear una plataforma completa para visualizar los precios en tiempo real de las acciones de una empresa. La plataforma nos permitirá realizar análisis de datos sobre las acciones y tomar decisiones informadas sobre inversiones financieras.</p>
+</section>
+<section id="configuracion-inicial-de-la-plataforma">
+<h3>Configuración inicial de la plataforma<a class="headerlink" href="#configuracion-inicial-de-la-plataforma" title="Link to this heading">#</a></h3>
+<p>Una vez desplegada la plataforma, necesitaremos realizar algunas configuraciones iniciales para empezar a utilizarla. A continuación, se detallan las configuraciones iniciales necesarias para cada uno de los componentes de la plataforma.</p>
+<section id="configuracion-de-kafka">
+<h4>Configuración de Kafka<a class="headerlink" href="#configuracion-de-kafka" title="Link to this heading">#</a></h4>
+<p>Kafka es un servidor de mensajería que utilizaremos para enviar los datos de las acciones al componente Spark Streaming. Para configurar Kafka, necesitaremos crear un tema en el servidor de Kafka y configurar el productor de datos para enviar los datos al tema. La creación del tema la haremos con comandos en el contenedor de Kafka. A continuación, muestra cómo crear el tema <code class="docutils literal notranslate"><span class="pre">market</span></code> en Kafka.</p>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>$<span class="w"> </span>docker<span class="w"> </span><span class="nb">exec</span><span class="w"> </span>kafka<span class="w"> </span><span class="se">\</span>
+kafka-topics<span class="w"> </span>--bootstrap-server<span class="w"> </span>kafka:9092<span class="w"> </span><span class="se">\</span>
+<span class="w">             </span>--create<span class="w"> </span><span class="se">\</span>
+<span class="w">             </span>--topic<span class="w"> </span>market
+</pre></div>
+</div>
+</section>
+<section id="configuracion-de-jupyter">
+<h4>Configuración de Jupyter<a class="headerlink" href="#configuracion-de-jupyter" title="Link to this heading">#</a></h4>
+<p>Para ejecutar los productores, consumidores y procesadores de datos de la plataforma, utilizaremos Jupyter. En concreto, lanzaremos todos los scripts desde la terminal de Jupyter. En nuestro caso, trabajaremos con Python 3.10. Para facilitar la gestión de los entornos de Python, utilizaremos Anaconda. A continuación, se muestra cómo instalar Anaconda en el contenedor de Jupyter.</p>
+<p>Desde la terminal de Jupyter, ejecutamos los siguientes comandos:</p>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>$<span class="w"> </span>curl<span class="w"> </span>https://repo.anaconda.com/archive/Anaconda3-2024.02-1-Linux-x86_64.sh<span class="w"> </span>-o<span class="w"> </span>anaconda.sh
+$<span class="w"> </span>bash<span class="w"> </span>anaconda.sh<span class="w"> </span>
+</pre></div>
+</div>
+<p>En el proceso de instalación, aceptamos los términos de la licencia y elegimos la ubicación de la instalación aceptando los valores predeterminados. Una vez finalizada la instalación, nos pedirá si queremos inicializar Anaconda. Aceptamos la inicialización y, una vez finalizada, cargamos el entorno de Anaconda con el siguiente comando:</p>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>$<span class="w"> </span>conda<span class="w"> </span>init<span class="w"> </span>bash
+$<span class="w"> </span><span class="nb">source</span><span class="w"> </span>~/.bashrc
+</pre></div>
+</div>
+<p>A continuación creamos un entorno de Anaconda con Python 3.10 y lo activamos:</p>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>$<span class="w"> </span>conda<span class="w"> </span>create<span class="w"> </span>-n<span class="w"> </span>python3_10<span class="w"> </span><span class="nv">python</span><span class="o">=</span><span class="m">3</span>.10
+$<span class="w"> </span>conda<span class="w"> </span>activate<span class="w"> </span>python3_10
+</pre></div>
+</div>
+</section>
+</section>
+</section>
+<section id="desarrollo-de-la-plataforma">
+<h2>Desarrollo de la plataforma<a class="headerlink" href="#desarrollo-de-la-plataforma" title="Link to this heading">#</a></h2>
+<p>Una vez configurada la plataforma, podemos empezar a desarrollar los componentes necesarios para enviar, procesar y visualizar los datos de las acciones de una empresa. En los siguientes pasos, veremos cómo desarrollar los componentes de la plataforma.</p>
+<section id="creacion-de-un-productor-de-datos-de-finnhub-stock">
+<h3>Creación de un productor de datos de Finnhub Stock<a class="headerlink" href="#creacion-de-un-productor-de-datos-de-finnhub-stock" title="Link to this heading">#</a></h3>
+<p>Para enviar los datos de las acciones al servidor de Kafka, necesitaremos crear un productor de datos que consuma la API de Finnhub Stock y envíe los datos al tema <code class="docutils literal notranslate"><span class="pre">market</span></code> de Kafka. El productor de datos lo programaremos en Python y lo ejecutaremos desde el entorno <code class="docutils literal notranslate"><span class="pre">python3_10</span></code> de Anaconda. A continuación, se muestra un ejemplo de código para un productor de datos de Finnhub Stock en Python. El código del productor se puede encontrar en la carpeta <code class="docutils literal notranslate"><span class="pre">producer</span></code> de <a class="reference external" href="https://github.com/ualmtorres/finnhub-data-streaming-workload-simulator">este repositorio de GitHub</a>.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">websockets</span>
+<span class="n">websocket</span><span class="o">-</span><span class="n">client</span>
+<span class="n">finnhub</span><span class="o">-</span><span class="n">python</span>
+<span class="n">kafka</span><span class="o">-</span><span class="n">python</span>
+<span class="n">avro</span>
+</pre></div>
+</div>
+<div class="highlight-json notranslate"><div class="highlight"><pre><span></span><span class="p">{</span>
+<span class="w">  </span><span class="nt">&quot;KAFKA_SERVER&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;kafka&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;KAFKA_PORT&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;29092&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;KAFKA_TOPIC_NAME&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;market&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;FINNHUB_API_KEY&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;**********&quot;</span><span class="w"> </span><span class="err">①</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<ol class="arabic simple">
+<li><p>Clave de la API de Finnhub Stock.</p></li>
+</ol>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">websocket</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">json</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">io</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">avro.schema</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">avro.io</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">kafka</span><span class="w"> </span><span class="kn">import</span> <span class="n">KafkaProducer</span>
+
+<span class="c1"># https://finnhub.io/docs/api/websocket-trades</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">FinnhubProducer</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Producer class that connects to the finnhub websocket, encodes &amp; validates the JSON payload</span>
+<span class="sd">        in avro format against pre-defined schema then sends data to kafka.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="c1"># define config from config file</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">config</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">load_config</span><span class="p">(</span><span class="s1">&#39;config.json&#39;</span><span class="p">)</span>
+
+        <span class="c1"># define the kafka producer here. This assumes there is a kafka server already setup at the address and port</span>
+        <span class="c1">#self.producer = KafkaProducer(bootstrap_servers=f&quot;{self.config[&#39;KAFKA_SERVER&#39;]}:{self.config[&#39;KAFKA_PORT&#39;]}&quot;,api_version=(0, 10, 1))</span>
+
+
+        <span class="n">kafka_servers</span><span class="o">=</span><span class="p">[</span><span class="n">config</span><span class="p">[</span><span class="s1">&#39;KAFKA_SERVER&#39;</span><span class="p">]</span> <span class="o">+</span> <span class="n">config</span><span class="p">[</span><span class="s1">&#39;KAFKA_PORT&#39;</span><span class="p">]]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">producer</span> <span class="o">=</span> <span class="n">KafkaProducer</span><span class="p">(</span><span class="n">bootstrap_servers</span> <span class="o">=</span> <span class="n">kafka_servers</span><span class="p">,</span><span class="n">api_version</span><span class="o">=</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="mi">1</span><span class="p">))</span>
+        
+        <span class="c1"># define the avro schema here. This assumes the schema is already defined in the src/schemas folder</span>
+        <span class="c1"># this helps us enforce the schema when we send data to kafka</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">avro_schema</span> <span class="o">=</span> <span class="n">avro</span><span class="o">.</span><span class="n">schema</span><span class="o">.</span><span class="n">parse</span><span class="p">(</span><span class="nb">open</span><span class="p">(</span><span class="s1">&#39;trades.avsc&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">read</span><span class="p">())</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;AVRO schema loaded&quot;</span><span class="p">)</span>
+
+        <span class="c1"># define the websocket client</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">ws</span> <span class="o">=</span> <span class="n">websocket</span><span class="o">.</span><span class="n">WebSocketApp</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;wss://ws.finnhub.io?token=</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s1">&#39;FINNHUB_API_KEY&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span>
+                                         <span class="n">on_message</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">on_message</span><span class="p">,</span>
+                                         <span class="n">on_error</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">on_error</span><span class="p">,</span>
+                                         <span class="n">on_close</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">on_close</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">ws</span><span class="o">.</span><span class="n">on_open</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">on_open</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">ws</span><span class="o">.</span><span class="n">run_forever</span><span class="p">()</span>
+    
+    <span class="k">def</span><span class="w"> </span><span class="nf">load_config</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">config_file</span><span class="p">):</span>
+        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">config_file</span><span class="p">,</span> <span class="s1">&#39;r&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+            <span class="n">config</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">f</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">config</span>
+        
+    <span class="k">def</span><span class="w"> </span><span class="nf">avro_encode</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">,</span> <span class="n">schema</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Avro encode data using the provided schema.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        data : dict</span>
+<span class="sd">            Data to encode.</span>
+<span class="sd">        schema : avro.schema.Schema</span>
+<span class="sd">            Avro schema to use for encoding.</span>
+<span class="sd">        </span>
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        bytes : Encoded data.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="n">writer</span> <span class="o">=</span> <span class="n">avro</span><span class="o">.</span><span class="n">io</span><span class="o">.</span><span class="n">DatumWriter</span><span class="p">(</span><span class="n">schema</span><span class="p">)</span>
+        <span class="n">bytes_writer</span> <span class="o">=</span> <span class="n">io</span><span class="o">.</span><span class="n">BytesIO</span><span class="p">()</span>
+        <span class="n">encoder</span> <span class="o">=</span> <span class="n">avro</span><span class="o">.</span><span class="n">io</span><span class="o">.</span><span class="n">BinaryEncoder</span><span class="p">(</span><span class="n">bytes_writer</span><span class="p">)</span>
+        <span class="n">writer</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">encoder</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">bytes_writer</span><span class="o">.</span><span class="n">getvalue</span><span class="p">()</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">on_message</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ws</span><span class="p">,</span> <span class="n">message</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Callback function that is called when a message is received from the websocket.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        ws : websocket.WebSocketApp</span>
+<span class="sd">            Websocket client.</span>
+<span class="sd">        message : str</span>
+<span class="sd">            Message received from the websocket.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">message</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="n">message</span><span class="p">)</span>
+        <span class="n">avro_message</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">avro_encode</span><span class="p">(</span>
+            <span class="p">{</span>
+                <span class="s1">&#39;data&#39;</span><span class="p">:</span> <span class="n">message</span><span class="p">[</span><span class="s1">&#39;data&#39;</span><span class="p">],</span>
+                <span class="s1">&#39;type&#39;</span><span class="p">:</span> <span class="n">message</span><span class="p">[</span><span class="s1">&#39;type&#39;</span><span class="p">]</span>
+            <span class="p">},</span> 
+            <span class="bp">self</span><span class="o">.</span><span class="n">avro_schema</span>
+        <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">producer</span><span class="o">.</span><span class="n">send</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s1">&#39;KAFKA_TOPIC_NAME&#39;</span><span class="p">],</span> <span class="n">avro_message</span><span class="p">)</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">on_error</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ws</span><span class="p">,</span> <span class="n">error</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Websocket error callback. This currently just prints the error to the console.</span>
+<span class="sd">        In a production environment, this should be logged to a file or sent to a monitoring service.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        ws : websocket.WebSocketApp</span>
+<span class="sd">            Websocket client.</span>
+<span class="sd">        error : str</span>
+<span class="sd">            Error message.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="nb">print</span><span class="p">(</span><span class="n">error</span><span class="p">)</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">on_close</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ws</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Websocket close callback. This currently just prints a message to the console.</span>
+<span class="sd">        In a production environment, this should be logged to a file or sent to a monitoring service.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        ws : websocket.WebSocketApp</span>
+<span class="sd">            Websocket client.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;### closed ###&quot;</span><span class="p">)</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">on_open</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ws</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Websocket open callback. This subscribes to the MSFT stock topic on the websocket.</span>
+<span class="sd">        </span>
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        ws : websocket.WebSocketApp</span>
+<span class="sd">            Websocket client.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;sending subscribe message&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">ws</span><span class="o">.</span><span class="n">send</span><span class="p">(</span><span class="s1">&#39;{&quot;type&quot;:&quot;subscribe&quot;,&quot;symbol&quot;:&quot;BINANCE:BTCUSDT&quot;}&#39;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;subscribed to AAPL&quot;</span><span class="p">)</span>
+
+
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">&quot;__main__&quot;</span><span class="p">:</span>
+    <span class="n">FinnhubProducer</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>Para ejecutar el productor de datos, haremos lo siguiente:</p>
+<ol class="arabic">
+<li><p>Activamos el entorno de Anaconda con Python 3.10.</p>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>$<span class="w"> </span>conda<span class="w"> </span>activate<span class="w"> </span>python3_10
+</pre></div>
+</div>
+</li>
+<li><p>Instalamos las dependencias necesarias.</p>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>$<span class="w"> </span>pip<span class="w"> </span>install<span class="w"> </span>-r<span class="w"> </span>requirements.txt
+</pre></div>
+</div>
+</li>
+<li><p>Ejecutamos el productor de datos.</p>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>$<span class="w"> </span>python<span class="w"> </span>producer.py
+</pre></div>
+</div>
+</li>
+</ol>
+<p>El productor de datos se conectará a la API de Finnhub Stock y enviará los datos de las acciones al servidor de Kafka. Podremos ver los mensajes en el tema <code class="docutils literal notranslate"><span class="pre">market</span></code> de Kafka utilizando la interfaz web de Kafdrop. La figura siguiente muestra un ejemplo de mensajes en el tema <code class="docutils literal notranslate"><span class="pre">market</span></code> de Kafka.</p>
+<p><img alt="Kafdrop" src="../../../_images/kafdrop.png" /></p>
+<p>Con el productor de datos en funcionamiento, los datos de Finnhub Stock se están enviando ya al servidor de Kafka para su procesamiento posterior por el componente Spark Streaming. Antes de pasar a crear el componente de Spark Streaming, crearemos un pequeño consumidor de datos para verificar que los datos se están enviando correctamente al servidor de Kafka.</p>
+</section>
+<section id="creacion-de-un-consumidor-de-datos-de-kafka">
+<h3>Creación de un consumidor de datos de Kafka<a class="headerlink" href="#creacion-de-un-consumidor-de-datos-de-kafka" title="Link to this heading">#</a></h3>
+<p>Para verificar que los datos se están enviando correctamente al servidor de Kafka, crearemos un consumidor de datos que lea los mensajes del tema <code class="docutils literal notranslate"><span class="pre">market</span></code> de Kafka. El consumidor de datos lo programaremos en Python y lo ejecutaremos desde el entorno <code class="docutils literal notranslate"><span class="pre">python3_10</span></code> de Anaconda. El código del consumidor de datos se puede encontrar en la carpeta <code class="docutils literal notranslate"><span class="pre">consumer</span></code> de <a class="reference external" href="https://github.com/ualmtorres/finnhub-data-streaming-workload-simulator">este repositorio de GitHub</a>.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">websockets</span>
+<span class="n">websocket</span><span class="o">-</span><span class="n">client</span>
+<span class="n">finnhub</span><span class="o">-</span><span class="n">python</span>
+<span class="n">kafka</span><span class="o">-</span><span class="n">python</span>
+<span class="n">avro</span>
+</pre></div>
+</div>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">kafka</span><span class="w"> </span><span class="kn">import</span> <span class="n">KafkaConsumer</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">json</span> 
+<span class="kn">import</span><span class="w"> </span><span class="nn">io</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">avro.io</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">avro.schema</span>
+
+<span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="s1">&#39;config.json&#39;</span><span class="p">,</span> <span class="s1">&#39;r&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+    <span class="n">config</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">f</span><span class="p">)</span>
+
+<span class="c1"># define the consumer to read from the Kafka topic</span>
+
+<span class="c1"># define kafka servers from the config file (KAFKA_SERVER variable)</span>
+<span class="n">kafka_servers</span><span class="o">=</span><span class="p">[</span><span class="n">config</span><span class="p">[</span><span class="s1">&#39;KAFKA_SERVER&#39;</span><span class="p">]</span> <span class="o">+</span> <span class="n">config</span><span class="p">[</span><span class="s1">&#39;KAFKA_PORT&#39;</span><span class="p">]]</span>
+<span class="n">consumer</span> <span class="o">=</span> <span class="n">KafkaConsumer</span><span class="p">(</span>
+    <span class="n">config</span><span class="p">[</span><span class="s1">&#39;KAFKA_TOPIC_NAME&#39;</span><span class="p">],</span>
+    <span class="n">bootstrap_servers</span> <span class="o">=</span> <span class="n">kafka_servers</span><span class="p">,</span>
+    <span class="n">api_version</span><span class="o">=</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+    <span class="p">)</span>
+
+<span class="c1"># define the Avro schema that corresponds to the encoded data</span>
+<span class="n">schema</span> <span class="o">=</span> <span class="n">avro</span><span class="o">.</span><span class="n">schema</span><span class="o">.</span><span class="n">parse</span><span class="p">(</span><span class="nb">open</span><span class="p">(</span><span class="s1">&#39;trades.avsc&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">read</span><span class="p">())</span>
+
+<span class="k">for</span> <span class="n">message</span> <span class="ow">in</span> <span class="n">consumer</span><span class="p">:</span>
+    <span class="c1"># asssume &#39;byte_string&#39; contains the Avro-encoded byte string,</span>
+    <span class="c1"># we need to decode it using avro library</span>
+    <span class="n">bytes_reader</span> <span class="o">=</span> <span class="n">io</span><span class="o">.</span><span class="n">BytesIO</span><span class="p">(</span><span class="n">message</span><span class="o">.</span><span class="n">value</span><span class="p">)</span>
+    <span class="n">decoder</span> <span class="o">=</span> <span class="n">avro</span><span class="o">.</span><span class="n">io</span><span class="o">.</span><span class="n">BinaryDecoder</span><span class="p">(</span><span class="n">bytes_reader</span><span class="p">)</span>
+    <span class="n">reader</span> <span class="o">=</span> <span class="n">avro</span><span class="o">.</span><span class="n">io</span><span class="o">.</span><span class="n">DatumReader</span><span class="p">(</span><span class="n">schema</span><span class="p">)</span>
+    <span class="n">data</span> <span class="o">=</span> <span class="n">reader</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="n">decoder</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+    
+</pre></div>
+</div>
+<p>También necesitaremos el archivo <code class="docutils literal notranslate"><span class="pre">config.json</span></code> con la configuración del consumidor de datos.</p>
+<div class="highlight-json notranslate"><div class="highlight"><pre><span></span><span class="p">{</span>
+<span class="w">  </span><span class="nt">&quot;KAFKA_SERVER&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;kafka&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;KAFKA_PORT&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;29092&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;KAFKA_TOPIC_NAME&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;market&quot;</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>Por último, también necesitaremos el archivo <code class="docutils literal notranslate"><span class="pre">trades.avsc</span></code> con el esquema Avro que corresponde a los datos codificados.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Avro es un sistema de serialización de datos que proporciona un esquema para la codificación de los datos muy utilizado en el contexto de Apache Hadoop y Apache Kafka. El esquema Avro define la estructura de los datos codificados y permite a los consumidores de datos decodificar los mensajes correctamente.</p>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">{</span>
+  <span class="s2">&quot;type&quot;</span> <span class="p">:</span> <span class="s2">&quot;record&quot;</span><span class="p">,</span>
+  <span class="s2">&quot;name&quot;</span> <span class="p">:</span> <span class="s2">&quot;message&quot;</span><span class="p">,</span>
+  <span class="s2">&quot;namespace&quot;</span> <span class="p">:</span> <span class="s2">&quot;FinnhubProducer&quot;</span><span class="p">,</span>
+  <span class="s2">&quot;fields&quot;</span> <span class="p">:</span> <span class="p">[</span> <span class="p">{</span>
+    <span class="s2">&quot;name&quot;</span> <span class="p">:</span> <span class="s2">&quot;data&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;type&quot;</span> <span class="p">:</span> <span class="p">{</span>
+      <span class="s2">&quot;type&quot;</span> <span class="p">:</span> <span class="s2">&quot;array&quot;</span><span class="p">,</span>
+      <span class="s2">&quot;items&quot;</span> <span class="p">:</span> <span class="p">{</span>
+        <span class="s2">&quot;type&quot;</span> <span class="p">:</span> <span class="s2">&quot;record&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;name&quot;</span> <span class="p">:</span> <span class="s2">&quot;data&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;fields&quot;</span> <span class="p">:</span> <span class="p">[</span> <span class="p">{</span>
+          <span class="s2">&quot;name&quot;</span> <span class="p">:</span> <span class="s2">&quot;c&quot;</span><span class="p">,</span>
+          <span class="s2">&quot;type&quot;</span><span class="p">:[</span>
+            <span class="p">{</span>
+               <span class="s2">&quot;type&quot;</span><span class="p">:</span><span class="s2">&quot;array&quot;</span><span class="p">,</span>
+               <span class="s2">&quot;items&quot;</span><span class="p">:[</span><span class="s2">&quot;null&quot;</span><span class="p">,</span><span class="s2">&quot;string&quot;</span><span class="p">],</span>
+               <span class="s2">&quot;default&quot;</span><span class="p">:[]</span>
+            <span class="p">},</span>
+            <span class="s2">&quot;null&quot;</span>
+          <span class="p">],</span>
+          <span class="s2">&quot;doc&quot;</span> <span class="p">:</span> <span class="s2">&quot;Trade conditions&quot;</span>
+        <span class="p">},</span> 
+        <span class="p">{</span>
+          <span class="s2">&quot;name&quot;</span> <span class="p">:</span> <span class="s2">&quot;p&quot;</span><span class="p">,</span>
+          <span class="s2">&quot;type&quot;</span> <span class="p">:</span> <span class="s2">&quot;double&quot;</span><span class="p">,</span>
+          <span class="s2">&quot;doc&quot;</span> <span class="p">:</span> <span class="s2">&quot;Price at which the stock was traded&quot;</span>
+        <span class="p">},</span> 
+        <span class="p">{</span>
+          <span class="s2">&quot;name&quot;</span> <span class="p">:</span> <span class="s2">&quot;s&quot;</span><span class="p">,</span>
+          <span class="s2">&quot;type&quot;</span> <span class="p">:</span> <span class="s2">&quot;string&quot;</span><span class="p">,</span>
+          <span class="s2">&quot;doc&quot;</span> <span class="p">:</span> <span class="s2">&quot;Symbol of a stock&quot;</span>
+        <span class="p">},</span> 
+        <span class="p">{</span>
+          <span class="s2">&quot;name&quot;</span> <span class="p">:</span> <span class="s2">&quot;t&quot;</span><span class="p">,</span>
+          <span class="s2">&quot;type&quot;</span> <span class="p">:</span> <span class="s2">&quot;long&quot;</span><span class="p">,</span>
+          <span class="s2">&quot;doc&quot;</span> <span class="p">:</span> <span class="s2">&quot;Timestamp at which the stock was traded&quot;</span>
+        <span class="p">},</span> 
+        <span class="p">{</span>
+          <span class="s2">&quot;name&quot;</span> <span class="p">:</span> <span class="s2">&quot;v&quot;</span><span class="p">,</span>
+          <span class="s2">&quot;type&quot;</span> <span class="p">:</span> <span class="s2">&quot;double&quot;</span><span class="p">,</span>
+          <span class="s2">&quot;doc&quot;</span> <span class="p">:</span> <span class="s2">&quot;Volume at which the stock was traded&quot;</span>
+        <span class="p">}</span> <span class="p">]</span>
+      <span class="p">},</span>
+      <span class="s2">&quot;doc&quot;</span> <span class="p">:</span> <span class="s2">&quot;Trades messages&quot;</span>
+    <span class="p">},</span>
+    <span class="s2">&quot;doc&quot;</span>  <span class="p">:</span> <span class="s2">&quot;Contains data inside a message&quot;</span>
+  <span class="p">},</span> 
+  <span class="p">{</span>
+    <span class="s2">&quot;name&quot;</span> <span class="p">:</span> <span class="s2">&quot;type&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;type&quot;</span> <span class="p">:</span> <span class="s2">&quot;string&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;doc&quot;</span>  <span class="p">:</span> <span class="s2">&quot;Type of message&quot;</span>
+  <span class="p">}</span> <span class="p">],</span>
+  <span class="s2">&quot;doc&quot;</span> <span class="p">:</span> <span class="s2">&quot;A schema for upcoming Finnhub messages&quot;</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>El esquema Avro debe coincidir con el esquema utilizado por el productor de datos para codificar los mensajes. De lo contrario, el consumidor de datos no podrá decodificar los mensajes correctamente.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Para crear el archivo <code class="docutils literal notranslate"><span class="pre">trades.avsc</span></code>, puedes utilizar una herramienta como <a class="reference external" href="https://konbert.com/convert/json/to/avro">Konbert</a> para convertir un JSON en un esquema Avro. Basta con subir un archivo JSON con una muestra de los datos codificados, seleccionar que sólo se quiere obtener el esquema y la herramienta generará el esquema Avro correspondiente en un archivo de texto con extensión <code class="docutils literal notranslate"><span class="pre">.avsc</span></code>.</p>
+</div>
+<p>Para ejecutar el consumidor de datos, haremos lo siguiente:</p>
+<ol class="arabic">
+<li><p>Activamos el entorno de Anaconda con Python 3.10.</p>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>$<span class="w"> </span>conda<span class="w"> </span>activate<span class="w"> </span>python3_10
+</pre></div>
+</div>
+</li>
+<li><p>Instalamos las dependencias necesarias.</p>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>$<span class="w"> </span>pip<span class="w"> </span>install<span class="w"> </span>-r<span class="w"> </span>requirements.txt
+</pre></div>
+</div>
+</li>
+<li><p>Ejecutamos el consumidor de datos.</p>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>$<span class="w"> </span>python<span class="w"> </span>consumer.py
+</pre></div>
+</div>
+</li>
+</ol>
+<p>El consumidor de datos leerá los mensajes del tema <code class="docutils literal notranslate"><span class="pre">market</span></code> de Kafka y los decodificará utilizando el esquema Avro. Podremos ver los mensajes en la consola a medida que se reciban nuevos datos de la API de Finnhub Stock y se envíen al servidor de Kafka. Con el consumidor de datos en funcionamiento, podemos verificar que los datos se están enviando correctamente al servidor de Kafka y que se pueden leer y decodificar correctamente.</p>
+<p>La figura siguiente muestra un ejemplo de mensajes decodificados del consumidor de datos de Kafka.</p>
+<p><img alt="Consumidor de datos" src="../../../_images/consumer.png" /></p>
+<p>Con el productor y el consumidor de datos en funcionamiento, podemos confirmar que los datos de Finnhub Stock se están enviando correctamente al servidor de Kafka y que se pueden leer y decodificar correctamente. En el siguiente paso, crearemos el componente Spark Streaming para procesar los datos de las acciones en tiempo real.</p>
+</section>
+<section id="creacion-de-un-componente-spark-streaming">
+<h3>Creación de un componente Spark Streaming<a class="headerlink" href="#creacion-de-un-componente-spark-streaming" title="Link to this heading">#</a></h3>
+<p>El componente Spark Streaming procesará los datos de las acciones en tiempo real y calculará estadísticas sobre los precios de las acciones. Utilizaremos Apache Spark para procesar los datos de las acciones y realizar cálculos sobre los precios de las acciones. El componente Spark Streaming leerá los datos del servidor de Kafka, los procesará en tiempo real y los almacenará en la base de datos Cassandra. El código del componente Spark Streaming se puede encontrar en la carpeta <code class="docutils literal notranslate"><span class="pre">spark</span></code> de <a class="reference external" href="https://github.com/ualmtorres/finnhub-data-streaming-workload-simulator">este repositorio de GitHub</a>. A continuación, se muestra un ejemplo de código para un componente Spark Streaming en Python.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">pyspark</span><span class="o">==</span><span class="mf">3.2.1</span>
+<span class="n">kafka</span><span class="o">-</span><span class="n">python</span>
+<span class="n">cassandra</span><span class="o">-</span><span class="n">driver</span>
+</pre></div>
+</div>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">pyspark.sql</span><span class="w"> </span><span class="kn">import</span> <span class="n">SparkSession</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pyspark.sql.functions</span><span class="w"> </span><span class="kn">import</span> <span class="o">*</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pyspark.sql.avro.functions</span><span class="w"> </span><span class="kn">import</span> <span class="n">from_avro</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pyspark.sql.streaming</span><span class="w"> </span><span class="kn">import</span> <span class="o">*</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">uuid</span><span class="w"> </span><span class="kn">import</span> <span class="n">uuid1</span>
+
+<span class="c1"># create a Spark session</span>
+<span class="n">spark</span> <span class="o">=</span> <span class="n">SparkSession</span> \
+    <span class="o">.</span><span class="n">builder</span> \
+    <span class="o">.</span><span class="n">master</span><span class="p">(</span><span class="s2">&quot;spark://master:7077&quot;</span><span class="p">)</span> \
+    <span class="o">.</span><span class="n">appName</span><span class="p">(</span><span class="s2">&quot;StreamProcessor&quot;</span><span class="p">)</span> \
+    <span class="o">.</span><span class="n">config</span><span class="p">(</span><span class="s2">&quot;spark.cassandra.connection.host&quot;</span><span class="p">,</span> <span class="s1">&#39;cassandra1&#39;</span><span class="p">)</span> \
+    <span class="o">.</span><span class="n">config</span><span class="p">(</span><span class="s2">&quot;spark.cassandra.connection.port&quot;</span><span class="p">,</span> <span class="s1">&#39;9042&#39;</span><span class="p">)</span> \
+    <span class="o">.</span><span class="n">config</span><span class="p">(</span><span class="s2">&quot;spark.cassandra.auth.username&quot;</span><span class="p">,</span> <span class="s1">&#39;cassandra&#39;</span><span class="p">)</span> \
+    <span class="o">.</span><span class="n">config</span><span class="p">(</span><span class="s2">&quot;spark.cassandra.auth.password&quot;</span><span class="p">,</span> <span class="s1">&#39;cassandra&#39;</span><span class="p">)</span> \
+    <span class="o">.</span><span class="n">getOrCreate</span><span class="p">()</span>
+
+<span class="c1"># suppress all the INFO logs except for errors</span>
+<span class="n">spark</span><span class="o">.</span><span class="n">sparkContext</span><span class="o">.</span><span class="n">setLogLevel</span><span class="p">(</span><span class="s2">&quot;ERROR&quot;</span><span class="p">)</span>
+
+<span class="c1"># define the Avro schema that corresponds to the encoded data</span>
+<span class="n">tradesSchema</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="s1">&#39;./trades.avsc&#39;</span><span class="p">,</span> <span class="s1">&#39;r&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">read</span><span class="p">()</span>
+
+<span class="nd">@udf</span><span class="p">(</span><span class="n">returnType</span><span class="o">=</span><span class="n">StringType</span><span class="p">())</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">makeUUID</span><span class="p">():</span>
+    <span class="k">return</span> <span class="nb">str</span><span class="p">(</span><span class="n">uuid1</span><span class="p">())</span>
+
+<span class="c1"># define the stream to read from the Kafka topic market</span>
+<span class="n">inputDF</span> <span class="o">=</span> <span class="n">spark</span> \
+    <span class="o">.</span><span class="n">readStream</span> \
+    <span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="s2">&quot;kafka&quot;</span><span class="p">)</span> \
+    <span class="o">.</span><span class="n">option</span><span class="p">(</span><span class="s2">&quot;kafka.bootstrap.servers&quot;</span><span class="p">,</span> <span class="s2">&quot;kafka:29092&quot;</span><span class="p">)</span> \
+    <span class="o">.</span><span class="n">option</span><span class="p">(</span><span class="s2">&quot;subscribe&quot;</span><span class="p">,</span> <span class="s2">&quot;market&quot;</span><span class="p">)</span> \
+    <span class="o">.</span><span class="n">option</span><span class="p">(</span><span class="s2">&quot;minPartitions&quot;</span><span class="p">,</span> <span class="s2">&quot;1&quot;</span><span class="p">)</span> \
+    <span class="o">.</span><span class="n">option</span><span class="p">(</span><span class="s2">&quot;maxOffsetsPerTrigger&quot;</span><span class="p">,</span> <span class="s2">&quot;1000&quot;</span><span class="p">)</span> \
+    <span class="o">.</span><span class="n">option</span><span class="p">(</span><span class="s2">&quot;useDeprecatedOffsetFetching&quot;</span><span class="p">,</span> <span class="s2">&quot;false&quot;</span><span class="p">)</span> \
+    <span class="o">.</span><span class="n">load</span><span class="p">()</span>
+
+
+
+<span class="c1"># explode the data column and select the columns we need</span>
+<span class="n">expandedDF</span> <span class="o">=</span> <span class="n">inputDF</span> \
+    <span class="o">.</span><span class="n">withColumn</span><span class="p">(</span><span class="s2">&quot;avroData&quot;</span><span class="p">,</span> <span class="n">from_avro</span><span class="p">(</span><span class="n">col</span><span class="p">(</span><span class="s2">&quot;value&quot;</span><span class="p">),</span> <span class="n">tradesSchema</span><span class="p">))</span> \
+    <span class="o">.</span><span class="n">select</span><span class="p">(</span><span class="n">col</span><span class="p">(</span><span class="s2">&quot;avroData.*&quot;</span><span class="p">))</span> \
+    <span class="o">.</span><span class="n">select</span><span class="p">(</span><span class="n">explode</span><span class="p">(</span><span class="n">col</span><span class="p">(</span><span class="s2">&quot;data&quot;</span><span class="p">)),</span> <span class="n">col</span><span class="p">(</span><span class="s2">&quot;type&quot;</span><span class="p">))</span> \
+    <span class="o">.</span><span class="n">select</span><span class="p">(</span><span class="n">col</span><span class="p">(</span><span class="s2">&quot;col.*&quot;</span><span class="p">),</span> <span class="n">col</span><span class="p">(</span><span class="s2">&quot;type&quot;</span><span class="p">))</span>
+
+<span class="c1"># create the final dataframe with the columns we need plus the ingest timestamp</span>
+<span class="n">finalDF</span> <span class="o">=</span> <span class="n">expandedDF</span> \
+    <span class="o">.</span><span class="n">withColumn</span><span class="p">(</span><span class="s2">&quot;uuid&quot;</span><span class="p">,</span> <span class="n">makeUUID</span><span class="p">())</span> \
+    <span class="o">.</span><span class="n">withColumnRenamed</span><span class="p">(</span><span class="s2">&quot;c&quot;</span><span class="p">,</span> <span class="s2">&quot;trade_conditions&quot;</span><span class="p">)</span> \
+    <span class="o">.</span><span class="n">withColumnRenamed</span><span class="p">(</span><span class="s2">&quot;p&quot;</span><span class="p">,</span> <span class="s2">&quot;price&quot;</span><span class="p">)</span> \
+    <span class="o">.</span><span class="n">withColumnRenamed</span><span class="p">(</span><span class="s2">&quot;s&quot;</span><span class="p">,</span> <span class="s2">&quot;symbol&quot;</span><span class="p">)</span> \
+    <span class="o">.</span><span class="n">withColumnRenamed</span><span class="p">(</span><span class="s2">&quot;t&quot;</span><span class="p">,</span> <span class="s2">&quot;trade_timestamp&quot;</span><span class="p">)</span> \
+    <span class="o">.</span><span class="n">withColumnRenamed</span><span class="p">(</span><span class="s2">&quot;v&quot;</span><span class="p">,</span> <span class="s2">&quot;volume&quot;</span><span class="p">)</span> \
+    <span class="o">.</span><span class="n">withColumn</span><span class="p">(</span><span class="s2">&quot;trade_timestamp&quot;</span><span class="p">,</span> <span class="p">(</span><span class="n">col</span><span class="p">(</span><span class="s2">&quot;trade_timestamp&quot;</span><span class="p">)</span> <span class="o">/</span> <span class="mi">1000</span><span class="p">)</span><span class="o">.</span><span class="n">cast</span><span class="p">(</span><span class="s2">&quot;timestamp&quot;</span><span class="p">))</span> \
+    <span class="o">.</span><span class="n">withColumn</span><span class="p">(</span><span class="s2">&quot;ingest_timestamp&quot;</span><span class="p">,</span> <span class="n">current_timestamp</span><span class="p">()</span><span class="o">.</span><span class="n">alias</span><span class="p">(</span><span class="s2">&quot;ingest_timestamp&quot;</span><span class="p">))</span>
+
+<span class="c1"># write the final dataframe to Cassandra</span>
+<span class="c1"># spark handles the streaming and batching for us</span>
+<span class="n">query</span> <span class="o">=</span> <span class="n">finalDF</span> \
+    <span class="o">.</span><span class="n">writeStream</span> \
+    <span class="o">.</span><span class="n">trigger</span><span class="p">(</span><span class="n">processingTime</span><span class="o">=</span><span class="s2">&quot;5 seconds&quot;</span><span class="p">)</span> \
+    <span class="o">.</span><span class="n">foreachBatch</span><span class="p">(</span><span class="k">lambda</span> <span class="n">batchDF</span><span class="p">,</span> <span class="n">batchId</span><span class="p">:</span> \
+        <span class="n">batchDF</span><span class="o">.</span><span class="n">write</span> \
+            <span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="s2">&quot;org.apache.spark.sql.cassandra&quot;</span><span class="p">)</span> \
+            <span class="o">.</span><span class="n">option</span><span class="p">(</span><span class="s2">&quot;table&quot;</span><span class="p">,</span> <span class="s2">&quot;trades&quot;</span><span class="p">)</span> \
+            <span class="o">.</span><span class="n">option</span><span class="p">(</span><span class="s2">&quot;keyspace&quot;</span><span class="p">,</span> <span class="s2">&quot;market&quot;</span><span class="p">)</span> \
+            <span class="o">.</span><span class="n">mode</span><span class="p">(</span><span class="s2">&quot;append&quot;</span><span class="p">)</span> \
+            <span class="o">.</span><span class="n">save</span><span class="p">())</span> \
+    <span class="o">.</span><span class="n">outputMode</span><span class="p">(</span><span class="s2">&quot;update&quot;</span><span class="p">)</span> \
+    <span class="o">.</span><span class="n">start</span><span class="p">()</span>
+
+<span class="c1"># create a summary dataframe with the average price * volume</span>
+<span class="n">summaryDF</span> <span class="o">=</span> <span class="n">finalDF</span> \
+    <span class="o">.</span><span class="n">withColumn</span><span class="p">(</span><span class="s2">&quot;price_volume_multiply&quot;</span><span class="p">,</span> <span class="n">col</span><span class="p">(</span><span class="s2">&quot;price&quot;</span><span class="p">)</span> <span class="o">*</span> <span class="n">col</span><span class="p">(</span><span class="s2">&quot;volume&quot;</span><span class="p">))</span> \
+    <span class="o">.</span><span class="n">withWatermark</span><span class="p">(</span><span class="s2">&quot;trade_timestamp&quot;</span><span class="p">,</span> <span class="s2">&quot;15 seconds&quot;</span><span class="p">)</span> \
+    <span class="o">.</span><span class="n">groupBy</span><span class="p">(</span><span class="s2">&quot;symbol&quot;</span><span class="p">)</span> \
+    <span class="o">.</span><span class="n">agg</span><span class="p">(</span><span class="n">avg</span><span class="p">(</span><span class="s2">&quot;price_volume_multiply&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">alias</span><span class="p">(</span><span class="s2">&quot;price_volume_multiply&quot;</span><span class="p">))</span>
+
+<span class="c1"># add UUID and ingest timestamp to the summary dataframe and rename agg column</span>
+<span class="n">finalsummaryDF</span> <span class="o">=</span> <span class="n">summaryDF</span> \
+    <span class="o">.</span><span class="n">withColumn</span><span class="p">(</span><span class="s2">&quot;uuid&quot;</span><span class="p">,</span> <span class="n">makeUUID</span><span class="p">())</span> \
+    <span class="o">.</span><span class="n">withColumn</span><span class="p">(</span><span class="s2">&quot;ingest_timestamp&quot;</span><span class="p">,</span> <span class="n">current_timestamp</span><span class="p">()</span><span class="o">.</span><span class="n">alias</span><span class="p">(</span><span class="s2">&quot;ingest_timestamp&quot;</span><span class="p">))</span> \
+    <span class="o">.</span><span class="n">withColumnRenamed</span><span class="p">(</span><span class="s2">&quot;avg(price_volume_multiply)&quot;</span><span class="p">,</span> <span class="s2">&quot;price_volume_multiply&quot;</span><span class="p">)</span>
+
+<span class="c1"># write the summary dataframe to Cassandra in 5 second batches</span>
+<span class="n">query2</span> <span class="o">=</span> <span class="n">finalsummaryDF</span> \
+    <span class="o">.</span><span class="n">writeStream</span> \
+    <span class="o">.</span><span class="n">trigger</span><span class="p">(</span><span class="n">processingTime</span><span class="o">=</span><span class="s2">&quot;5 seconds&quot;</span><span class="p">)</span> \
+    <span class="o">.</span><span class="n">foreachBatch</span><span class="p">(</span><span class="k">lambda</span> <span class="n">batchDF</span><span class="p">,</span> <span class="n">batchId</span><span class="p">:</span> \
+        <span class="n">batchDF</span><span class="o">.</span><span class="n">write</span> \
+            <span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="s2">&quot;org.apache.spark.sql.cassandra&quot;</span><span class="p">)</span> \
+            <span class="o">.</span><span class="n">option</span><span class="p">(</span><span class="s2">&quot;table&quot;</span><span class="p">,</span> <span class="s2">&quot;running_averages_15_sec&quot;</span><span class="p">)</span> \
+            <span class="o">.</span><span class="n">option</span><span class="p">(</span><span class="s2">&quot;keyspace&quot;</span><span class="p">,</span> <span class="s2">&quot;market&quot;</span><span class="p">)</span> \
+            <span class="o">.</span><span class="n">mode</span><span class="p">(</span><span class="s2">&quot;append&quot;</span><span class="p">)</span> \
+            <span class="o">.</span><span class="n">save</span><span class="p">())</span> \
+    <span class="o">.</span><span class="n">outputMode</span><span class="p">(</span><span class="s2">&quot;update&quot;</span><span class="p">)</span> \
+    <span class="o">.</span><span class="n">start</span><span class="p">()</span>
+
+<span class="c1"># wait for the stream to terminate - i.e. wait forever</span>
+<span class="n">spark</span><span class="o">.</span><span class="n">streams</span><span class="o">.</span><span class="n">awaitAnyTermination</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>Para ejecutar el componente Spark Streaming, haremos lo siguiente:</p>
+<ol class="arabic simple">
+<li><p>Activamos el entorno de Anaconda con Python 3.10.</p></li>
+</ol>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>$<span class="w"> </span>conda<span class="w"> </span>activate<span class="w"> </span>python3_10
+</pre></div>
+</div>
+<ol class="arabic">
+<li><p>Instalamos las dependencias necesarias.</p>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>$<span class="w"> </span>pip<span class="w"> </span>install<span class="w"> </span>-r<span class="w"> </span>requirements.txt
+</pre></div>
+</div>
+</li>
+<li><p>Ejecutamos el componente Spark Streaming.</p>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>$<span class="w"> </span>spark-submit<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>--master<span class="w"> </span>spark://<span class="s">&lt;&lt;SPARK_MAS</span>TER&gt;&gt;:7077<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>--packages<span class="w"> </span>org.apache.spark:spark-sql-kafka-0-10_2.12:3.2.1,<span class="se">\</span>
+<span class="w">    </span>org.apache.spark:spark-avro_2.12:3.2.1,<span class="se">\</span>
+<span class="w">    </span>com.datastax.spark:spark-cassandra-connector_2.12:3.2.0<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>main.py
+</pre></div>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>El repositorio contiene un archivo bash <code class="docutils literal notranslate"><span class="pre">run.sh</span></code> que facilita la ejecución del componente Spark Streaming. El archivo <code class="docutils literal notranslate"><span class="pre">run.sh</span></code> contiene el comando <code class="docutils literal notranslate"><span class="pre">spark-submit</span></code> con las opciones necesarias para ejecutar el componente Spark Streaming. Para ejecutar el componente Spark Streaming, simplemente ejecutamos el archivo <code class="docutils literal notranslate"><span class="pre">run.sh</span></code> desde la terminal (p.e. <code class="docutils literal notranslate"><span class="pre">bash</span> <span class="pre">run.sh</span></code> si estamos en la terminal de Jupyter).</p>
+</div>
+</li>
+</ol>
+<p>El componente Spark Streaming leerá los datos del servidor de Kafka, los procesará en tiempo real y los almacenará en la base de datos Cassandra. El resultado de la ejecución del componentes de Spark Streaming se puede consultar en la interfaz web de Spark History Server en la dirección http://EXTERNAL_IP:18080. Podremos ver los trabajos y las etapas de Spark en la interfaz web de Spark History Server. La figura siguiente muestra un ejemplo de la interfaz web de Spark History Server. Al seleccionar un trabajo o una etapa, podremos ver los detalles del trabajo o la etapa, incluidos los registros y las estadísticas de ejecución. Podremos utilizar la interfaz web de Spark History Server para depurar y optimizar los trabajos y las etapas de Spark.</p>
+<p><img alt="Spark History Server" src="../../../_images/sparkhistoryserver.png" /></p>
+<p>Al mismo tiempo, los datos procesados se están almacenando en la base de datos Cassandra. Podremos ver los datos procesados en la base de datos Cassandra utilizando Cassandra Web. La figura siguiente muestra un ejemplo de datos almacenados en la base de datos Cassandra.</p>
+<p><img alt="Cassandra Web" src="../../../_images/cassandraweb.png" /></p>
+<p>Con el componente Spark Streaming en funcionamiento, los datos de las acciones se están procesando en tiempo real y se están almacenando en la base de datos Cassandra. Podremos realizar consultas sobre los datos almacenados en Cassandra y visualizar los resultados en Cassandra Web. En el siguiente paso, veremos los datos procesados en la interfaz web de Grafana mediante un dashboard interactivo.</p>
+</section>
+<section id="visualizacion-de-los-datos-en-grafana">
+<h3>Visualización de los datos en Grafana<a class="headerlink" href="#visualizacion-de-los-datos-en-grafana" title="Link to this heading">#</a></h3>
+<p>Grafana es una plataforma de visualización de datos que utilizaremos para visualizar los datos de las acciones en tiempo real. Utilizaremos Grafana para crear un dashboard interactivo que muestre los precios de las acciones y las estadísticas calculadas por el componente Spark Streaming. El dashboard mostrará gráficos en tiempo real de los precios de las acciones y las medias móviles de los precios de las acciones. El dashboard se cargó en Grafana añadiéndole un archivo de configuración en formato JSON (<a class="reference external" href="https://github.com/ualmtorres/finnhub-data-streaming-docker-compose/blob/main/grafana/dashboards/dashboard.json"><code class="docutils literal notranslate"><span class="pre">dashboard.json</span></code></a>) al crear la imagen de Grafana que se está usando en este tutorial. Se trata de un dashboard de ejemplo con tres paneles: uno para mostrar los precios de las acciones, otro para mostrar el volumen de las acciones y otro para mostrar las medias móviles de los precios de las acciones en un intervalo de 15 segundos.</p>
+<p>Para acceder al dashboard en Grafana, abrimos un navegador web y vamos a la dirección http://EXTERNAL_IP:3000. El dashboard se muestra de forma predeterminada en la página principal de Grafana. Podremos ver los gráficos en tiempo real de los precios de las acciones y las medias móviles de los precios de las acciones en el dashboard. La figura siguiente muestra un ejemplo de un dashboard interactivo en Grafana.</p>
+<p><img alt="Grafana" src="../../../_images/dashboard.png" /></p>
+<p>Con el dashboard en funcionamiento, podremos visualizar los precios de las acciones y las estadísticas calculadas por el componente Spark Streaming en tiempo real. Podremos realizar análisis de datos sobre las acciones y tomar decisiones informadas sobre inversiones financieras.</p>
+</section>
+</section>
+<section id="conclusiones">
+<h2>Conclusiones<a class="headerlink" href="#conclusiones" title="Link to this heading">#</a></h2>
+<p>En este tutorial hemos creado una plataforma de data streaming y visualización de Finnhub Stock. Se trata de una plataforma completa para visualizar los precios en tiempo real de las acciones de una empresa. Hemos utilizado tecnologías de Big Data como Apache Kafka, Apache Spark, Apache Cassandra, Grafana y Jupyter para procesar los datos de las acciones en tiempo real y visualizarlos en un dashboard interactivo. Tambien se ha utilizado Infraestructura como Código (IaC) con Terraform para crear la máquina virtual en OpenStack, mostrando cómo se puede automatizar el despliegue de la plataforma en un entorno cloud. Además, hemos utilizado contenedores, concretamente Docker, para desplegar los componentes de la plataforma, mostrando cómo se puede empaquetar y desplegar aplicaciones de forma sencilla y portable. Con esta plataforma podremos realizar análisis de datos sobre las acciones y tomar decisiones sobre inversiones financieras basadas en los datos.</p>
+</section>
+</section>
+
+    <script type="text/x-thebe-config">
+    {
+        requestKernel: true,
+        binderOptions: {
+            repo: "binder-examples/jupyter-stacks-datascience",
+            ref: "master",
+        },
+        codeMirrorConfig: {
+            theme: "abcdef",
+            mode: "python"
+        },
+        kernelOptions: {
+            name: "python3",
+            path: "./notebooks/CasosDeUso/cuadroDeMandosParaFinnhub"
+        },
+        predefinedOutput: true
+    }
+    </script>
+    <script>kernelName = 'python3'</script>
+
+                </article>
+              
+
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="../../Labs/Lab06/lab06.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title">Lab 06. Desarrollo de un aplicación PHP para la consulta de información cinematográfica almacenada en Neo4j</p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="../ofertasFlashRedis/index.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">Desarrollo de una API REST para gestión de ofertas flash con Slim Framework y Redis</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+  <div class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> Contents
+  </div>
+  <nav class="bd-toc-nav page-toc">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#introduccion">Introducción</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#configuracion-de-la-plataforma">Configuración de la plataforma</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#creacion-de-la-maquina-virtual-openstack-con-terraform">Creación de la máquina virtual OpenStack con Terraform</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#creacion-de-la-plataforma-de-data-streaming-y-visualizacion-con-docker">Creación de la plataforma de data streaming y visualización con Docker</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#configuracion-inicial-de-la-plataforma">Configuración inicial de la plataforma</a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#configuracion-de-kafka">Configuración de Kafka</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#configuracion-de-jupyter">Configuración de Jupyter</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#desarrollo-de-la-plataforma">Desarrollo de la plataforma</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#creacion-de-un-productor-de-datos-de-finnhub-stock">Creación de un productor de datos de Finnhub Stock</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#creacion-de-un-consumidor-de-datos-de-kafka">Creación de un consumidor de datos de Kafka</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#creacion-de-un-componente-spark-streaming">Creación de un componente Spark Streaming</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#visualizacion-de-los-datos-en-grafana">Visualización de los datos en Grafana</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#conclusiones">Conclusiones</a></li>
+</ul>
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
+  
+  <div class="footer-item">
+    
+<p class="component-author">
+By Manuel Torres
+</p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+
+  <p class="copyright">
+    
+      © Copyright 2023.
+      <br/>
+    
+  </p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+</div>
+          </footer>
+        
+
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="../../../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b"></script>
+<script src="../../../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+  <footer class="bd-footer">
+  </footer>
+  </body>
+</html>

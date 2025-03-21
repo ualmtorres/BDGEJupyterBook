@@ -1,0 +1,2074 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="../../../" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Desarrollo de una API REST para gestión de productos y valoraciones con Slim Framework y MongoDB &#8212; Aprendiendo bases de datos con Jupyter</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../../../_static/styles/theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="../../../_static/styles/bootstrap.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="../../../_static/styles/pydata-sphinx-theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+
+  
+  <link href="../../../_static/vendor/fontawesome/6.5.2/css/all.min.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="../../../_static/vendor/fontawesome/6.5.2/webfonts/fa-solid-900.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../../../_static/vendor/fontawesome/6.5.2/webfonts/fa-brands-400.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../../../_static/vendor/fontawesome/6.5.2/webfonts/fa-regular-400.woff2" />
+
+    <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=03e43079" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/styles/sphinx-book-theme.css?v=eba8b062" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/togglebutton.css?v=13237357" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/sphinx-thebe.css?v=4fa983c6" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/sphinx-design.min.css?v=95c83b7e" />
+  
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../../../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b" />
+<link rel="preload" as="script" href="../../../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b" />
+  <script src="../../../_static/vendor/fontawesome/6.5.2/js/all.min.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+    <script src="../../../_static/documentation_options.js?v=9eb32ce0"></script>
+    <script src="../../../_static/doctools.js?v=9a2dae69"></script>
+    <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../../_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="../../../_static/copybutton.js?v=f281be69"></script>
+    <script src="../../../_static/scripts/sphinx-book-theme.js?v=887ef09a"></script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="../../../_static/togglebutton.js?v=4a39c7ea"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="../../../_static/design-tabs.js?v=f930bc37"></script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script async="async" src="../../../_static/sphinx-thebe.js?v=c100c467"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'notebooks/CasosDeUso/valoracionesMongoDB/index';</script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" />
+    <link rel="next" title="Desarrollo de una API REST para gestión de recomendaciones con Slim Framework y Neo4j" href="../recomendacionesNeo4j/index.html" />
+    <link rel="prev" title="Desarrollo de una API REST para gestión de ofertas flash con Slim Framework y Redis" href="../ofertasFlashRedis/index.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-primary-sidebar-checkbox"/>
+  <label class="overlay overlay-primary" for="pst-primary-sidebar-checkbox"></label>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-secondary-sidebar-checkbox"/>
+  <label class="overlay overlay-secondary" for="pst-secondary-sidebar-checkbox"></label>
+  
+  <div class="search-button__wrapper">
+    <div class="search-button__overlay"></div>
+    <div class="search-button__search-container">
+<form class="bd-search d-flex align-items-center"
+      action="../../../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         id="search-input"
+         placeholder="Search this book..."
+         aria-label="Search this book..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form></div>
+  </div>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+      <div class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+    
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="../../intro.html">
+  
+  
+  
+  
+  
+    
+    
+      
+    
+    
+    <img src="../../../_static/di.png" class="logo__image only-light" alt="Aprendiendo bases de datos con Jupyter - Home"/>
+    <script>document.write(`<img src="../../../_static/di.png" class="logo__image only-dark" alt="Aprendiendo bases de datos con Jupyter - Home"/>`);</script>
+  
+  
+</a></div>
+        <div class="sidebar-primary-item">
+
+ <script>
+ document.write(`
+   <button class="btn search-button-field search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass"></i>
+    <span class="search-button__default-text">Search</span>
+    <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+   </button>
+ `);
+ </script></div>
+        <div class="sidebar-primary-item"><nav class="bd-links bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
+        
+        <ul class="nav bd-sidenav bd-sidenav__home-link">
+            <li class="toctree-l1">
+                <a class="reference internal" href="../../intro.html">
+                    Bases de datos a gran escala
+                </a>
+            </li>
+        </ul>
+        <p aria-level="2" class="caption" role="heading"><span class="caption-text">Temario</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../../Docs/Tema1/tema1.html">Tema 1. Modelos de almacenamiento no relacionales. El fenómeno NoSQL</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../Docs/Tema2/tema2.html">Tema 2. Bases de datos clave-valor</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../Docs/Tema3/tema3.html">Tema 3. Bases de datos orientadas a documentos</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../Docs/Tema4/tema4.html">Tema 4. Bases de datos orientadas a grafos</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../Docs/Tema5/tema5.html">Tema 5. Bases de datos orientadas a columnas</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Labs</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../../Labs/Lab01/lab01.html">Lab 01. Consultas en MongoDB</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../Labs/Lab02/lab02.html">Lab 02. Indexación en MongoDB</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../Labs/Lab03/lab03.html">Lab 03. Desarrollo de un Blog con PHP y MongoDB</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../Labs/Lab04/lab04.html">Lab 04. Framework de Agregación de MongoDB</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../Labs/Lab05/lab05.html">Lab 05. Consultas en Neo4j</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../Labs/Lab06/lab06.html">Lab 06. Desarrollo de un aplicación PHP para la consulta de información cinematográfica almacenada en Neo4j</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Casos de uso</span></p>
+<ul class="current nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../ofertasFlashRedis/index.html">Desarrollo de una API REST para gestión de ofertas flash con Slim Framework y Redis</a></li>
+<li class="toctree-l1 current active"><a class="current reference internal" href="#">Desarrollo de una API REST para gestión de productos y valoraciones con Slim Framework y MongoDB</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../recomendacionesNeo4j/index.html">Desarrollo de una API REST para gestión de recomendaciones con Slim Framework y Neo4j</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../historialCassandra/index.html">Desarrollo de una API REST para gestión historial de pedidos y seguimiento en tiempo real con Express y Cassandra</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Actividades complementarias</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../../ActividadesComplementarias/actividades.html">Descripción</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../ActividadesComplementarias/gestionRedTransporteMovilidadUrbana.html">Actividad complementaria. Gestión de una red de transporte y movilidad urbana</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../ActividadesComplementarias/gestionEmergenciasDesastresNaturales.html">Actividad complementaria. Gestión de emergencias y desastres naturales</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Licencia</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../../../LICENSE.html">Licencia</a></li>
+</ul>
+
+    </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+  </div>
+  
+  <div id="rtd-footer-container"></div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><button class="sidebar-toggle primary-toggle btn btn-sm" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</button></div>
+      
+    </div>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+<a href="https://github.com/ualmtorres/AprendiendoBasesDeDatosConJupyter" target="_blank"
+   class="btn btn-sm btn-source-repository-button"
+   title="Source repository"
+   data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fab fa-github"></i>
+  </span>
+
+</a>
+
+
+
+
+
+
+<div class="dropdown dropdown-download-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Download this page">
+    <i class="fas fa-download"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="../../../_sources/notebooks/CasosDeUso/valoracionesMongoDB/index.md" target="_blank"
+   class="btn btn-sm btn-download-source-button dropdown-item"
+   title="Download source file"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="btn__text-container">.md</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li>
+<button onclick="window.print()"
+  class="btn btn-sm btn-download-pdf-button dropdown-item"
+  title="Print to PDF"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="btn__text-container">.pdf</span>
+</button>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+<button onclick="toggleFullScreen()"
+  class="btn btn-sm btn-fullscreen-button"
+  title="Fullscreen mode"
+  data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="theme-switch fa-solid fa-sun fa-lg" data-mode="light"></i>
+    <i class="theme-switch fa-solid fa-moon fa-lg" data-mode="dark"></i>
+    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"></i>
+  </button>
+`);
+</script>
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm pst-navbar-icon search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
+  </button>
+`);
+</script>
+<button class="sidebar-toggle secondary-toggle btn btn-sm" title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="fa-solid fa-list"></span>
+</button>
+</div></div>
+      
+    </div>
+  
+</div>
+</div>
+              
+              
+
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1>Desarrollo de una API REST para gestión de productos y valoraciones con Slim Framework y MongoDB</h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+            <div>
+                <h2> Contents </h2>
+            </div>
+            <nav aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#introduccion">Introducción</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#descricion-del-problema">Descrición del problema</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#configuracion-del-entorno-de-desarrollo">Configuración del entorno de desarrollo</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#servicios">Servicios</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#instrucciones-de-instalacion">Instrucciones de instalación</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#uso-basico-de-la-extension-mongodb-para-php">Uso básico de la extensión MongoDB para PHP</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#conexion-a-mongodb">Conexión a MongoDB</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#operaciones-basicas">Operaciones básicas</a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#insertar-documentos">Insertar documentos</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#consultar-documentos">Consultar documentos</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#actualizar-documentos">Actualizar documentos</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#eliminar-documentos">Eliminar documentos</a></li>
+</ul>
+</li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#manejo-de-errores">Manejo de errores</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#desarrollo-de-la-api">Desarrollo de la API</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#especificacion-de-los-endpoints-de-la-api">Especificación de los endpoints de la API</a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#ejemplo-de-json-de-un-producto">Ejemplo de JSON de un producto</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#ejemplo-de-json-de-una-categoria">Ejemplo de JSON de una categoría</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#ejemplo-de-json-de-un-comentario">Ejemplo de JSON de un comentario</a></li>
+</ul>
+</li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#crear-la-aplicacion-slim">Crear la aplicación Slim</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#endpoint-de-prueba">Endpoint de prueba</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#endpoints-de-categorias">Endpoints de categorías</a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#endpoint-para-crear-una-categoria">Endpoint para crear una categoría</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#endpoint-para-obtener-todas-las-categorias-incluyendo-la-jerarquia">Endpoint para obtener todas las categorías incluyendo la jerarquía</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#endpoint-para-obtener-todas-las-categorias">Endpoint para obtener todas las categorías</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#endpoint-para-obtener-una-categoria-por-id">Endpoint para obtener una categoría por ID</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#endpoint-para-actualizar-una-categoria">Endpoint para actualizar una categoría</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#endpoint-para-eliminar-una-categoria">Endpoint para eliminar una categoría</a></li>
+</ul>
+</li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#endpoints-de-productos">Endpoints de productos</a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#endpoint-para-crear-un-producto">Endpoint para crear un producto</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#endpoint-para-obtener-detalles-de-un-producto">Endpoint para obtener detalles de un producto</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#endpoint-para-consultar-productos">Endpoint para consultar productos</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#endpoint-para-actualizar-un-producto">Endpoint para actualizar un producto</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#endpoint-para-eliminar-un-producto">Endpoint para eliminar un producto</a></li>
+</ul>
+</li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#endpoints-de-comentarios">Endpoints de comentarios</a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#endpoint-para-anadir-un-comentario-a-un-producto">Endpoint para añadir un comentario a un producto</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#endpoint-para-obtener-los-comentarios-de-un-producto-o-por-usuario">Endpoint para obtener los comentarios de un producto o por usuario</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#endpoint-para-actualizar-un-comentario">Endpoint para actualizar un comentario</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#endpoint-para-eliminar-un-comentario">Endpoint para eliminar un comentario</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#indices-para-mejorar-el-rendimiento">Indices para mejorar el rendimiento</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#definir-indices-en-mongodb">Definir índices en MongoDB</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#indices-recomendados-para-la-api">Índices recomendados para la API</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#pruebas-de-la-api">Pruebas de la API</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#conclusiones">Conclusiones</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#licencia">Licencia</a></li>
+</ul>
+            </nav>
+        </div>
+    </div>
+</div>
+
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <section class="tex2jax_ignore mathjax_ignore" id="desarrollo-de-una-api-rest-para-gestion-de-productos-y-valoraciones-con-slim-framework-y-mongodb">
+<h1>Desarrollo de una API REST para gestión de productos y valoraciones con Slim Framework y MongoDB<a class="headerlink" href="#desarrollo-de-una-api-rest-para-gestion-de-productos-y-valoraciones-con-slim-framework-y-mongodb" title="Link to this heading">#</a></h1>
+<p>Manuel Torres</p>
+<p>Bases de datos a gran escala. Máster en Ingeniería Informática. Universidad de Almería</p>
+<hr class="docutils" />
+<p>Este proyecto tiene como objetivo desarrollar una API REST eficiente y escalable para la gestión de productos y valoraciones en un entorno de comercio electrónico. Utilizando Slim Framework y MongoDB, se busca proporcionar una solución flexible y robusta que permita a los desarrolladores crear aplicaciones modernas y de alto rendimiento. MongoDB, con su capacidad para manejar datos no estructurados y su flexibilidad en el esquema, es especialmente adecuado para este tipo de aplicaciones, permitiendo una gestión eficiente de productos y valoraciones. La implementación de esta API no solo facilitará la gestión de productos y categorías, sino que también mejorará la experiencia del usuario al permitir la consulta y gestión de valoraciones y comentarios. Con un entorno de desarrollo configurado mediante Docker y Docker Compose, este proyecto ofrece una base sólida para futuras expansiones y mejoras.</p>
+<ul class="simple">
+<li><p>Desarrollar una API REST utilizando Slim Framework y MongoDB para gestionar productos, categorías y valoraciones.</p></li>
+<li><p>Configurar un entorno de desarrollo utilizando Docker y Docker Compose.</p></li>
+<li><p>Implementar endpoints para la creación, consulta, actualización y eliminación de productos, categorías y valoraciones.</p></li>
+<li><p>Proporcionar ejemplos prácticos de uso de la extensión MongoDB para PHP.</p></li>
+<li><p>Realizar pruebas de la API utilizando Postman.</p></li>
+</ul>
+<div class="admonition tip">
+<p class="admonition-title">Tip</p>
+<p>Disponible el <a class="reference external" href="https://github.com/ualmtorres/SlimMongoDBAPIProductosValoraciones.git">repositorio de GitHub</a> con el código fuente de la API REST.</p>
+</div>
+<section id="introduccion">
+<h2>Introducción<a class="headerlink" href="#introduccion" title="Link to this heading">#</a></h2>
+<p>En el contexto del comercio electrónico, la experiencia del usuario no solo depende de la disponibilidad de productos, sino también de la calidad de la información y las opiniones de otros compradores. Las valoraciones y comentarios juegan un papel crucial en la toma de decisiones de los clientes, ayudando a generar confianza y a mejorar los productos ofrecidos.</p>
+<p>MongoDB, como base de datos NoSQL orientada a documentos, permite modelar eficientemente este tipo de información, almacenando productos y sus valoraciones de forma flexible y escalable. En este tutorial se desarrollará una API REST que gestione productos, categorías y valoraciones en un entorno de comercio electrónico.</p>
+</section>
+<section id="descricion-del-problema">
+<h2>Descrición del problema<a class="headerlink" href="#descricion-del-problema" title="Link to this heading">#</a></h2>
+<p>En este proyecto se va a desarrollar una API REST utilizando MongoDB para gestionar productos y valoraciones en un entorno de comercio electrónico utilizando Slim Framework, MongoDB y la extensión MongoDB para PHP. La API debe permitir:</p>
+<ul class="simple">
+<li><p>La gestión de productos, incluyendo su creación, actualización, eliminación y consulta.</p></li>
+<li><p>La organización de productos en categorías con una estructura flexible.</p></li>
+<li><p>La gestión de valoraciones y comentarios de los usuarios sobre los productos.</p></li>
+<li><p>La consulta eficiente de productos con sus valoraciones agregadas.</p></li>
+</ul>
+</section>
+<section id="configuracion-del-entorno-de-desarrollo">
+<h2>Configuración del entorno de desarrollo<a class="headerlink" href="#configuracion-del-entorno-de-desarrollo" title="Link to this heading">#</a></h2>
+<p>Para configurar el entorno de desarrollo de la API REST, utilizaremos Docker y Docker Compose. El archivo <code class="docutils literal notranslate"><span class="pre">docker-compose.yml</span></code> define los servicios necesarios para ejecutar la aplicación, incluyendo MongoDB, PHP con Slim y Nginx.</p>
+<p>A continuación se muestra el contenido del archivo <code class="docutils literal notranslate"><span class="pre">docker-compose.yml</span></code>:</p>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">version</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;3.8&quot;</span>
+
+<span class="nt">services</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">mongo</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">container_name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">mongo</span>
+<span class="w">    </span><span class="nt">image</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">mongo:6.0.4</span>
+<span class="w">    </span><span class="nt">restart</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">always</span>
+<span class="w">    </span><span class="nt">ports</span><span class="p">:</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">27017:27017</span>
+<span class="w">    </span><span class="nt">volumes</span><span class="p">:</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&quot;./mongo-data/:/data/db&quot;</span>
+<span class="w">    </span><span class="nt">environment</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">MONGO_INITDB_ROOT_USERNAME</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;mongouser&quot;</span>
+<span class="w">      </span><span class="nt">MONGO_INITDB_ROOT_PASSWORD</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;mongopassword&quot;</span>
+<span class="w">  </span><span class="nt">mongo-express</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">container_name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">mongo-express</span>
+<span class="w">    </span><span class="nt">image</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">mongo-express:1.0.2</span>
+<span class="w">    </span><span class="nt">restart</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">always</span>
+<span class="w">    </span><span class="nt">ports</span><span class="p">:</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">8081:8081</span>
+<span class="w">    </span><span class="nt">environment</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">ME_CONFIG_MONGODB_ADMINUSERNAME</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;mongouser&quot;</span>
+<span class="w">      </span><span class="nt">ME_CONFIG_MONGODB_ADMINPASSWORD</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;mongopassword&quot;</span>
+<span class="w">      </span><span class="nt">ME_CONFIG_MONGODB_URL</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;mongodb://mongouser:mongopassword@mongo:27017&quot;</span>
+<span class="w">      </span><span class="nt">ME_CONFIG_BASICAUTH_USERNAME</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;user&quot;</span>
+<span class="w">      </span><span class="nt">ME_CONFIG_BASICAUTH_PASSWORD</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;password&quot;</span>
+<span class="w">  </span><span class="nt">php</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">container_name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">slim_php</span>
+<span class="w">    </span><span class="nt">build</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">context</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">./docker/php</span>
+<span class="w">    </span><span class="nt">ports</span><span class="p">:</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&quot;9000:9000&quot;</span>
+<span class="w">    </span><span class="nt">volumes</span><span class="p">:</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">.:/var/www/slim_app</span>
+
+<span class="w">  </span><span class="nt">nginx</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">container_name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">slim_nginx</span>
+<span class="w">    </span><span class="nt">image</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">nginx:stable-alpine</span>
+<span class="w">    </span><span class="nt">ports</span><span class="p">:</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&quot;8084:80&quot;</span>
+<span class="w">    </span><span class="nt">volumes</span><span class="p">:</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">.:/var/www/slim_app</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">./docker/nginx/default.conf:/etc/nginx/conf.d/default.conf</span>
+<span class="w">    </span><span class="nt">depends_on</span><span class="p">:</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">php</span>
+</pre></div>
+</div>
+<section id="servicios">
+<h3>Servicios<a class="headerlink" href="#servicios" title="Link to this heading">#</a></h3>
+<ul class="simple">
+<li><p><em><strong>mongo</strong></em>: Servicio de bases de datos de documentos que se utiliza para almacenar los productos y las valoraciones. Se expone en el puerto 27017 y utiliza un volumen para almacenar los datos de la base de datos que mapea el directorio <code class="docutils literal notranslate"><span class="pre">mongo-data</span></code> al directorio <code class="docutils literal notranslate"><span class="pre">/data/db</span></code> en el contenedor.</p></li>
+<li><p><em><strong>mongo-express</strong></em>: Interfaz web para administrar la base de datos de MongoDB. Se expone en el puerto 8081 y se conecta al servicio de MongoDB utilizando las credenciales indicadas.</p></li>
+<li><p><em><strong>PHP</strong></em>: Servicio que ejecuta la aplicación Slim. Se construye a partir del contexto <code class="docutils literal notranslate"><span class="pre">./docker/php</span></code> y se expone en el puerto <code class="docutils literal notranslate"><span class="pre">9000</span></code>. Incluye un volumen que mapea el directorio actual al directorio de la aplicación Slim. El código fuente de la aplicación Slim se encuentra en el directorio <code class="docutils literal notranslate"><span class="pre">./public</span></code>.</p></li>
+<li><p><em><strong>Nginx</strong></em>: Servidor web que sirve la aplicación Slim. Se expone en el puerto <code class="docutils literal notranslate"><span class="pre">8080</span></code> y depende del servicio PHP.</p></li>
+</ul>
+<p><strong>Configuración de la extensión MongoDB para PHP</strong></p>
+<p>Para interactuar con la base de datos de MongoDB desde PHP, es necesario instalar la extensión <code class="docutils literal notranslate"><span class="pre">mongodb</span></code> en el contenedor PHP. A continuación se muestra el contenido del archivo <code class="docutils literal notranslate"><span class="pre">docker/php/Dockerfile</span></code>:</p>
+<div class="highlight-docker notranslate"><div class="highlight"><pre><span></span><span class="k">FROM</span><span class="w"> </span><span class="s">php:8.1-fpm</span>
+
+<span class="k">RUN</span><span class="w"> </span>apt<span class="w"> </span>update<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span><span class="o">&amp;&amp;</span><span class="w"> </span>apt<span class="w"> </span>install<span class="w"> </span>-y<span class="w"> </span>zlib1g-dev<span class="w"> </span>g++<span class="w"> </span>git<span class="w"> </span>libicu-dev<span class="w"> </span>zip<span class="w"> </span>libzip-dev<span class="w"> </span>zip<span class="w"> </span>libpq-dev<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span><span class="o">&amp;&amp;</span><span class="w"> </span>docker-php-ext-configure<span class="w"> </span>pgsql<span class="w"> </span>-with-pgsql<span class="o">=</span>/usr/local/pgsql<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span><span class="o">&amp;&amp;</span><span class="w"> </span>docker-php-ext-install<span class="w"> </span>intl<span class="w"> </span>opcache<span class="w"> </span>pdo<span class="w"> </span>pdo_pgsql<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span><span class="o">&amp;&amp;</span><span class="w"> </span>pecl<span class="w"> </span>install<span class="w"> </span>apcu<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span><span class="o">&amp;&amp;</span><span class="w"> </span>yes<span class="w"> </span><span class="s1">&#39;&#39;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>pecl<span class="w"> </span>install<span class="w"> </span>mongodb<span class="w"> </span><span class="se">\ </span>①
+<span class="w">    </span><span class="o">&amp;&amp;</span><span class="w"> </span>docker-php-ext-enable<span class="w"> </span>apcu<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span><span class="o">&amp;&amp;</span><span class="w"> </span>docker-php-ext-configure<span class="w"> </span>zip<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span><span class="o">&amp;&amp;</span><span class="w"> </span>docker-php-ext-install<span class="w"> </span>zip<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span><span class="o">&amp;&amp;</span><span class="w"> </span>docker-php-ext-enable<span class="w"> </span>mongodb<span class="w"> </span>②
+
+<span class="k">WORKDIR</span><span class="w"> </span><span class="s">/var/www/slim_app</span>
+
+<span class="k">RUN</span><span class="w"> </span>curl<span class="w"> </span>-sS<span class="w"> </span>https://getcomposer.org/installer<span class="w"> </span><span class="p">|</span><span class="w"> </span>php<span class="w"> </span>--<span class="w"> </span>--install-dir<span class="o">=</span>/usr/local/bin<span class="w"> </span>--filename<span class="o">=</span>composer
+</pre></div>
+</div>
+<ol class="arabic simple">
+<li><p>Instala la extensión <code class="docutils literal notranslate"><span class="pre">mongodb</span></code> de PECL.</p></li>
+<li><p>Habilita la extensión <code class="docutils literal notranslate"><span class="pre">mongodb</span></code> en PHP.</p></li>
+</ol>
+<p>Además, es necesario incluir la dependencia de la extensión <code class="docutils literal notranslate"><span class="pre">mongodb</span></code> en el archivo <code class="docutils literal notranslate"><span class="pre">composer.json</span></code> de la aplicación Slim. Desde el contenedor PHP, ejecuta el siguiente comando para instalar la extensión <code class="docutils literal notranslate"><span class="pre">mongodb</span></code>:</p>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>composer<span class="w"> </span>require<span class="w"> </span>mongodb/mongodb
+</pre></div>
+</div>
+</section>
+<section id="instrucciones-de-instalacion">
+<h3>Instrucciones de instalación<a class="headerlink" href="#instrucciones-de-instalacion" title="Link to this heading">#</a></h3>
+<p>Para instalar y ejecutar la aplicación, sigue estos pasos:</p>
+<ol class="arabic">
+<li><p>Clona el repositorio:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>git<span class="w"> </span>clone<span class="w"> </span>https://github.com/ualmtorres/SlimMongoDBAPIProductosValoraciones.git
+<span class="nb">cd</span><span class="w"> </span>SlimMongoDBAPIProductosValoraciones
+</pre></div>
+</div>
+</li>
+<li><p>Ejecuta Docker Compose para levantar los servicios:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>docker-compose<span class="w"> </span>up<span class="w"> </span>-d
+</pre></div>
+</div>
+</li>
+<li><p>Accede a la documentación de la API REST en <code class="docutils literal notranslate"><span class="pre">http://localhost:8080</span></code>.</p></li>
+<li><p>Accede a los endpoints de la API REST en <code class="docutils literal notranslate"><span class="pre">http://localhost:8080/api</span></code>.</p></li>
+</ol>
+<p>Con estos pasos, tendrás el entorno de desarrollo configurado y la API REST en funcionamiento.</p>
+</section>
+</section>
+<section id="uso-basico-de-la-extension-mongodb-para-php">
+<h2>Uso básico de la extensión MongoDB para PHP<a class="headerlink" href="#uso-basico-de-la-extension-mongodb-para-php" title="Link to this heading">#</a></h2>
+<p>La extensión MongoDB para PHP proporciona una API orientada a objetos para interactuar con una base de datos de MongoDB. A continuación se muestra cómo conectarse a una base de datos de MongoDB, realizar operaciones básicas como insertar, consultar, actualizar y eliminar documentos, y manejar errores.</p>
+<section id="conexion-a-mongodb">
+<h3>Conexión a MongoDB<a class="headerlink" href="#conexion-a-mongodb" title="Link to this heading">#</a></h3>
+<p>Para conectarse a una base de datos de MongoDB, primero necesitamos crear una instancia de la clase <code class="docutils literal notranslate"><span class="pre">MongoDB\Client</span></code> con la URL de conexión de MongoDB. Aquí hay un ejemplo de cómo conectarse a una base de datos local:</p>
+<div class="highlight-php notranslate"><div class="highlight"><pre><span></span><span class="cp">&lt;?php</span>
+<span class="k">require</span> <span class="s1">&#39;vendor/autoload.php&#39;</span><span class="p">;</span> <span class="c1">// incluir la librería de MongoDB</span>
+
+<span class="nv">$client</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">MongoDB\Client</span><span class="p">(</span><span class="s1">&#39;mongodb://&lt;user&gt;:&lt;password&gt;@mongo:27017&#39;</span><span class="p">);</span>
+<span class="cp">?&gt;</span>
+</pre></div>
+</div>
+</section>
+<section id="operaciones-basicas">
+<h3>Operaciones básicas<a class="headerlink" href="#operaciones-basicas" title="Link to this heading">#</a></h3>
+<section id="insertar-documentos">
+<h4>Insertar documentos<a class="headerlink" href="#insertar-documentos" title="Link to this heading">#</a></h4>
+<p>Para insertar documentos en una colección, utilizamos el método <code class="docutils literal notranslate"><span class="pre">insertOne</span></code> o <code class="docutils literal notranslate"><span class="pre">insertMany</span></code>. Aquí hay un ejemplo de cómo insertar un solo documento:</p>
+<div class="highlight-php notranslate"><div class="highlight"><pre><span></span><span class="cp">&lt;?php</span>
+<span class="k">require</span> <span class="s1">&#39;vendor/autoload.php&#39;</span><span class="p">;</span> <span class="c1">// incluir la librería de MongoDB</span>
+
+<span class="nv">$client</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">MongoDB\Client</span><span class="p">(</span><span class="s1">&#39;mongodb://&lt;user&gt;:&lt;password&gt;@mongo:27017&#39;</span><span class="p">);</span>
+<span class="nv">$collection</span> <span class="o">=</span> <span class="nv">$client</span><span class="o">-&gt;</span><span class="na">test</span><span class="o">-&gt;</span><span class="na">users</span><span class="p">;</span>
+
+<span class="nv">$result</span> <span class="o">=</span> <span class="nv">$collection</span><span class="o">-&gt;</span><span class="na">insertOne</span><span class="p">([</span>
+    <span class="s1">&#39;name&#39;</span> <span class="o">=&gt;</span> <span class="s1">&#39;Alice&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;email&#39;</span> <span class="o">=&gt;</span> <span class="s1">&#39;alice@example.com&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;age&#39;</span> <span class="o">=&gt;</span> <span class="mi">25</span>
+<span class="p">]);</span>
+
+<span class="k">echo</span> <span class="s2">&quot;Inserted with Object ID &#39;</span><span class="si">{</span><span class="nv">$result</span><span class="o">-&gt;</span><span class="na">getInsertedId</span><span class="p">()</span><span class="si">}</span><span class="s2">&#39;&quot;</span><span class="p">;</span>
+<span class="cp">?&gt;</span>
+</pre></div>
+</div>
+<p>Para insertar múltiples documentos, utilizamos el método <code class="docutils literal notranslate"><span class="pre">insertMany</span></code>:</p>
+<div class="highlight-php notranslate"><div class="highlight"><pre><span></span><span class="cp">&lt;?php</span>
+<span class="k">require</span> <span class="s1">&#39;vendor/autoload.php&#39;</span><span class="p">;</span>
+
+<span class="nv">$client</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">MongoDB\Client</span><span class="p">(</span><span class="s1">&#39;mongodb://&lt;user&gt;:&lt;password&gt;@mongo:27017&#39;</span><span class="p">);</span>
+<span class="nv">$collection</span> <span class="o">=</span> <span class="nv">$client</span><span class="o">-&gt;</span><span class="na">test</span><span class="o">-&gt;</span><span class="na">users</span><span class="p">;</span>
+
+<span class="nv">$result</span> <span class="o">=</span> <span class="nv">$collection</span><span class="o">-&gt;</span><span class="na">insertMany</span><span class="p">([</span>
+    <span class="p">[</span>
+        <span class="s1">&#39;name&#39;</span> <span class="o">=&gt;</span> <span class="s1">&#39;Bob&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;email&#39;</span> <span class="o">=&gt;</span> <span class="s1">&#39;bob@example.com&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;age&#39;</span> <span class="o">=&gt;</span> <span class="mi">30</span>
+    <span class="p">],</span>
+    <span class="p">[</span>
+        <span class="s1">&#39;name&#39;</span> <span class="o">=&gt;</span> <span class="s1">&#39;Charlie&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;email&#39;</span> <span class="o">=&gt;</span> <span class="s1">&#39;charlie@example.com&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;age&#39;</span> <span class="o">=&gt;</span> <span class="mi">35</span>
+    <span class="p">]</span>
+<span class="p">]);</span>
+
+<span class="k">echo</span> <span class="s2">&quot;Inserted </span><span class="si">{</span><span class="nv">$result</span><span class="o">-&gt;</span><span class="na">getInsertedCount</span><span class="p">()</span><span class="si">}</span><span class="s2"> documents&quot;</span><span class="p">;</span>
+<span class="cp">?&gt;</span>
+</pre></div>
+</div>
+</section>
+<section id="consultar-documentos">
+<h4>Consultar documentos<a class="headerlink" href="#consultar-documentos" title="Link to this heading">#</a></h4>
+<p>Para consultar documentos en una colección, utilizamos el método <code class="docutils literal notranslate"><span class="pre">find</span></code> o <code class="docutils literal notranslate"><span class="pre">findOne</span></code>. Aquí hay un ejemplo de cómo consultar todos los documentos en una colección:</p>
+<div class="highlight-php notranslate"><div class="highlight"><pre><span></span><span class="cp">&lt;?php</span>
+<span class="k">require</span> <span class="s1">&#39;vendor/autoload.php&#39;</span><span class="p">;</span>
+
+<span class="nv">$client</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">MongoDB\Client</span><span class="p">(</span><span class="s1">&#39;mongodb://&lt;user&gt;:&lt;password&gt;@mongo:27017&#39;</span><span class="p">);</span>
+<span class="nv">$collection</span> <span class="o">=</span> <span class="nv">$client</span><span class="o">-&gt;</span><span class="na">test</span><span class="o">-&gt;</span><span class="na">users</span><span class="p">;</span>
+
+<span class="nv">$cursor</span> <span class="o">=</span> <span class="nv">$collection</span><span class="o">-&gt;</span><span class="na">find</span><span class="p">();</span>
+
+<span class="k">foreach</span> <span class="p">(</span><span class="nv">$cursor</span> <span class="k">as</span> <span class="nv">$document</span><span class="p">)</span> <span class="p">{</span>
+    <span class="nb">var_dump</span><span class="p">(</span><span class="nv">$document</span><span class="p">);</span>
+<span class="p">}</span>
+<span class="cp">?&gt;</span>
+</pre></div>
+</div>
+<p>Para consultar un solo documento, utilizamos el método <code class="docutils literal notranslate"><span class="pre">findOne</span></code>:</p>
+<div class="highlight-php notranslate"><div class="highlight"><pre><span></span><span class="cp">&lt;?php</span>
+<span class="k">require</span> <span class="s1">&#39;vendor/autoload.php&#39;</span><span class="p">;</span>
+
+<span class="nv">$client</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">MongoDB\Client</span><span class="p">(</span><span class="s1">&#39;mongodb://&lt;user&gt;:&lt;password&gt;@mongo:27017&#39;</span><span class="p">);</span>
+<span class="nv">$collection</span> <span class="o">=</span> <span class="nv">$client</span><span class="o">-&gt;</span><span class="na">test</span><span class="o">-&gt;</span><span class="na">users</span><span class="p">;</span>
+
+<span class="nv">$document</span> <span class="o">=</span> <span class="nv">$collection</span><span class="o">-&gt;</span><span class="na">findOne</span><span class="p">([</span><span class="s1">&#39;name&#39;</span> <span class="o">=&gt;</span> <span class="s1">&#39;Alice&#39;</span><span class="p">]);</span>
+<span class="nb">var_dump</span><span class="p">(</span><span class="nv">$document</span><span class="p">);</span>
+<span class="cp">?&gt;</span>
+</pre></div>
+</div>
+</section>
+<section id="actualizar-documentos">
+<h4>Actualizar documentos<a class="headerlink" href="#actualizar-documentos" title="Link to this heading">#</a></h4>
+<p>Para actualizar documentos en una colección, utilizamos el método <code class="docutils literal notranslate"><span class="pre">updateOne</span></code> o <code class="docutils literal notranslate"><span class="pre">updateMany</span></code>. Aquí hay un ejemplo de cómo actualizar un solo documento:</p>
+<div class="highlight-php notranslate"><div class="highlight"><pre><span></span><span class="cp">&lt;?php</span>
+<span class="k">require</span> <span class="s1">&#39;vendor/autoload.php&#39;</span><span class="p">;</span>
+
+<span class="nv">$client</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">MongoDB\Client</span><span class="p">(</span><span class="s1">&#39;mongodb://&lt;user&gt;:&lt;password&gt;@mongo:27017&#39;</span><span class="p">);</span>
+<span class="nv">$collection</span> <span class="o">=</span> <span class="nv">$client</span><span class="o">-&gt;</span><span class="na">test</span><span class="o">-&gt;</span><span class="na">users</span><span class="p">;</span>
+
+<span class="nv">$result</span> <span class="o">=</span> <span class="nv">$collection</span><span class="o">-&gt;</span><span class="na">updateOne</span><span class="p">(</span>
+    <span class="p">[</span><span class="s1">&#39;name&#39;</span> <span class="o">=&gt;</span> <span class="s1">&#39;Alice&#39;</span><span class="p">],</span>
+    <span class="p">[</span><span class="s1">&#39;$set&#39;</span> <span class="o">=&gt;</span> <span class="p">[</span><span class="s1">&#39;age&#39;</span> <span class="o">=&gt;</span> <span class="mi">26</span><span class="p">]]</span>
+<span class="p">);</span>
+
+<span class="k">echo</span> <span class="s2">&quot;Matched </span><span class="si">{</span><span class="nv">$result</span><span class="o">-&gt;</span><span class="na">getMatchedCount</span><span class="p">()</span><span class="si">}</span><span class="s2"> document(s)&quot;</span><span class="p">;</span>
+<span class="k">echo</span> <span class="s2">&quot;Modified </span><span class="si">{</span><span class="nv">$result</span><span class="o">-&gt;</span><span class="na">getModifiedCount</span><span class="p">()</span><span class="si">}</span><span class="s2"> document(s)&quot;</span><span class="p">;</span>
+<span class="cp">?&gt;</span>
+</pre></div>
+</div>
+<p>Para actualizar múltiples documentos, utilizamos el método <code class="docutils literal notranslate"><span class="pre">updateMany</span></code>:</p>
+<div class="highlight-php notranslate"><div class="highlight"><pre><span></span><span class="cp">&lt;?php</span>
+<span class="k">require</span> <span class="s1">&#39;vendor/autoload.php&#39;</span><span class="p">;</span>
+
+<span class="nv">$client</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">MongoDB\Client</span><span class="p">(</span><span class="s1">&#39;mongodb://&lt;user&gt;:&lt;password&gt;@mongo:27017&#39;</span><span class="p">);</span>
+<span class="nv">$collection</span> <span class="o">=</span> <span class="nv">$client</span><span class="o">-&gt;</span><span class="na">test</span><span class="o">-&gt;</span><span class="na">users</span><span class="p">;</span>
+
+<span class="nv">$result</span> <span class="o">=</span> <span class="nv">$collection</span><span class="o">-&gt;</span><span class="na">updateMany</span><span class="p">(</span>
+    <span class="p">[</span><span class="s1">&#39;age&#39;</span> <span class="o">=&gt;</span> <span class="p">[</span><span class="s1">&#39;$gte&#39;</span> <span class="o">=&gt;</span> <span class="mi">30</span><span class="p">]],</span>
+    <span class="p">[</span><span class="s1">&#39;$set&#39;</span> <span class="o">=&gt;</span> <span class="p">[</span><span class="s1">&#39;status&#39;</span> <span class="o">=&gt;</span> <span class="s1">&#39;senior&#39;</span><span class="p">]]</span>
+<span class="p">);</span>
+
+<span class="k">echo</span> <span class="s2">&quot;Matched </span><span class="si">{</span><span class="nv">$result</span><span class="o">-&gt;</span><span class="na">getMatchedCount</span><span class="p">()</span><span class="si">}</span><span class="s2"> document(s)&quot;</span><span class="p">;</span>
+<span class="k">echo</span> <span class="s2">&quot;Modified </span><span class="si">{</span><span class="nv">$result</span><span class="o">-&gt;</span><span class="na">getModifiedCount</span><span class="p">()</span><span class="si">}</span><span class="s2"> document(s)&quot;</span><span class="p">;</span>
+<span class="cp">?&gt;</span>
+</pre></div>
+</div>
+</section>
+<section id="eliminar-documentos">
+<h4>Eliminar documentos<a class="headerlink" href="#eliminar-documentos" title="Link to this heading">#</a></h4>
+<p>Para eliminar documentos en una colección, utilizamos el método <code class="docutils literal notranslate"><span class="pre">deleteOne</span></code> o <code class="docutils literal notranslate"><span class="pre">deleteMany</span></code>. Aquí hay un ejemplo de cómo eliminar un solo documento:</p>
+<div class="highlight-php notranslate"><div class="highlight"><pre><span></span><span class="cp">&lt;?php</span>
+<span class="k">require</span> <span class="s1">&#39;vendor/autoload.php&#39;</span><span class="p">;</span>
+
+<span class="nv">$client</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">MongoDB\Client</span><span class="p">(</span><span class="s1">&#39;mongodb://&lt;user&gt;:&lt;password&gt;@mongo:27017&#39;</span><span class="p">);</span>
+<span class="nv">$collection</span> <span class="o">=</span> <span class="nv">$client</span><span class="o">-&gt;</span><span class="na">test</span><span class="o">-&gt;</span><span class="na">users</span><span class="p">;</span>
+
+<span class="nv">$result</span> <span class="o">=</span> <span class="nv">$collection</span><span class="o">-&gt;</span><span class="na">deleteOne</span><span class="p">([</span><span class="s1">&#39;name&#39;</span> <span class="o">=&gt;</span> <span class="s1">&#39;Alice&#39;</span><span class="p">]);</span>
+
+<span class="k">echo</span> <span class="s2">&quot;Deleted </span><span class="si">{</span><span class="nv">$result</span><span class="o">-&gt;</span><span class="na">getDeletedCount</span><span class="p">()</span><span class="si">}</span><span class="s2"> document(s)&quot;</span><span class="p">;</span>
+<span class="cp">?&gt;</span>
+</pre></div>
+</div>
+<p>Para eliminar múltiples documentos, utilizamos el método <code class="docutils literal notranslate"><span class="pre">deleteMany</span></code>:</p>
+<div class="highlight-php notranslate"><div class="highlight"><pre><span></span><span class="cp">&lt;?php</span>
+<span class="k">require</span> <span class="s1">&#39;vendor/autoload.php&#39;</span><span class="p">;</span>
+
+<span class="nv">$client</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">MongoDB\Client</span><span class="p">(</span><span class="s1">&#39;mongodb://&lt;user&gt;:&lt;password&gt;@mongo:27017&#39;</span><span class="p">);</span>
+<span class="nv">$collection</span> <span class="o">=</span> <span class="nv">$client</span><span class="o">-&gt;</span><span class="na">test</span><span class="o">-&gt;</span><span class="na">users</span><span class="p">;</span>
+
+<span class="nv">$result</span> <span class="o">=</span> <span class="nv">$collection</span><span class="o">-&gt;</span><span class="na">deleteMany</span><span class="p">([</span><span class="s1">&#39;age&#39;</span> <span class="o">=&gt;</span> <span class="p">[</span><span class="s1">&#39;$gte&#39;</span> <span class="o">=&gt;</span> <span class="mi">30</span><span class="p">]]);</span>
+
+<span class="k">echo</span> <span class="s2">&quot;Deleted </span><span class="si">{</span><span class="nv">$result</span><span class="o">-&gt;</span><span class="na">getDeletedCount</span><span class="p">()</span><span class="si">}</span><span class="s2"> document(s)&quot;</span><span class="p">;</span>
+<span class="cp">?&gt;</span>
+</pre></div>
+</div>
+</section>
+</section>
+<section id="manejo-de-errores">
+<h3>Manejo de errores<a class="headerlink" href="#manejo-de-errores" title="Link to this heading">#</a></h3>
+<p>Es importante manejar los errores al trabajar con Redis. Puedes utilizar bloques <code class="docutils literal notranslate"><span class="pre">try-catch</span></code> para capturar excepciones:</p>
+<div class="highlight-php notranslate"><div class="highlight"><pre><span></span><span class="cp">&lt;?php</span>
+<span class="o">...</span>
+    <span class="k">try</span> <span class="p">{</span>
+        <span class="k">new</span> <span class="nx">ObjectId</span><span class="p">(</span><span class="nv">$id</span><span class="p">);</span>
+    <span class="p">}</span> <span class="k">catch</span> <span class="p">(</span><span class="nx">Exception</span> <span class="nv">$e</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">return</span> <span class="nx">createJsonResponse</span><span class="p">(</span><span class="nv">$response</span><span class="o">-&gt;</span><span class="na">withStatus</span><span class="p">(</span><span class="mi">400</span><span class="p">),</span> <span class="p">[</span>
+            <span class="s1">&#39;status&#39;</span> <span class="o">=&gt;</span> <span class="mi">400</span><span class="p">,</span>
+            <span class="s1">&#39;message&#39;</span> <span class="o">=&gt;</span> <span class="s1">&#39;Invalid category ID&#39;</span>
+        <span class="p">]);</span>
+    <span class="p">}</span>
+<span class="o">...</span>
+<span class="cp">?&gt;</span>
+</pre></div>
+</div>
+</section>
+</section>
+<section id="desarrollo-de-la-api">
+<h2>Desarrollo de la API<a class="headerlink" href="#desarrollo-de-la-api" title="Link to this heading">#</a></h2>
+<p>En esta sección vamos a crear la API REST para gestionar productos, categorías y valoraciones utilizando Slim Framework y MongoDB. Seguiremos un enfoque incremental, comenzando con la configuración general y luego desarrollando cada endpoint paso a paso. Antes, vamos a describir los endpoints disponibles en la API REST.</p>
+<section id="especificacion-de-los-endpoints-de-la-api">
+<h3>Especificación de los endpoints de la API<a class="headerlink" href="#especificacion-de-los-endpoints-de-la-api" title="Link to this heading">#</a></h3>
+<ul class="simple">
+<li><p>Productos</p>
+<ul>
+<li><p><code class="docutils literal notranslate"><span class="pre">POST</span> <span class="pre">/api/products</span></code>: Crear un nuevo producto.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">GET</span> <span class="pre">/api/products</span></code>: Obtener todos los productos. Parámetros opcionales de filtrado: <code class="docutils literal notranslate"><span class="pre">categoryId</span></code> y <code class="docutils literal notranslate"><span class="pre">name</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">GET</span> <span class="pre">/api/products/{id}</span></code>: Obtener un producto por ID.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">PUT</span> <span class="pre">/api/products/{id}</span></code>: Actualizar un producto por ID.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">DELETE</span> <span class="pre">/api/products/{id}</span></code>: Eliminar un producto por ID. También se eliminan los comentarios asociados.</p></li>
+</ul>
+</li>
+<li><p>Categorías</p>
+<ul>
+<li><p><code class="docutils literal notranslate"><span class="pre">POST</span> <span class="pre">/api/categories</span></code>: Crear una nueva categoría.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">GET</span> <span class="pre">/api/categories</span></code>: Obtener todas las categorías.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">GET</span> <span class="pre">/api/categories/tree</span></code>: Obtener la jerarquía completa de categorías.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">GET</span> <span class="pre">/api/categories/{id}</span></code>: Obtener una categoría por ID.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">PUT</span> <span class="pre">/api/categories/{id}</span></code>: Actualizar una categoría por ID.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">DELETE</span> <span class="pre">/api/categories/{id}</span></code>: Eliminar una categoría por ID.</p></li>
+</ul>
+</li>
+<li><p>Comentarios</p>
+<ul>
+<li><p><code class="docutils literal notranslate"><span class="pre">POST</span> <span class="pre">/api/reviews</span></code>: Añadir un comentario a un producto.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">GET</span> <span class="pre">/api/reviews</span></code>: Obtener todos los comentarios. Parámetros opcionales de filtrado: <code class="docutils literal notranslate"><span class="pre">productId</span></code> y <code class="docutils literal notranslate"><span class="pre">userId</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">PUT</span> <span class="pre">/api/reviews/{id}</span></code>: Actualizar un comentario (solo por el usuario que lo creó).</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">DELETE</span> <span class="pre">/api/reviews/{id}</span></code>: Eliminar un comentario por ID (solo por el usuario que lo creó).</p></li>
+</ul>
+</li>
+</ul>
+<section id="ejemplo-de-json-de-un-producto">
+<h4>Ejemplo de JSON de un producto<a class="headerlink" href="#ejemplo-de-json-de-un-producto" title="Link to this heading">#</a></h4>
+<div class="highlight-json notranslate"><div class="highlight"><pre><span></span><span class="p">{</span>
+<span class="w">    </span><span class="nt">&quot;name&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Producto 1&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;description&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Descripción del producto 1&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;price&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">100</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;categoryId&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;60c72b2f9b1d8b3a4c8b4567&quot;</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</section>
+<section id="ejemplo-de-json-de-una-categoria">
+<h4>Ejemplo de JSON de una categoría<a class="headerlink" href="#ejemplo-de-json-de-una-categoria" title="Link to this heading">#</a></h4>
+<div class="highlight-json notranslate"><div class="highlight"><pre><span></span><span class="p">{</span>
+<span class="w">    </span><span class="nt">&quot;name&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Categoría 1&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;description&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Descripción de la categoría 1&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;parentId&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;60c72b2f9b1d8b3a4c8b4567&quot;</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</section>
+<section id="ejemplo-de-json-de-un-comentario">
+<h4>Ejemplo de JSON de un comentario<a class="headerlink" href="#ejemplo-de-json-de-un-comentario" title="Link to this heading">#</a></h4>
+<div class="highlight-json notranslate"><div class="highlight"><pre><span></span><span class="p">{</span>
+<span class="w">    </span><span class="nt">&quot;productId&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;60c72b2f9b1d8b3a4c8b4567&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;userId&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;60c72b2f9b1d8b3a4c8b4567&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;username&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;usuario123&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;rating&quot;</span><span class="p">:</span><span class="w"> </span><span class="mf">4.5</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;comment&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Muy buen producto, la batería dura bastante.&quot;</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</section>
+</section>
+<section id="crear-la-aplicacion-slim">
+<h3>Crear la aplicación Slim<a class="headerlink" href="#crear-la-aplicacion-slim" title="Link to this heading">#</a></h3>
+<p>Crea un archivo <code class="docutils literal notranslate"><span class="pre">public/index.php</span></code> y añade el siguiente código para configurar la aplicación Slim y conectar a Redis:</p>
+<div class="highlight-php notranslate"><div class="highlight"><pre><span></span><span class="cp">&lt;?php</span>
+
+<span class="k">require</span> <span class="nb">dirname</span><span class="p">(</span><span class="no">__DIR__</span><span class="p">)</span> <span class="o">.</span> <span class="s1">&#39;/vendor/autoload.php&#39;</span><span class="p">;</span>
+
+<span class="k">use</span> <span class="nx">Psr\Http\Message\RequestInterface</span><span class="p">;</span>
+<span class="k">use</span> <span class="nx">Psr\Http\Message\ResponseInterface</span><span class="p">;</span>
+<span class="k">use</span> <span class="nx">Slim\Factory\AppFactory</span><span class="p">;</span>
+
+<span class="nv">$app</span> <span class="o">=</span> <span class="nx">AppFactory</span><span class="o">::</span><span class="na">create</span><span class="p">();</span>
+
+<span class="nv">$mongo</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">MongoDB\Client</span><span class="p">(</span><span class="s1">&#39;mongodb://youruser:yourpassword@mongo:27017/admin&#39;</span><span class="p">);</span>
+<span class="nv">$database</span> <span class="o">=</span> <span class="nv">$mongo</span><span class="o">-&gt;</span><span class="na">selectDatabase</span><span class="p">(</span><span class="s1">&#39;ecommerce&#39;</span><span class="p">);</span>
+<span class="nv">$products</span> <span class="o">=</span> <span class="nv">$database</span><span class="o">-&gt;</span><span class="na">selectCollection</span><span class="p">(</span><span class="s1">&#39;products&#39;</span><span class="p">);</span>
+<span class="nv">$categories</span> <span class="o">=</span> <span class="nv">$database</span><span class="o">-&gt;</span><span class="na">selectCollection</span><span class="p">(</span><span class="s1">&#39;categories&#39;</span><span class="p">);</span>
+<span class="nv">$reviews</span> <span class="o">=</span> <span class="nv">$database</span><span class="o">-&gt;</span><span class="na">selectCollection</span><span class="p">(</span><span class="s1">&#39;reviews&#39;</span><span class="p">);</span>
+
+<span class="nv">$prefix</span> <span class="o">=</span> <span class="s1">&#39;/api&#39;</span><span class="p">;</span>
+
+<span class="nv">$app</span><span class="o">-&gt;</span><span class="na">addBodyParsingMiddleware</span><span class="p">();</span>
+
+<span class="k">function</span> <span class="nf">createJsonResponse</span><span class="p">(</span><span class="nx">ResponseInterface</span> <span class="nv">$response</span><span class="p">,</span> <span class="k">array</span> <span class="nv">$data</span><span class="p">)</span><span class="o">:</span> <span class="nx">ResponseInterface</span>
+<span class="p">{</span>
+    <span class="c1">// Establecer el tipo de contenido de la respuesta</span>
+    <span class="nv">$response</span> <span class="o">=</span> <span class="nv">$response</span><span class="o">-&gt;</span><span class="na">withHeader</span><span class="p">(</span><span class="s1">&#39;Content-Type&#39;</span><span class="p">,</span> <span class="s1">&#39;application/json; charset=utf-8&#39;</span><span class="p">);</span>
+
+    <span class="c1">// Escribir la respuesta</span>
+    <span class="nv">$response</span><span class="o">-&gt;</span><span class="na">getBody</span><span class="p">()</span><span class="o">-&gt;</span><span class="na">write</span><span class="p">(</span><span class="nb">json_encode</span><span class="p">(</span><span class="nv">$data</span><span class="p">));</span>
+
+    <span class="c1">// Devolver la respuesta</span>
+    <span class="k">return</span> <span class="nv">$response</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="nv">$app</span><span class="o">-&gt;</span><span class="na">get</span><span class="p">(</span><span class="s2">&quot;/&quot;</span><span class="p">,</span> <span class="k">function</span> <span class="p">(</span><span class="nx">RequestInterface</span> <span class="nv">$request</span><span class="p">,</span> <span class="nx">ResponseInterface</span> <span class="nv">$response</span><span class="p">,</span> <span class="k">array</span> <span class="nv">$args</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">echo</span> <span class="nb">file_get_contents</span><span class="p">(</span><span class="s1">&#39;./index.html&#39;</span><span class="p">);</span> <span class="o">&lt;</span><span class="mi">1</span><span class="o">&gt;</span>
+
+    <span class="k">return</span> <span class="nv">$response</span><span class="p">;</span>
+<span class="p">});</span>
+
+<span class="cm">/*</span>
+<span class="cm"> **************************************************************************************</span>
+<span class="cm"> * Aquí se implementarán los endpoints de la API REST</span>
+<span class="cm"> **************************************************************************************</span>
+<span class="cm"> */</span>
+
+<span class="nv">$app</span><span class="o">-&gt;</span><span class="na">run</span><span class="p">();</span>
+</pre></div>
+</div>
+<p>&lt;1&gt; Devuelve el contenido del archivo <code class="docutils literal notranslate"><span class="pre">index.html</span></code> en la ruta raíz. Este archivo se utiliza para mostrar la documentación de la API REST.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>El valor de <code class="docutils literal notranslate"><span class="pre">mongo</span></code> en la función <code class="docutils literal notranslate"><span class="pre">connect</span></code> se refiere al nombre del servicio MongoDB definido en el archivo <code class="docutils literal notranslate"><span class="pre">docker-compose.yml</span></code>. Este es el mismo nombre que se utiliza en el archivo <code class="docutils literal notranslate"><span class="pre">docker-compose.yml</span></code>.</p>
+</div>
+<p>La figura siguiente muestra algunos endpoints de la API organizados en categorías, productos y comentarios:</p>
+<p><img alt="slim-api-redis-api-structure" src="../../../_images/slim-api-redis-api-structure1.png" /></p>
+</section>
+<section id="endpoint-de-prueba">
+<h3>Endpoint de prueba<a class="headerlink" href="#endpoint-de-prueba" title="Link to this heading">#</a></h3>
+<p>Añade el siguiente código para definir un endpoint de prueba <code class="docutils literal notranslate"><span class="pre">GET</span> <span class="pre">/api/test</span></code> que devuelve un mensaje de prueba:</p>
+<div class="highlight-php notranslate"><div class="highlight"><pre><span></span><span class="x">$app-&gt;get($prefix . &#39;/test&#39;, function (RequestInterface $request, ResponseInterface $response) {</span>
+<span class="x">    $data = [</span>
+<span class="x">        &#39;status&#39; =&gt; 200,</span>
+<span class="x">        &#39;message&#39; =&gt; &#39;API is working&#39;</span>
+<span class="x">    ];</span>
+
+<span class="x">    return createJsonResponse($response, $data);</span>
+<span class="x">});</span>
+</pre></div>
+</div>
+</section>
+<section id="endpoints-de-categorias">
+<h3>Endpoints de categorías<a class="headerlink" href="#endpoints-de-categorias" title="Link to this heading">#</a></h3>
+<p>En esta sección vamos a implementar los endpoints para gestionar categorías en la API REST. Los endpoints incluyen la creación, consulta, actualización y eliminación de categorías.</p>
+<p>En el archivo <code class="docutils literal notranslate"><span class="pre">public/routes/categories.php</span></code>, añade el siguiente código antes de la definición de las rutas de categorías:</p>
+<div class="highlight-php notranslate"><div class="highlight"><pre><span></span><span class="cp">&lt;?php</span>
+
+<span class="k">use</span> <span class="nx">Psr\Http\Message\RequestInterface</span><span class="p">;</span>
+<span class="k">use</span> <span class="nx">Psr\Http\Message\ResponseInterface</span><span class="p">;</span>
+<span class="k">use</span> <span class="nx">MongoDB\BSON\ObjectId</span><span class="p">;</span>
+
+<span class="c1">// Los endpoints de categorías se definen aquí</span>
+</pre></div>
+</div>
+<section id="endpoint-para-crear-una-categoria">
+<h4>Endpoint para crear una categoría<a class="headerlink" href="#endpoint-para-crear-una-categoria" title="Link to this heading">#</a></h4>
+<p>Añade el siguiente código para definir un endpoint <code class="docutils literal notranslate"><span class="pre">POST</span> <span class="pre">/api/categories</span></code> que permite crear una nueva categoría. Este endpoint recibe los datos de la categoría en formato JSON en el cuerpo de la solicitud y los inserta en la colección de categorías de MongoDB. En el cuerpo de la solicitud se deben proporcionar los siguientes campos: <code class="docutils literal notranslate"><span class="pre">name</span></code>, <code class="docutils literal notranslate"><span class="pre">description</span></code> y <code class="docutils literal notranslate"><span class="pre">parentId</span></code>. El endpoint devuelve un mensaje con el ID de la nueva categoría creada. La operación MongoDB que se usaría para insertar un documento en la colección de categorías sería similar a la siguiente:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">db</span><span class="o">.</span><span class="n">categories</span><span class="o">.</span><span class="n">insertOne</span><span class="p">({</span>
+    <span class="n">name</span><span class="p">:</span> <span class="s2">&quot;Categoría 1&quot;</span><span class="p">,</span>
+    <span class="n">description</span><span class="p">:</span> <span class="s2">&quot;Descripción de la categoría 1&quot;</span><span class="p">,</span>
+    <span class="n">parentId</span><span class="p">:</span> <span class="n">ObjectId</span><span class="p">(</span><span class="s2">&quot;60c72b2f9b1d8b3a4c8b4567&quot;</span><span class="p">)</span>
+<span class="p">});</span>
+</pre></div>
+</div>
+<div class="highlight-php notranslate"><div class="highlight"><pre><span></span><span class="x">// Endpoint para crear una nueva categoría</span>
+<span class="x">$app-&gt;post($prefix . &#39;/categories&#39;, function (RequestInterface $request, ResponseInterface $response) use ($categories) {</span>
+<span class="x">    $data = $request-&gt;getParsedBody();</span>
+
+<span class="x">    // Validar los datos de entrada</span>
+<span class="x">    if (!array_key_exists(&#39;name&#39;, $data) || !array_key_exists(&#39;description&#39;, $data) || !array_key_exists(&#39;parentId&#39;, $data)) {</span>
+<span class="x">        return createJsonResponse($response-&gt;withStatus(400), [</span>
+<span class="x">            &#39;status&#39; =&gt; 400,</span>
+<span class="x">            &#39;message&#39; =&gt; &#39;Invalid input&#39;</span>
+<span class="x">        ]);</span>
+<span class="x">    }</span>
+
+<span class="x">    // Insertar la nueva categoría en la base de datos</span>
+<span class="x">    $result = $categories-&gt;insertOne([</span>
+<span class="x">        &#39;name&#39; =&gt; $data[&#39;name&#39;],</span>
+<span class="x">        &#39;description&#39; =&gt; $data[&#39;description&#39;],</span>
+<span class="x">        &#39;parentId&#39; =&gt; $data[&#39;parentId&#39;]</span>
+<span class="x">    ]);</span>
+
+<span class="x">    // Devolver la respuesta con el ID de la nueva categoría</span>
+<span class="x">    return createJsonResponse($response-&gt;withStatus(201), [</span>
+<span class="x">        &#39;status&#39; =&gt; 201,</span>
+<span class="x">        &#39;message&#39; =&gt; &#39;Category created&#39;,</span>
+<span class="x">        &#39;categoryId&#39; =&gt; (string) $result-&gt;getInsertedId()</span>
+<span class="x">    ]);</span>
+<span class="x">});</span>
+</pre></div>
+</div>
+</section>
+<section id="endpoint-para-obtener-todas-las-categorias-incluyendo-la-jerarquia">
+<h4>Endpoint para obtener todas las categorías incluyendo la jerarquía<a class="headerlink" href="#endpoint-para-obtener-todas-las-categorias-incluyendo-la-jerarquia" title="Link to this heading">#</a></h4>
+<p>Añade el siguiente código para definir un endpoint <code class="docutils literal notranslate"><span class="pre">GET</span> <span class="pre">/api/categories/tree</span></code> que permite obtener la jerarquía completa de categorías. Este endpoint consulta todas las categorías de la colección de categorías de MongoDB y construye la jerarquía de categorías en forma de árbol. Para ello, usa una función auxiliar recursiva que recorre las categorías y sus subcategorías. El endpoint devuelve la jerarquía de categorías en formato JSON. La operación MongoDB que se usaría para consultar todas las categorías en la colección de categorías sería similar a la siguiente:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">db</span><span class="o">.</span><span class="n">categories</span><span class="o">.</span><span class="n">find</span><span class="p">();</span>
+</pre></div>
+</div>
+<div class="highlight-php notranslate"><div class="highlight"><pre><span></span><span class="x">// Función para construir la jerarquía de categorías</span>
+<span class="x">function buildCategoryTree($categories, $parentId = null)</span>
+<span class="x">{</span>
+<span class="x">    $branch = [];</span>
+<span class="x">    foreach ($categories as $category) {</span>
+<span class="x">        if ($category[&#39;parentId&#39;] == $parentId) {</span>
+<span class="x">            $children = buildCategoryTree($categories, (string) $category[&#39;_id&#39;]);</span>
+<span class="x">            if ($children) {</span>
+<span class="x">                $category[&#39;children&#39;] = $children;</span>
+<span class="x">            }</span>
+<span class="x">            $branch[] = $category;</span>
+<span class="x">        }</span>
+<span class="x">    }</span>
+<span class="x">    return $branch;</span>
+<span class="x">}</span>
+
+<span class="x">// Endpoint para obtener la jerarquía completa de categorías</span>
+<span class="x">$app-&gt;get($prefix . &#39;/categories/tree&#39;, function (RequestInterface $request, ResponseInterface $response) use ($categories) {</span>
+<span class="x">    $result = $categories-&gt;find()-&gt;toArray();</span>
+
+<span class="x">    // Convertir ObjectId a string</span>
+<span class="x">    $categoriesArray = array_map(function ($category) {</span>
+<span class="x">        $category[&#39;_id&#39;] = (string) $category[&#39;_id&#39;];</span>
+<span class="x">        $category[&#39;parentId&#39;] = (string) $category[&#39;parentId&#39;];</span>
+<span class="x">        return $category;</span>
+<span class="x">    }, $result);</span>
+
+<span class="x">    $categoryTree = buildCategoryTree($categoriesArray);</span>
+
+<span class="x">    return createJsonResponse($response, [</span>
+<span class="x">        &#39;status&#39; =&gt; 200,</span>
+<span class="x">        &#39;data&#39; =&gt; $categoryTree</span>
+<span class="x">    ]);</span>
+<span class="x">});</span>
+</pre></div>
+</div>
+<p><strong>Conflictos en la definición de rutas o <em>route shadowing</em></strong></p>
+<p>Este endpoint <code class="docutils literal notranslate"><span class="pre">GET</span> <span class="pre">/api/categories/tree</span></code> se debe colocar antes que el endpoint <code class="docutils literal notranslate"><span class="pre">GET</span> <span class="pre">/api/categories</span></code> para que no haya conflictos en la definición de rutas. Estos conflictos pueden ocurrir si las rutas tienen el mismo prefijo y solo difieren en un parámetro opcional. En ese caso, colocaremos primero la ruta más específica y luego la más general, ya que Slim Framework evalúa las rutas en el orden en que se definen y selecciona la primera coincidencia encontrada.
+Así evitaremos lo que se conoce como “route shadowing”, que consiste en que una ruta más específica sea ignorada en favor de una ruta más general porque se definió primero.</p>
+</section>
+<section id="endpoint-para-obtener-todas-las-categorias">
+<h4>Endpoint para obtener todas las categorías<a class="headerlink" href="#endpoint-para-obtener-todas-las-categorias" title="Link to this heading">#</a></h4>
+<p>Añade el siguiente código para definir un endpoint <code class="docutils literal notranslate"><span class="pre">GET</span> <span class="pre">/api/categories</span></code> que permite obtener todas las categorías. Este endpoint consulta todas las categorías de la colección de categorías de MongoDB y las devuelve en formato JSON. La operación MongoDB que se usaría para consultar todas las categorías en la colección de categorías sería similar a la siguiente:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">db</span><span class="o">.</span><span class="n">categories</span><span class="o">.</span><span class="n">find</span><span class="p">();</span>
+</pre></div>
+</div>
+<div class="highlight-php notranslate"><div class="highlight"><pre><span></span><span class="x">// Endpoint para obtener todas las categorías</span>
+<span class="x">$app-&gt;get($prefix . &#39;/categories&#39;, function (RequestInterface $request, ResponseInterface $response) use ($categories) {</span>
+<span class="x">    $result = $categories-&gt;find()-&gt;toArray();</span>
+
+<span class="x">    // Convertir ObjectId a string</span>
+<span class="x">    $categoriesArray = array_map(function ($category) {</span>
+<span class="x">        $category[&#39;_id&#39;] = (string) $category[&#39;_id&#39;];</span>
+<span class="x">        return $category;</span>
+<span class="x">    }, $result);</span>
+
+<span class="x">    return createJsonResponse($response, [</span>
+<span class="x">        &#39;status&#39; =&gt; 200,</span>
+<span class="x">        &#39;data&#39; =&gt; $categoriesArray</span>
+<span class="x">    ]);</span>
+<span class="x">});</span>
+</pre></div>
+</div>
+</section>
+<section id="endpoint-para-obtener-una-categoria-por-id">
+<h4>Endpoint para obtener una categoría por ID<a class="headerlink" href="#endpoint-para-obtener-una-categoria-por-id" title="Link to this heading">#</a></h4>
+<p>Añade el siguiente código para definir un endpoint <code class="docutils literal notranslate"><span class="pre">GET</span> <span class="pre">/api/categories/{id}</span></code> que permite obtener una categoría por su ID. Este endpoint recibe el ID de la categoría como parámetro en la URL y busca la categoría correspondiente en la colección de categorías de MongoDB. Si la categoría existe, se devuelve su información en formato JSON. Si la categoría no existe, se devuelve un mensaje de error. La operación MongoDB que se usaría para buscar una categoría en la colección de categorías sería similar a la siguiente:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">db</span><span class="o">.</span><span class="n">categories</span><span class="o">.</span><span class="n">findOne</span><span class="p">({</span> <span class="n">_id</span><span class="p">:</span> <span class="n">ObjectId</span><span class="p">(</span><span class="s2">&quot;60c72b2f9b1d8b3a4c8b4567&quot;</span><span class="p">)</span> <span class="p">});</span>
+</pre></div>
+</div>
+<div class="highlight-php notranslate"><div class="highlight"><pre><span></span><span class="x">// Endpoint para obtener una categoría por ID</span>
+<span class="x">$app-&gt;get($prefix . &#39;/categories/{id}&#39;, function (RequestInterface $request, ResponseInterface $response, array $args) use ($categories) {</span>
+<span class="x">    $id = $args[&#39;id&#39;];</span>
+
+<span class="x">    // Validar el ID</span>
+<span class="x">    try {</span>
+<span class="x">        new ObjectId($id);</span>
+<span class="x">    } catch (Exception $e) {</span>
+<span class="x">        return createJsonResponse($response-&gt;withStatus(400), [</span>
+<span class="x">            &#39;status&#39; =&gt; 400,</span>
+<span class="x">            &#39;message&#39; =&gt; &#39;Invalid category ID&#39;</span>
+<span class="x">        ]);</span>
+<span class="x">    }</span>
+
+<span class="x">    // Buscar la categoría en la base de datos</span>
+<span class="x">    $category = $categories-&gt;findOne([&#39;_id&#39; =&gt; new ObjectId($id)]);</span>
+
+<span class="x">    if (!$category) {</span>
+<span class="x">        return createJsonResponse($response-&gt;withStatus(404), [</span>
+<span class="x">            &#39;status&#39; =&gt; 404,</span>
+<span class="x">            &#39;message&#39; =&gt; &#39;Category not found&#39;</span>
+<span class="x">        ]);</span>
+<span class="x">    }</span>
+
+<span class="x">    // Convertir ObjectId a string</span>
+<span class="x">    $category[&#39;_id&#39;] = (string) $category[&#39;_id&#39;];</span>
+
+<span class="x">    return createJsonResponse($response, [</span>
+<span class="x">        &#39;status&#39; =&gt; 200,</span>
+<span class="x">        &#39;data&#39; =&gt; $category</span>
+<span class="x">    ]);</span>
+<span class="x">});</span>
+</pre></div>
+</div>
+</section>
+<section id="endpoint-para-actualizar-una-categoria">
+<h4>Endpoint para actualizar una categoría<a class="headerlink" href="#endpoint-para-actualizar-una-categoria" title="Link to this heading">#</a></h4>
+<p>Añade el siguiente código para definir un endpoint <code class="docutils literal notranslate"><span class="pre">PUT</span> <span class="pre">/api/categories/{id}</span></code> que permite actualizar una categoría por su ID. Este endpoint recibe el ID de la categoría como parámetro en la URL y los nuevos datos de la categoría en formato JSON en el cuerpo de la solicitud. Los datos de la categoría a actualizar deben incluir los campos <code class="docutils literal notranslate"><span class="pre">name</span></code>, <code class="docutils literal notranslate"><span class="pre">description</span></code> y <code class="docutils literal notranslate"><span class="pre">parentId</span></code>. El endpoint actualiza la categoría correspondiente en la colección de categorías de MongoDB. Si la categoría se actualiza correctamente, se devuelve un mensaje de éxito. Si la categoría no se encuentra, se devuelve un mensaje de error. La operación MongoDB que se usaría para actualizar una categoría en la colección de categorías sería similar a la siguiente:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>db.categories.updateOne(
+    { _id: ObjectId(&quot;60c72b2f9b1d8b3a4c8b4567&quot;) },
+    { $set: { name: &quot;Nueva categoría&quot;, description: &quot;Nueva descripción&quot;, parentId: ObjectId(&quot;60c72b2f9b1d8b3a4c8b4567&quot;) } }
+);
+</pre></div>
+</div>
+<div class="highlight-php notranslate"><div class="highlight"><pre><span></span><span class="x">// Endpoint para actualizar una categoría por ID</span>
+<span class="x">$app-&gt;put($prefix . &#39;/categories/{id}&#39;, function (RequestInterface $request, ResponseInterface $response, array $args) use ($categories) {</span>
+<span class="x">    $id = $args[&#39;id&#39;];</span>
+<span class="x">    $data = $request-&gt;getParsedBody();</span>
+
+<span class="x">    // Validar el ID</span>
+<span class="x">    try {</span>
+<span class="x">        new ObjectId($id);</span>
+<span class="x">    } catch (Exception $e) {</span>
+<span class="x">        return createJsonResponse($response-&gt;withStatus(400), [</span>
+<span class="x">            &#39;status&#39; =&gt; 400,</span>
+<span class="x">            &#39;message&#39; =&gt; &#39;Invalid category ID&#39;</span>
+<span class="x">        ]);</span>
+<span class="x">    }</span>
+
+<span class="x">    // Validar los datos de entrada</span>
+<span class="x">    if (!array_key_exists(&#39;name&#39;, $data) || !array_key_exists(&#39;description&#39;, $data) || !array_key_exists(&#39;parentId&#39;, $data)) {</span>
+<span class="x">        return createJsonResponse($response-&gt;withStatus(400), [</span>
+<span class="x">            &#39;status&#39; =&gt; 400,</span>
+<span class="x">            &#39;message&#39; =&gt; &#39;Invalid input&#39;</span>
+<span class="x">        ]);</span>
+<span class="x">    }</span>
+
+<span class="x">    // Actualizar la categoría en la base de datos</span>
+<span class="x">    $result = $categories-&gt;updateOne(</span>
+<span class="x">        [&#39;_id&#39; =&gt; new ObjectId($id)],</span>
+<span class="x">        [&#39;$set&#39; =&gt; [</span>
+<span class="x">            &#39;name&#39; =&gt; $data[&#39;name&#39;],</span>
+<span class="x">            &#39;description&#39; =&gt; $data[&#39;description&#39;],</span>
+<span class="x">            &#39;parentId&#39; =&gt; $data[&#39;parentId&#39;]</span>
+<span class="x">        ]]</span>
+<span class="x">    );</span>
+
+<span class="x">    if ($result-&gt;getMatchedCount() === 0) {</span>
+<span class="x">        return createJsonResponse($response-&gt;withStatus(404), [</span>
+<span class="x">            &#39;status&#39; =&gt; 404,</span>
+<span class="x">            &#39;message&#39; =&gt; &#39;Category not found&#39;</span>
+<span class="x">        ]);</span>
+<span class="x">    }</span>
+
+<span class="x">    return createJsonResponse($response, [</span>
+<span class="x">        &#39;status&#39; =&gt; 200,</span>
+<span class="x">        &#39;message&#39; =&gt; &#39;Category updated&#39;</span>
+<span class="x">    ]);</span>
+<span class="x">});</span>
+</pre></div>
+</div>
+</section>
+<section id="endpoint-para-eliminar-una-categoria">
+<h4>Endpoint para eliminar una categoría<a class="headerlink" href="#endpoint-para-eliminar-una-categoria" title="Link to this heading">#</a></h4>
+<p>Añade el siguiente código para definir un endpoint <code class="docutils literal notranslate"><span class="pre">DELETE</span> <span class="pre">/api/categories/{id}</span></code> que permite eliminar una categoría por su ID. Este endpoint recibe el ID de la categoría como parámetro en la URL y elimina la categoría correspondiente de la colección de categorías de MongoDB. Si la categoría se elimina correctamente, se devuelve un mensaje de éxito. Si la categoría no se encuentra, se devuelve un mensaje de error. La operación MongoDB que se usaría para eliminar una categoría en la colección de categorías sería similar a la siguiente:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">db</span><span class="o">.</span><span class="n">categories</span><span class="o">.</span><span class="n">deleteOne</span><span class="p">({</span> <span class="n">_id</span><span class="p">:</span> <span class="n">ObjectId</span><span class="p">(</span><span class="s2">&quot;60c72b2f9b1d8b3a4c8b4567&quot;</span><span class="p">)</span> <span class="p">});</span>
+</pre></div>
+</div>
+<div class="highlight-php notranslate"><div class="highlight"><pre><span></span><span class="x">// Endpoint para eliminar una categoría por ID</span>
+<span class="x">$app-&gt;delete($prefix . &#39;/categories/{id}&#39;, function (RequestInterface $request, ResponseInterface $response, array $args) use ($categories) {</span>
+<span class="x">    $id = $args[&#39;id&#39;];</span>
+
+<span class="x">    // Validar el ID</span>
+<span class="x">    try {</span>
+<span class="x">        new ObjectId($id);</span>
+<span class="x">    } catch (Exception $e) {</span>
+<span class="x">        return createJsonResponse($response-&gt;withStatus(400), [</span>
+<span class="x">            &#39;status&#39; =&gt; 400,</span>
+<span class="x">            &#39;message&#39; =&gt; &#39;Invalid category ID&#39;</span>
+<span class="x">        ]);</span>
+<span class="x">    }</span>
+
+<span class="x">    // Eliminar la categoría de la base de datos</span>
+<span class="x">    $result = $categories-&gt;deleteOne([&#39;_id&#39; =&gt; new ObjectId($id)]);</span>
+
+<span class="x">    if ($result-&gt;getDeletedCount() === 0) {</span>
+<span class="x">        return createJsonResponse($response-&gt;withStatus(404), [</span>
+<span class="x">            &#39;status&#39; =&gt; 404,</span>
+<span class="x">            &#39;message&#39; =&gt; &#39;Category not found&#39;</span>
+<span class="x">        ]);</span>
+<span class="x">    }</span>
+
+<span class="x">    return createJsonResponse($response, [</span>
+<span class="x">        &#39;status&#39; =&gt; 200,</span>
+<span class="x">        &#39;message&#39; =&gt; &#39;Category deleted&#39;</span>
+<span class="x">    ]);</span>
+<span class="x">});</span>
+</pre></div>
+</div>
+</section>
+</section>
+<section id="endpoints-de-productos">
+<h3>Endpoints de productos<a class="headerlink" href="#endpoints-de-productos" title="Link to this heading">#</a></h3>
+<p>En esta sección, vamos a implementar los endpoints para gestionar productos en la API REST. Los endpoints incluyen la creación, consulta, actualización y eliminación de productos.</p>
+<p>En el archivo <code class="docutils literal notranslate"><span class="pre">public/routes/products.php</span></code>, añade el siguiente código antes de la definición de las rutas de productos:</p>
+<div class="highlight-php notranslate"><div class="highlight"><pre><span></span><span class="cp">&lt;?php</span>
+
+<span class="k">use</span> <span class="nx">Psr\Http\Message\RequestInterface</span><span class="p">;</span>
+<span class="k">use</span> <span class="nx">Psr\Http\Message\ResponseInterface</span><span class="p">;</span>
+<span class="k">use</span> <span class="nx">MongoDB\BSON\ObjectId</span><span class="p">;</span>
+
+<span class="c1">// Los endpoints de productos se definen aquí</span>
+</pre></div>
+</div>
+<section id="endpoint-para-crear-un-producto">
+<h4>Endpoint para crear un producto<a class="headerlink" href="#endpoint-para-crear-un-producto" title="Link to this heading">#</a></h4>
+<p>Añade el siguiente código para definir un endpoint <code class="docutils literal notranslate"><span class="pre">POST</span> <span class="pre">/api/products</span></code> que permite crear un nuevo producto. Este endpoint recibe los datos del producto en formato JSON en el cuerpo de la solicitud y los inserta en la colección de productos de MongoDB. En el cuerpo de la solicitudo se deben proporcionar los siguientes campos: <code class="docutils literal notranslate"><span class="pre">name</span></code>, <code class="docutils literal notranslate"><span class="pre">description</span></code>, <code class="docutils literal notranslate"><span class="pre">price</span></code> y <code class="docutils literal notranslate"><span class="pre">categoryId</span></code>. El endpoint devuelve un mensaje con el ID del nuevo producto creado. La operación MongoDB que se usaría para insertar un documento en la colección de productos sería similar a la siguiente:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">db</span><span class="o">.</span><span class="n">products</span><span class="o">.</span><span class="n">insertOne</span><span class="p">({</span>
+    <span class="n">name</span><span class="p">:</span> <span class="s2">&quot;Producto 1&quot;</span><span class="p">,</span>
+    <span class="n">description</span><span class="p">:</span> <span class="s2">&quot;Descripción del producto 1&quot;</span><span class="p">,</span>
+    <span class="n">price</span><span class="p">:</span> <span class="mi">100</span><span class="p">,</span>
+    <span class="n">categoryId</span><span class="p">:</span> <span class="n">ObjectId</span><span class="p">(</span><span class="s2">&quot;60c72b2f9b1d8b3a4c8b4567&quot;</span><span class="p">)</span>
+<span class="p">});</span>
+</pre></div>
+</div>
+<div class="highlight-php notranslate"><div class="highlight"><pre><span></span><span class="x">// Endpoint para crear un nuevo producto</span>
+<span class="x">$app-&gt;post($prefix . &#39;/products&#39;, function (RequestInterface $request, ResponseInterface $response) use ($products) {</span>
+<span class="x">    $data = $request-&gt;getParsedBody();</span>
+
+<span class="x">    // Validar los datos de entrada</span>
+<span class="x">    if (!isset($data[&#39;name&#39;], $data[&#39;description&#39;], $data[&#39;price&#39;], $data[&#39;categoryId&#39;])) {</span>
+<span class="x">        return createJsonResponse($response-&gt;withStatus(400), [</span>
+<span class="x">            &#39;status&#39; =&gt; 400,</span>
+<span class="x">            &#39;message&#39; =&gt; &#39;Invalid input&#39;</span>
+<span class="x">        ]);</span>
+<span class="x">    }</span>
+
+<span class="x">    // Insertar el nuevo producto en la base de datos</span>
+<span class="x">    $result = $products-&gt;insertOne([</span>
+<span class="x">        &#39;name&#39; =&gt; $data[&#39;name&#39;],</span>
+<span class="x">        &#39;description&#39; =&gt; $data[&#39;description&#39;],</span>
+<span class="x">        &#39;price&#39; =&gt; $data[&#39;price&#39;],</span>
+<span class="x">        &#39;categoryId&#39; =&gt; $data[&#39;categoryId&#39;]</span>
+<span class="x">    ]);</span>
+
+<span class="x">    // Devolver la respuesta con el ID del nuevo producto</span>
+<span class="x">    return createJsonResponse($response-&gt;withStatus(201), [</span>
+<span class="x">        &#39;status&#39; =&gt; 201,</span>
+<span class="x">        &#39;message&#39; =&gt; &#39;Product created&#39;,</span>
+<span class="x">        &#39;productId&#39; =&gt; (string) $result-&gt;getInsertedId()</span>
+<span class="x">    ]);</span>
+<span class="x">});</span>
+</pre></div>
+</div>
+</section>
+<section id="endpoint-para-obtener-detalles-de-un-producto">
+<h4>Endpoint para obtener detalles de un producto<a class="headerlink" href="#endpoint-para-obtener-detalles-de-un-producto" title="Link to this heading">#</a></h4>
+<p>Añade el siguiente código para definir un endpoint <code class="docutils literal notranslate"><span class="pre">GET</span> <span class="pre">/api/products/{id}</span></code> que permite obtener los detalles de un producto por su ID. Este endpoint recibe el ID del producto como parámetro en la URL y busca el producto correspondiente en la colección de productos de MongoDB. Si el producto existe, se devuelve su información en formato JSON. Si el producto no existe, se devuelve un mensaje de error. La operación MongoDB que se usaría para buscar un documento en la colección de productos sería similar a la siguiente:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">db</span><span class="o">.</span><span class="n">products</span><span class="o">.</span><span class="n">findOne</span><span class="p">({</span> <span class="n">_id</span><span class="p">:</span> <span class="n">ObjectId</span><span class="p">(</span><span class="s2">&quot;60c72b2f9b1d8b3a4c8b4567&quot;</span><span class="p">)</span> <span class="p">});</span>
+</pre></div>
+</div>
+<div class="highlight-php notranslate"><div class="highlight"><pre><span></span><span class="x">// Endpoint para obtener un producto por ID</span>
+<span class="x">$app-&gt;get($prefix . &#39;/products/{id}&#39;, function (RequestInterface $request, ResponseInterface $response, array $args) use ($products) {</span>
+<span class="x">    $id = $args[&#39;id&#39;];</span>
+
+<span class="x">    // Validar el ID</span>
+<span class="x">    try {</span>
+<span class="x">        new ObjectId($id);</span>
+<span class="x">    } catch (Exception $e) {</span>
+<span class="x">        return createJsonResponse($response-&gt;withStatus(400), [</span>
+<span class="x">            &#39;status&#39; =&gt; 400,</span>
+<span class="x">            &#39;message&#39; =&gt; &#39;Invalid product ID&#39;</span>
+<span class="x">        ]);</span>
+<span class="x">    }</span>
+
+<span class="x">    // Buscar el producto en la base de datos</span>
+<span class="x">    $product = $products-&gt;findOne([&#39;_id&#39; =&gt; new ObjectId($id)]);</span>
+
+<span class="x">    if (!$product) {</span>
+<span class="x">        return createJsonResponse($response-&gt;withStatus(404), [</span>
+<span class="x">            &#39;status&#39; =&gt; 404,</span>
+<span class="x">            &#39;message&#39; =&gt; &#39;Product not found&#39;</span>
+<span class="x">        ]);</span>
+<span class="x">    }</span>
+
+<span class="x">    // Convertir ObjectId a string</span>
+<span class="x">    $product[&#39;_id&#39;] = (string) $product[&#39;_id&#39;];</span>
+
+<span class="x">    return createJsonResponse($response, [</span>
+<span class="x">        &#39;status&#39; =&gt; 200,</span>
+<span class="x">        &#39;data&#39; =&gt; $product</span>
+<span class="x">    ]);</span>
+<span class="x">});</span>
+</pre></div>
+</div>
+</section>
+<section id="endpoint-para-consultar-productos">
+<h4>Endpoint para consultar productos<a class="headerlink" href="#endpoint-para-consultar-productos" title="Link to this heading">#</a></h4>
+<p>Añade el siguiente código para definir un endpoint <code class="docutils literal notranslate"><span class="pre">GET</span> <span class="pre">/api/products</span></code> que permite consultar productos. Este endpoint admite parámetros de consulta opcionales para filtrar los productos por categoría (<code class="docutils literal notranslate"><span class="pre">categoryId</span></code>) o por nombre (<code class="docutils literal notranslate"><span class="pre">name</span></code>). Si se proporciona el parámetro <code class="docutils literal notranslate"><span class="pre">categoryId</span></code>, se filtran los productos por la categoría especificada. Si se proporciona el parámetro <code class="docutils literal notranslate"><span class="pre">name</span></code>, se filtran los productos por el nombre que coincida con la cadena especificada. Se pueden combinar ambos parámetros para realizar búsquedas más específicas. Esta operación devuelve una lista de productos en formato JSON. La operación MongoDB que se usaría para consultar productos en la colección de productos sería similar a la siguiente:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">db</span><span class="o">.</span><span class="n">products</span><span class="o">.</span><span class="n">find</span><span class="p">({</span> <span class="n">categoryId</span><span class="p">:</span> <span class="n">ObjectId</span><span class="p">(</span><span class="s2">&quot;60c72b2f9b1d8b3a4c8b4567&quot;</span><span class="p">)</span> <span class="p">});</span>
+</pre></div>
+</div>
+<div class="highlight-php notranslate"><div class="highlight"><pre><span></span><span class="x">// Endpoint para obtener todos los productos o los productos de una categoría o por nombre</span>
+<span class="x">$app-&gt;get($prefix . &#39;/products&#39;, function (RequestInterface $request, ResponseInterface $response) use ($products) {</span>
+<span class="x">    $queryParams = $request-&gt;getQueryParams();</span>
+<span class="x">    $filter = [];</span>
+
+<span class="x">    if (isset($queryParams[&#39;categoryId&#39;])) {</span>
+<span class="x">        // Validar el ID de la categoría</span>
+<span class="x">        try {</span>
+<span class="x">            new ObjectId($queryParams[&#39;categoryId&#39;]);</span>
+<span class="x">            $filter[&#39;categoryId&#39;] = $queryParams[&#39;categoryId&#39;];</span>
+<span class="x">        } catch (Exception $e) {</span>
+<span class="x">            return createJsonResponse($response-&gt;withStatus(400), [</span>
+<span class="x">                &#39;status&#39; =&gt; 400,</span>
+<span class="x">                &#39;message&#39; =&gt; &#39;Invalid category ID&#39;</span>
+<span class="x">            ]);</span>
+<span class="x">        }</span>
+<span class="x">    }</span>
+
+<span class="x">    if (isset($queryParams[&#39;name&#39;])) {</span>
+<span class="x">        $filter[&#39;name&#39;] = new \MongoDB\BSON\Regex($queryParams[&#39;name&#39;], &#39;i&#39;);</span>
+<span class="x">    }</span>
+
+<span class="x">    $result = $products-&gt;find($filter)-&gt;toArray();</span>
+
+<span class="x">    // Convertir ObjectId a string</span>
+<span class="x">    $productsArray = array_map(function ($product) {</span>
+<span class="x">        $product[&#39;_id&#39;] = (string) $product[&#39;_id&#39;];</span>
+<span class="x">        return $product;</span>
+<span class="x">    }, $result);</span>
+
+<span class="x">    return createJsonResponse($response, [</span>
+<span class="x">        &#39;status&#39; =&gt; 200,</span>
+<span class="x">        &#39;data&#39; =&gt; $productsArray</span>
+<span class="x">    ]);</span>
+<span class="x">});</span>
+</pre></div>
+</div>
+</section>
+<section id="endpoint-para-actualizar-un-producto">
+<h4>Endpoint para actualizar un producto<a class="headerlink" href="#endpoint-para-actualizar-un-producto" title="Link to this heading">#</a></h4>
+<p>Añade el siguiente código para definir un endpoint <code class="docutils literal notranslate"><span class="pre">PUT</span> <span class="pre">/api/products/{id}</span></code> que permite actualizar un producto por su ID. Este endpoint recibe el ID del producto como parámetro en la URL y los nuevos datos del producto en formato JSON en el cuerpo de la solicitud. Los datos del producto a actualizar deben incluir los campos <code class="docutils literal notranslate"><span class="pre">name</span></code>, <code class="docutils literal notranslate"><span class="pre">description</span></code>, <code class="docutils literal notranslate"><span class="pre">price</span></code> y <code class="docutils literal notranslate"><span class="pre">categoryId</span></code>. El endpoint actualiza el producto correspondiente en la colección de productos de MongoDB. Si el producto se actualiza correctamente, se devuelve un mensaje de éxito. Si el producto no se encuentra, se devuelve un mensaje de error. La operación MongoDB que se usaría para actualizar un documento en la colección de productos sería similar a la siguiente:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>db.products.updateOne(
+    { _id: ObjectId(&quot;60c72b2f9b1d8b3a4c8b4567&quot;) },
+    { $set: {
+        name: &quot;Producto 2&quot;,
+        description: &quot;Descripción del producto 2&quot;,
+        price: 150,
+        categoryId: ObjectId(&quot;60c72b2f9b1d8b3a4c8b4568&quot;)
+    }}
+);
+</pre></div>
+</div>
+<div class="highlight-php notranslate"><div class="highlight"><pre><span></span><span class="x">// Endpoint para actualizar un producto por ID</span>
+<span class="x">$app-&gt;put($prefix . &#39;/products/{id}&#39;, function (RequestInterface $request, ResponseInterface $response, array $args) use ($products) {</span>
+<span class="x">    $id = $args[&#39;id&#39;];</span>
+<span class="x">    $data = $request-&gt;getParsedBody();</span>
+
+<span class="x">    // Validar el ID</span>
+<span class="x">    try {</span>
+<span class="x">        new ObjectId($id);</span>
+<span class="x">    } catch (Exception $e) {</span>
+<span class="x">        return createJsonResponse($response-&gt;withStatus(400), [</span>
+<span class="x">            &#39;status&#39; =&gt; 400,</span>
+<span class="x">            &#39;message&#39; =&gt; &#39;Invalid product ID&#39;</span>
+<span class="x">        ]);</span>
+<span class="x">    }</span>
+
+<span class="x">    // Validar los datos de entrada</span>
+<span class="x">    if (!isset($data[&#39;name&#39;], $data[&#39;description&#39;], $data[&#39;price&#39;], $data[&#39;categoryId&#39;])) {</span>
+<span class="x">        return createJsonResponse($response-&gt;withStatus(400), [</span>
+<span class="x">            &#39;status&#39; =&gt; 400,</span>
+<span class="x">            &#39;message&#39; =&gt; &#39;Invalid input&#39;</span>
+<span class="x">        ]);</span>
+<span class="x">    }</span>
+
+<span class="x">    // Actualizar el producto en la base de datos</span>
+<span class="x">    $result = $products-&gt;updateOne(</span>
+<span class="x">        [&#39;_id&#39; =&gt; new ObjectId($id)],</span>
+<span class="x">        [&#39;$set&#39; =&gt; [</span>
+<span class="x">            &#39;name&#39; =&gt; $data[&#39;name&#39;],</span>
+<span class="x">            &#39;description&#39; =&gt; $data[&#39;description&#39;],</span>
+<span class="x">            &#39;price&#39; =&gt; $data[&#39;price&#39;],</span>
+<span class="x">            &#39;categoryId&#39; =&gt; $data[&#39;categoryId&#39;]</span>
+<span class="x">        ]]</span>
+<span class="x">    );</span>
+
+<span class="x">    if ($result-&gt;getMatchedCount() === 0) {</span>
+<span class="x">        return createJsonResponse($response-&gt;withStatus(404), [</span>
+<span class="x">            &#39;status&#39; =&gt; 404,</span>
+<span class="x">            &#39;message&#39; =&gt; &#39;Product not found&#39;</span>
+<span class="x">        ]);</span>
+<span class="x">    }</span>
+
+<span class="x">    return createJsonResponse($response, [</span>
+<span class="x">        &#39;status&#39; =&gt; 200,</span>
+<span class="x">        &#39;message&#39; =&gt; &#39;Product updated&#39;</span>
+<span class="x">    ]);</span>
+<span class="x">});</span>
+</pre></div>
+</div>
+</section>
+<section id="endpoint-para-eliminar-un-producto">
+<h4>Endpoint para eliminar un producto<a class="headerlink" href="#endpoint-para-eliminar-un-producto" title="Link to this heading">#</a></h4>
+<p>Añade el siguiente código para definir un endpoint <code class="docutils literal notranslate"><span class="pre">DELETE</span> <span class="pre">/api/products/{id}</span></code> que permite eliminar un producto por su ID. Este endpoint recibe el ID del producto como parámetro en la URL y elimina el producto correspondiente de la colección de productos de MongoDB. También elimina los comentarios asociados al producto. Si el producto se elimina correctamente, se devuelve un mensaje de éxito. Si el producto no se encuentra, se devuelve un mensaje de error. La operación MongoDB que se usaría para eliminar un documento en la colección de productos sería similar a la siguiente:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">db</span><span class="o">.</span><span class="n">products</span><span class="o">.</span><span class="n">deleteOne</span><span class="p">({</span> <span class="n">_id</span><span class="p">:</span> <span class="n">ObjectId</span><span class="p">(</span><span class="s2">&quot;60c72b2f9b1d8b3a4c8b4567&quot;</span><span class="p">)</span> <span class="p">});</span>
+</pre></div>
+</div>
+<div class="highlight-php notranslate"><div class="highlight"><pre><span></span><span class="x">// Endpoint para eliminar un producto por ID</span>
+<span class="x">$app-&gt;delete($prefix . &#39;/products/{id}&#39;, function (RequestInterface $request, ResponseInterface $response, array $args) use ($products, $reviews) {</span>
+<span class="x">    $id = $args[&#39;id&#39;];</span>
+
+<span class="x">    // Validar el ID</span>
+<span class="x">    try {</span>
+<span class="x">        new ObjectId($id);</span>
+<span class="x">    } catch (Exception $e) {</span>
+<span class="x">        return createJsonResponse($response-&gt;withStatus(400), [</span>
+<span class="x">            &#39;status&#39; =&gt; 400,</span>
+<span class="x">            &#39;message&#39; =&gt; &#39;Invalid product ID&#39;</span>
+<span class="x">        ]);</span>
+<span class="x">    }</span>
+
+<span class="x">    // Eliminar el producto de la base de datos</span>
+<span class="x">    $result = $products-&gt;deleteOne([&#39;_id&#39; =&gt; new ObjectId($id)]);</span>
+
+<span class="x">    if ($result-&gt;getDeletedCount() === 0) {</span>
+<span class="x">        return createJsonResponse($response-&gt;withStatus(404), [</span>
+<span class="x">            &#39;status&#39; =&gt; 404,</span>
+<span class="x">            &#39;message&#39; =&gt; &#39;Product not found&#39;</span>
+<span class="x">        ]);</span>
+<span class="x">    }</span>
+
+<span class="x">    // Eliminar los comentarios asociados al producto</span>
+<span class="x">    $reviews-&gt;deleteMany([&#39;productId&#39; =&gt; new ObjectId($id)]);</span>
+
+<span class="x">    return createJsonResponse($response, [</span>
+<span class="x">        &#39;status&#39; =&gt; 200,</span>
+<span class="x">        &#39;message&#39; =&gt; &#39;Product and associated reviews deleted&#39;</span>
+<span class="x">    ]);</span>
+<span class="x">});</span>
+</pre></div>
+</div>
+</section>
+</section>
+<section id="endpoints-de-comentarios">
+<h3>Endpoints de comentarios<a class="headerlink" href="#endpoints-de-comentarios" title="Link to this heading">#</a></h3>
+<p>En esta sección, vamos a implementar los endpoints para gestionar comentarios en la API REST. Los endpoints incluyen la creación, consulta, actualización y eliminación de comentarios.</p>
+<p>En el archivo <code class="docutils literal notranslate"><span class="pre">public/routes/reviews.php</span></code>, añade el siguiente código antes de la definición de las rutas de comentarios:</p>
+<div class="highlight-php notranslate"><div class="highlight"><pre><span></span><span class="cp">&lt;?php</span>
+
+<span class="k">use</span> <span class="nx">Psr\Http\Message\RequestInterface</span><span class="p">;</span>
+<span class="k">use</span> <span class="nx">Psr\Http\Message\ResponseInterface</span><span class="p">;</span>
+<span class="k">use</span> <span class="nx">MongoDB\BSON\ObjectId</span><span class="p">;</span>
+</pre></div>
+</div>
+<section id="endpoint-para-anadir-un-comentario-a-un-producto">
+<h4>Endpoint para añadir un comentario a un producto<a class="headerlink" href="#endpoint-para-anadir-un-comentario-a-un-producto" title="Link to this heading">#</a></h4>
+<p>Añade el siguiente código para definir un endpoint <code class="docutils literal notranslate"><span class="pre">POST</span> <span class="pre">/api/reviews</span></code> que permite añadir un comentario a un producto. Este endpoint recibe los datos del comentario en formato JSON en el cuerpo de la solicitud y los inserta en la colección de comentarios de MongoDB. En el cuerpo de la solicitud se deben proporcionar los siguientes campos: <code class="docutils literal notranslate"><span class="pre">productId</span></code>, <code class="docutils literal notranslate"><span class="pre">userId</span></code>, <code class="docutils literal notranslate"><span class="pre">username</span></code>, <code class="docutils literal notranslate"><span class="pre">rating</span></code> y <code class="docutils literal notranslate"><span class="pre">comment</span></code>. El endpoint devuelve un mensaje con el ID del nuevo comentario creado. La operación MongoDB que se usaría para insertar un documento en la colección de comentarios sería similar a la siguiente:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">db</span><span class="o">.</span><span class="n">reviews</span><span class="o">.</span><span class="n">insertOne</span><span class="p">({</span>
+    <span class="n">productId</span><span class="p">:</span> <span class="n">ObjectId</span><span class="p">(</span><span class="s2">&quot;60c72b2f9b1d8b3a4c8b4567&quot;</span><span class="p">),</span>
+    <span class="n">userId</span><span class="p">:</span> <span class="n">ObjectId</span><span class="p">(</span><span class="s2">&quot;60c72b2f9b1d8b3a4c8b4568&quot;</span><span class="p">),</span>
+    <span class="n">username</span><span class="p">:</span> <span class="s2">&quot;usuario123&quot;</span><span class="p">,</span>
+    <span class="n">rating</span><span class="p">:</span> <span class="mf">4.5</span><span class="p">,</span>
+    <span class="n">comment</span><span class="p">:</span> <span class="s2">&quot;Muy buen producto, la batería dura bastante.&quot;</span><span class="p">,</span>
+    <span class="n">createdAt</span><span class="p">:</span> <span class="n">new</span> <span class="n">Date</span><span class="p">()</span>
+<span class="p">});</span>
+</pre></div>
+</div>
+<div class="highlight-php notranslate"><div class="highlight"><pre><span></span><span class="x">// Endpoint para añadir un comentario a un producto</span>
+<span class="x">$app-&gt;post($prefix . &#39;/reviews&#39;, function (RequestInterface $request, ResponseInterface $response) use ($reviews) {</span>
+<span class="x">    $data = $request-&gt;getParsedBody();</span>
+
+<span class="x">    // Validar los datos de entrada</span>
+<span class="x">    if (!isset($data[&#39;productId&#39;], $data[&#39;userId&#39;], $data[&#39;username&#39;], $data[&#39;rating&#39;], $data[&#39;comment&#39;])) {</span>
+<span class="x">        return createJsonResponse($response-&gt;withStatus(400), [</span>
+<span class="x">            &#39;status&#39; =&gt; 400,</span>
+<span class="x">            &#39;message&#39; =&gt; &#39;Invalid input&#39;</span>
+<span class="x">        ]);</span>
+<span class="x">    }</span>
+
+<span class="x">    // Validar el ID del producto</span>
+<span class="x">    try {</span>
+<span class="x">        new ObjectId($data[&#39;productId&#39;]);</span>
+<span class="x">    } catch (Exception $e) {</span>
+<span class="x">        return createJsonResponse($response-&gt;withStatus(400), [</span>
+<span class="x">            &#39;status&#39; =&gt; 400,</span>
+<span class="x">            &#39;message&#39; =&gt; &#39;Invalid product ID&#39;</span>
+<span class="x">        ]);</span>
+<span class="x">    }</span>
+
+<span class="x">    // Añadir el comentario a la colección de reviews</span>
+<span class="x">    $result = $reviews-&gt;insertOne([</span>
+<span class="x">        &#39;productId&#39; =&gt; new ObjectId($data[&#39;productId&#39;]),</span>
+<span class="x">        &#39;userId&#39; =&gt; new ObjectId($data[&#39;userId&#39;]),</span>
+<span class="x">        &#39;username&#39; =&gt; $data[&#39;username&#39;],</span>
+<span class="x">        &#39;rating&#39; =&gt; $data[&#39;rating&#39;],</span>
+<span class="x">        &#39;comment&#39; =&gt; $data[&#39;comment&#39;],</span>
+<span class="x">        &#39;createdAt&#39; =&gt; new \MongoDB\BSON\UTCDateTime()</span>
+<span class="x">    ]);</span>
+
+<span class="x">    return createJsonResponse($response-&gt;withStatus(201), [</span>
+<span class="x">        &#39;status&#39; =&gt; 201,</span>
+<span class="x">        &#39;message&#39; =&gt; &#39;Comment added&#39;,</span>
+<span class="x">        &#39;commentId&#39; =&gt; (string) $result-&gt;getInsertedId()</span>
+<span class="x">    ]);</span>
+<span class="x">});</span>
+</pre></div>
+</div>
+</section>
+<section id="endpoint-para-obtener-los-comentarios-de-un-producto-o-por-usuario">
+<h4>Endpoint para obtener los comentarios de un producto o por usuario<a class="headerlink" href="#endpoint-para-obtener-los-comentarios-de-un-producto-o-por-usuario" title="Link to this heading">#</a></h4>
+<p>Añade el siguiente código para definir un endpoint <code class="docutils literal notranslate"><span class="pre">GET</span> <span class="pre">/api/reviews</span></code> que permite obtener los comentarios de un producto o por usuario. Este endpoint admite parámetros de consulta opcionales para filtrar los comentarios por producto (<code class="docutils literal notranslate"><span class="pre">productId</span></code>) o por usuario (<code class="docutils literal notranslate"><span class="pre">userId</span></code>). Si se proporciona el parámetro <code class="docutils literal notranslate"><span class="pre">productId</span></code>, se filtran los comentarios por el producto especificado. Si se proporciona el parámetro <code class="docutils literal notranslate"><span class="pre">userId</span></code>, se filtran los comentarios por el usuario especificado. Se pueden combinar ambos parámetros para realizar búsquedas más específicas. Esta operación devuelve una lista de comentarios en formato JSON. La operación MongoDB que se usaría para consultar comentarios en la colección de comentarios sería similar a la siguiente:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">db</span><span class="o">.</span><span class="n">reviews</span><span class="o">.</span><span class="n">find</span><span class="p">({</span> <span class="n">productId</span><span class="p">:</span> <span class="n">ObjectId</span><span class="p">(</span><span class="s2">&quot;60c72b2f9b1d8b3a4c8b4567&quot;</span><span class="p">)</span> <span class="p">});</span>
+</pre></div>
+</div>
+<div class="highlight-php notranslate"><div class="highlight"><pre><span></span><span class="x">// Endpoint para obtener los comentarios de un producto o por usuario</span>
+<span class="x">$app-&gt;get($prefix . &#39;/reviews&#39;, function (RequestInterface $request, ResponseInterface $response) use ($reviews) {</span>
+<span class="x">    $queryParams = $request-&gt;getQueryParams();</span>
+<span class="x">    $filter = [];</span>
+
+<span class="x">    if (isset($queryParams[&#39;productId&#39;])) {</span>
+<span class="x">        // Validar el ID del producto</span>
+<span class="x">        try {</span>
+<span class="x">            new ObjectId($queryParams[&#39;productId&#39;]);</span>
+<span class="x">            $filter[&#39;productId&#39;] = new ObjectId($queryParams[&#39;productId&#39;]);</span>
+<span class="x">        } catch (Exception $e) {</span>
+<span class="x">            return createJsonResponse($response-&gt;withStatus(400), [</span>
+<span class="x">                &#39;status&#39; =&gt; 400,</span>
+<span class="x">                &#39;message&#39; =&gt; &#39;Invalid product ID&#39;</span>
+<span class="x">            ]);</span>
+<span class="x">        }</span>
+<span class="x">    }</span>
+
+<span class="x">    if (isset($queryParams[&#39;userId&#39;])) {</span>
+<span class="x">        // Validar el ID del usuario</span>
+<span class="x">        try {</span>
+<span class="x">            new ObjectId($queryParams[&#39;userId&#39;]);</span>
+<span class="x">            $filter[&#39;userId&#39;] = new ObjectId($queryParams[&#39;userId&#39;]);</span>
+<span class="x">        } catch (Exception $e) {</span>
+<span class="x">            return createJsonResponse($response-&gt;withStatus(400), [</span>
+<span class="x">                &#39;status&#39; =&gt; 400,</span>
+<span class="x">                &#39;message&#39; =&gt; &#39;Invalid user ID&#39;</span>
+<span class="x">            ]);</span>
+<span class="x">        }</span>
+<span class="x">    }</span>
+
+<span class="x">    // Buscar los comentarios en la colección de reviews</span>
+<span class="x">    $reviews = $reviews-&gt;find($filter)-&gt;toArray();</span>
+
+<span class="x">    // Convertir ObjectId a string y formatear fechas en los comentarios</span>
+<span class="x">    $reviewsArray = array_map(function ($comment) {</span>
+<span class="x">        $comment[&#39;_id&#39;] = (string) $comment[&#39;_id&#39;];</span>
+<span class="x">        $comment[&#39;productId&#39;] = (string) $comment[&#39;productId&#39;];</span>
+<span class="x">        $comment[&#39;userId&#39;] = (string) $comment[&#39;userId&#39;];</span>
+<span class="x">        $comment[&#39;createdAt&#39;] = $comment[&#39;createdAt&#39;]-&gt;toDateTime()-&gt;format(&#39;Y-m-d\TH:i:s\Z&#39;);</span>
+<span class="x">        if (isset($comment[&#39;updatedAt&#39;])) {</span>
+<span class="x">            $comment[&#39;updatedAt&#39;] = $comment[&#39;updatedAt&#39;]-&gt;toDateTime()-&gt;format(&#39;Y-m-d\TH:i:s\Z&#39;);</span>
+<span class="x">        }</span>
+<span class="x">        return $comment;</span>
+<span class="x">    }, $reviews);</span>
+
+<span class="x">    return createJsonResponse($response, [</span>
+<span class="x">        &#39;status&#39; =&gt; 200,</span>
+<span class="x">        &#39;data&#39; =&gt; $reviewsArray</span>
+<span class="x">    ]);</span>
+<span class="x">});</span>
+</pre></div>
+</div>
+</section>
+<section id="endpoint-para-actualizar-un-comentario">
+<h4>Endpoint para actualizar un comentario<a class="headerlink" href="#endpoint-para-actualizar-un-comentario" title="Link to this heading">#</a></h4>
+<p>Añade el siguiente código para definir un endpoint <code class="docutils literal notranslate"><span class="pre">PUT</span> <span class="pre">/api/reviews/{id}</span></code> que permite actualizar un comentario por su ID. Este endpoint recibe el ID del comentario como parámetro en la URL y los nuevos datos del comentario en formato JSON en el cuerpo de la solicitud. Los datos del comentario a actualizar deben incluir los campos <code class="docutils literal notranslate"><span class="pre">userId</span></code>, <code class="docutils literal notranslate"><span class="pre">rating</span></code> y <code class="docutils literal notranslate"><span class="pre">comment</span></code>. El endpoint actualiza el comentario correspondiente en la colección de comentarios de MongoDB. Como medida de seguridad se verifica que el usuario que intenta actualizar el comentario sea el mismo que lo creó. Si el comentario se actualiza correctamente, se devuelve un mensaje de éxito. Si el comentario no se encuentra, se devuelve un mensaje de error. La operación MongoDB que se usaría para actualizar un documento en la colección de comentarios sería similar a la siguiente:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>db.reviews.updateOne(
+    { _id: ObjectId(&quot;60c72b2f9b1d8b3a4c8b4567&quot;) },
+    { $set: {
+        userId: ObjectId(&quot;60c72b2f9b1d8b3a4c8b4568&quot;),
+        rating: 4.0,
+        comment: &quot;Muy buen producto, la batería dura bastante.&quot;,
+        updatedAt: new Date()
+    }}
+);
+</pre></div>
+</div>
+<div class="highlight-php notranslate"><div class="highlight"><pre><span></span><span class="x">$app-&gt;put($prefix . &#39;/reviews/{id}&#39;, function (RequestInterface $request, ResponseInterface $response, array $args) use ($reviews) {</span>
+<span class="x">    $id = $args[&#39;id&#39;];</span>
+<span class="x">    $data = $request-&gt;getParsedBody();</span>
+
+<span class="x">    // Validar el ID del comentario</span>
+<span class="x">    try {</span>
+<span class="x">        new ObjectId($id);</span>
+<span class="x">    } catch (Exception $e) {</span>
+<span class="x">        return createJsonResponse($response-&gt;withStatus(400), [</span>
+<span class="x">            &#39;status&#39; =&gt; 400,</span>
+<span class="x">            &#39;message&#39; =&gt; &#39;Invalid comment ID&#39;</span>
+<span class="x">        ]);</span>
+<span class="x">    }</span>
+
+<span class="x">    // Validar que el ID del usuario sea un ObjectId</span>
+<span class="x">    try {</span>
+<span class="x">        new ObjectId($data[&#39;userId&#39;]);</span>
+<span class="x">    } catch (Exception $e) {</span>
+<span class="x">        return createJsonResponse($response-&gt;withStatus(400), [</span>
+<span class="x">            &#39;status&#39; =&gt; 400,</span>
+<span class="x">            &#39;message&#39; =&gt; &#39;Invalid user ID&#39;</span>
+<span class="x">        ]);</span>
+<span class="x">    }</span>
+
+<span class="x">    // Validar los datos de entrada</span>
+<span class="x">    if (!isset($data[&#39;userId&#39;], $data[&#39;rating&#39;], $data[&#39;comment&#39;])) {</span>
+<span class="x">        return createJsonResponse($response-&gt;withStatus(400), [</span>
+<span class="x">            &#39;status&#39; =&gt; 400,</span>
+<span class="x">            &#39;message&#39; =&gt; &#39;Invalid input&#39;</span>
+<span class="x">        ]);</span>
+<span class="x">    }</span>
+
+<span class="x">    // Verificar que el comentario pertenece al usuario</span>
+<span class="x">    $comment = $reviews-&gt;findOne([&#39;_id&#39; =&gt; new ObjectId($id), &#39;userId&#39; =&gt; new ObjectId($data[&#39;userId&#39;])]);</span>
+<span class="x">    if (!$comment) {</span>
+<span class="x">        return createJsonResponse($response-&gt;withStatus(403), [</span>
+<span class="x">            &#39;status&#39; =&gt; 403,</span>
+<span class="x">            &#39;message&#39; =&gt; &#39;Forbidden: You can only update your own reviews&#39;</span>
+<span class="x">        ]);</span>
+<span class="x">    }</span>
+
+<span class="x">    // Actualizar el comentario en la base de datos</span>
+<span class="x">    $result = $reviews-&gt;updateOne(</span>
+<span class="x">        [&#39;_id&#39; =&gt; new ObjectId($id)],</span>
+<span class="x">        [&#39;$set&#39; =&gt; [</span>
+<span class="x">            &#39;rating&#39; =&gt; $data[&#39;rating&#39;],</span>
+<span class="x">            &#39;comment&#39; =&gt; $data[&#39;comment&#39;],</span>
+<span class="x">            &#39;updatedAt&#39; =&gt; new \MongoDB\BSON\UTCDateTime()</span>
+<span class="x">        ]]</span>
+<span class="x">    );</span>
+
+<span class="x">    if ($result-&gt;getMatchedCount() === 0) {</span>
+<span class="x">        return createJsonResponse($response-&gt;withStatus(404), [</span>
+<span class="x">            &#39;status&#39; =&gt; 404,</span>
+<span class="x">            &#39;message&#39; =&gt; &#39;Comment not found&#39;</span>
+<span class="x">        ]);</span>
+<span class="x">    }</span>
+
+<span class="x">    return createJsonResponse($response, [</span>
+<span class="x">        &#39;status&#39; =&gt; 200,</span>
+<span class="x">        &#39;message&#39; =&gt; &#39;Comment updated&#39;</span>
+<span class="x">    ]);</span>
+<span class="x">});</span>
+</pre></div>
+</div>
+</section>
+<section id="endpoint-para-eliminar-un-comentario">
+<h4>Endpoint para eliminar un comentario<a class="headerlink" href="#endpoint-para-eliminar-un-comentario" title="Link to this heading">#</a></h4>
+<p>Añade el siguiente código para definir un endpoint <code class="docutils literal notranslate"><span class="pre">DELETE</span> <span class="pre">/api/reviews/{id}</span></code> que permite eliminar un comentario por su ID. Este endpoint recibe el ID del comentario como parámetro en la URL y elimina el comentario correspondiente de la colección de comentarios de MongoDB. Como medida de seguridad se verifica que el usuario que intenta eliminar el comentario sea el mismo que lo creó. Si el comentario se elimina correctamente, se devuelve un mensaje de éxito. Si el comentario no se encuentra, se devuelve un mensaje de error. La operación MongoDB que se usaría para eliminar un documento en la colección de comentarios sería similar a la siguiente:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">db</span><span class="o">.</span><span class="n">reviews</span><span class="o">.</span><span class="n">deleteOne</span><span class="p">({</span> <span class="n">_id</span><span class="p">:</span> <span class="n">ObjectId</span><span class="p">(</span><span class="s2">&quot;60c72b2f9b1d8b3a4c8b4567&quot;</span><span class="p">)</span> <span class="p">});</span>
+</pre></div>
+</div>
+<div class="highlight-php notranslate"><div class="highlight"><pre><span></span><span class="x">// Endpoint para eliminar un comentario</span>
+<span class="x">$app-&gt;delete($prefix . &#39;/reviews/{id}&#39;, function (RequestInterface $request, ResponseInterface $response, array $args) use ($reviews) {</span>
+<span class="x">    $id = $args[&#39;id&#39;];</span>
+<span class="x">    $data = $request-&gt;getParsedBody();</span>
+
+<span class="x">    // Validar el ID del comentario</span>
+<span class="x">    try {</span>
+<span class="x">        new ObjectId($id);</span>
+<span class="x">    } catch (Exception $e) {</span>
+<span class="x">        return createJsonResponse($response-&gt;withStatus(400), [</span>
+<span class="x">            &#39;status&#39; =&gt; 400,</span>
+<span class="x">            &#39;message&#39; =&gt; &#39;Invalid comment ID&#39;</span>
+<span class="x">        ]);</span>
+<span class="x">    }</span>
+
+<span class="x">    // Validar el ID del usuario</span>
+<span class="x">    if (!isset($data[&#39;userId&#39;])) {</span>
+<span class="x">        return createJsonResponse($response-&gt;withStatus(400), [</span>
+<span class="x">            &#39;status&#39; =&gt; 400,</span>
+<span class="x">            &#39;message&#39; =&gt; &#39;Invalid input&#39;</span>
+<span class="x">        ]);</span>
+<span class="x">    }</span>
+
+<span class="x">    // Validar que el ID del usuario sea válido</span>
+<span class="x">    try {</span>
+<span class="x">        new ObjectId($data[&#39;userId&#39;]);</span>
+<span class="x">    } catch (Exception $e) {</span>
+<span class="x">        return createJsonResponse($response-&gt;withStatus(400), [</span>
+<span class="x">            &#39;status&#39; =&gt; 400,</span>
+<span class="x">            &#39;message&#39; =&gt; &#39;Invalid user ID&#39;</span>
+<span class="x">        ]);</span>
+<span class="x">    }</span>
+
+<span class="x">    // Verificar que el comentario pertenece al usuario</span>
+<span class="x">    $comment = $reviews-&gt;findOne([&#39;_id&#39; =&gt; new ObjectId($id), &#39;userId&#39; =&gt; new ObjectId($data[&#39;userId&#39;])]);</span>
+<span class="x">    if (!$comment) {</span>
+<span class="x">        return createJsonResponse($response-&gt;withStatus(403), [</span>
+<span class="x">            &#39;status&#39; =&gt; 403,</span>
+<span class="x">            &#39;message&#39; =&gt; &#39;Forbidden: You can only delete your own reviews&#39;</span>
+<span class="x">        ]);</span>
+<span class="x">    }</span>
+
+<span class="x">    // Eliminar el comentario de la base de datos</span>
+<span class="x">    $result = $reviews-&gt;deleteOne([&#39;_id&#39; =&gt; new ObjectId($id)]);</span>
+
+<span class="x">    if ($result-&gt;getDeletedCount() === 0) {</span>
+<span class="x">        return createJsonResponse($response-&gt;withStatus(404), [</span>
+<span class="x">            &#39;status&#39; =&gt; 404,</span>
+<span class="x">            &#39;message&#39; =&gt; &#39;Comment not found&#39;</span>
+<span class="x">        ]);</span>
+<span class="x">    }</span>
+
+<span class="x">    return createJsonResponse($response, [</span>
+<span class="x">        &#39;status&#39; =&gt; 200,</span>
+<span class="x">        &#39;message&#39; =&gt; &#39;Comment deleted&#39;</span>
+<span class="x">    ]);</span>
+<span class="x">});</span>
+</pre></div>
+</div>
+</section>
+</section>
+</section>
+<section id="indices-para-mejorar-el-rendimiento">
+<h2>Indices para mejorar el rendimiento<a class="headerlink" href="#indices-para-mejorar-el-rendimiento" title="Link to this heading">#</a></h2>
+<p>Los índices son cruciales para mejorar el rendimiento de las consultas en una base de datos. Sin índices, MongoDB debe realizar un escaneo completo de la colección para encontrar los documentos que coinciden con la consulta, lo que puede ser muy ineficiente y lento, especialmente en colecciones grandes. Los índices permiten a MongoDB buscar de manera más eficiente, reduciendo el tiempo de respuesta de las consultas y mejorando el rendimiento general de la aplicación.</p>
+<p>En el contexto de esta API, los índices pueden ayudar a acelerar las consultas que filtran productos por categoría, buscan productos por nombre, o filtran comentarios por producto o usuario. Al definir índices en los campos más consultados, se puede reducir significativamente el tiempo de respuesta de estos endpoints, proporcionando una mejor experiencia de usuario.</p>
+<p>En MongoDB se pueden definir varios tipos de índices, cada uno con un propósito específico:</p>
+<ul class="simple">
+<li><p><em><strong>Indice único</strong></em>: Garantiza que los valores de un campo sean únicos en toda la colección.</p></li>
+<li><p><em><strong>Indice compuesto</strong></em>: Un índice en múltiples campos de un documento.</p></li>
+<li><p><em><strong>Indice de texto</strong></em>: Permite realizar búsquedas de texto completo en los campos indexados.</p></li>
+<li><p><em><strong>Indice geoespacial</strong></em>: Permite realizar consultas geoespaciales en los datos.</p></li>
+<li><p><em><strong>Indice parcial</strong></em>: Indexa solo los documentos que cumplen con una condición especificada.</p></li>
+<li><p><em><strong>Indice TTL (Time To Live)</strong></em>: Elimina automáticamente los documentos después de un período de tiempo especificado.</p></li>
+</ul>
+<section id="definir-indices-en-mongodb">
+<h3>Definir índices en MongoDB<a class="headerlink" href="#definir-indices-en-mongodb" title="Link to this heading">#</a></h3>
+<p>Para definir índices en MongoDB, se utiliza el método <code class="docutils literal notranslate"><span class="pre">createIndex</span></code> en la colección correspondiente. A continuación se muestran algunos ejemplos de cómo definir diferentes tipos de índices:</p>
+<ul>
+<li><p><em><strong>Indice en un solo campo</strong></em>:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>db.products.createIndex<span class="o">({</span><span class="w"> </span>categoryId:<span class="w"> </span><span class="m">1</span><span class="w"> </span><span class="o">})</span>
+</pre></div>
+</div>
+</li>
+<li><p><em><strong>Indice compuesto</strong></em>:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>db.products.createIndex<span class="o">({</span><span class="w"> </span>categoryId:<span class="w"> </span><span class="m">1</span>,<span class="w"> </span>name:<span class="w"> </span><span class="m">1</span><span class="w"> </span><span class="o">})</span>
+</pre></div>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>En un índice compuesto, el orden de los campos es importante. En el ejemplo anterior, el índice se crea en los campos <code class="docutils literal notranslate"><span class="pre">categoryId</span></code> y <code class="docutils literal notranslate"><span class="pre">name</span></code>, en ese orden. Esto significa que el índice se ordenará primero por <code class="docutils literal notranslate"><span class="pre">categoryId</span></code> y luego por <code class="docutils literal notranslate"><span class="pre">name</span></code>. Esto es útil para consultas que filtran por <code class="docutils literal notranslate"><span class="pre">categoryId</span></code> y ordenan por <code class="docutils literal notranslate"><span class="pre">name</span></code>. Sin embargo, si las consultas se realizaran en el orden contrario (filtrar por <code class="docutils literal notranslate"><span class="pre">name</span></code> y ordenar por <code class="docutils literal notranslate"><span class="pre">categoryId</span></code>), el índice no sería tan eficiente. Por tanto, los índices compuestos deben diseñarse cuidadosamente en función de las consultas que se realizarán.</p>
+</div>
+</li>
+<li><p><em><strong>Indice de texto</strong></em>:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>db.products.createIndex<span class="o">({</span><span class="w"> </span>name:<span class="w"> </span><span class="s2">&quot;text&quot;</span><span class="w"> </span><span class="o">})</span>
+</pre></div>
+</div>
+</li>
+<li><p><em><strong>Indice único</strong></em>:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>db.users.createIndex<span class="o">({</span><span class="w"> </span>email:<span class="w"> </span><span class="m">1</span><span class="w"> </span><span class="o">}</span>,<span class="w"> </span><span class="o">{</span><span class="w"> </span>unique:<span class="w"> </span><span class="nb">true</span><span class="w"> </span><span class="o">})</span>
+</pre></div>
+</div>
+</li>
+<li><p><em><strong>Indice parcial</strong></em>:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>db.orders.createIndex<span class="o">({</span><span class="w"> </span>status:<span class="w"> </span><span class="m">1</span><span class="w"> </span><span class="o">}</span>,<span class="w"> </span><span class="o">{</span><span class="w"> </span>partialFilterExpression:<span class="w"> </span><span class="o">{</span><span class="w"> </span>status:<span class="w"> </span><span class="o">{</span><span class="w"> </span><span class="nv">$eq</span>:<span class="w"> </span><span class="s2">&quot;pending&quot;</span><span class="w"> </span><span class="o">}</span><span class="w"> </span><span class="o">}</span><span class="w"> </span><span class="o">})</span>
+</pre></div>
+</div>
+</li>
+<li><p><em><strong>Indice TTL</strong></em>:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>db.sessions.createIndex<span class="o">({</span><span class="w"> </span>createdAt:<span class="w"> </span><span class="m">1</span><span class="w"> </span><span class="o">}</span>,<span class="w"> </span><span class="o">{</span><span class="w"> </span>expireAfterSeconds:<span class="w"> </span><span class="m">3600</span><span class="w"> </span><span class="o">})</span>
+</pre></div>
+</div>
+</li>
+</ul>
+</section>
+<section id="indices-recomendados-para-la-api">
+<h3>Índices recomendados para la API<a class="headerlink" href="#indices-recomendados-para-la-api" title="Link to this heading">#</a></h3>
+<p>Definir los índices adecuados en MongoDB es una práctica esencial para optimizar el rendimiento de las consultas y garantizar que la API funcione de manera eficiente, incluso con grandes volúmenes de datos. Para mejorar el rendimiento de los endpoints, es recomendable definir los siguientes índices en MongoDB:</p>
+<ul>
+<li><p><em><strong>Indices para la colección de productos</strong></em></p>
+<ul>
+<li><p>Indice en el campo <code class="docutils literal notranslate"><span class="pre">categoryId</span></code> para filtrar productos por categoría:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>db.products.createIndex<span class="o">({</span><span class="w"> </span>categoryId:<span class="w"> </span><span class="m">1</span><span class="w"> </span><span class="o">})</span>
+</pre></div>
+</div>
+</li>
+<li><p>Indice en el campo <code class="docutils literal notranslate"><span class="pre">name</span></code> para buscar productos por nombre:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>db.products.createIndex<span class="o">({</span><span class="w"> </span>name:<span class="w"> </span><span class="s2">&quot;text&quot;</span><span class="w"> </span><span class="o">})</span>
+</pre></div>
+</div>
+</li>
+</ul>
+</li>
+<li><p><em><strong>Indices para la colección de categorías</strong></em></p>
+<ul>
+<li><p>Indice en el campo <code class="docutils literal notranslate"><span class="pre">parentId</span></code> para construir la jerarquía de categorías:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>db.categories.createIndex<span class="o">({</span><span class="w"> </span>parentId:<span class="w"> </span><span class="m">1</span><span class="w"> </span><span class="o">})</span>
+</pre></div>
+</div>
+</li>
+</ul>
+</li>
+<li><p><em><strong>Indices para la colección de comentarios</strong></em></p>
+<ul>
+<li><p>Indice en el campo <code class="docutils literal notranslate"><span class="pre">productId</span></code> para filtrar comentarios por producto:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>db.reviews.createIndex<span class="o">({</span><span class="w"> </span>productId:<span class="w"> </span><span class="m">1</span><span class="w"> </span><span class="o">})</span>
+</pre></div>
+</div>
+</li>
+<li><p>Indice en el campo <code class="docutils literal notranslate"><span class="pre">userId</span></code> para filtrar comentarios por usuario:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>db.reviews.createIndex<span class="o">({</span><span class="w"> </span>userId:<span class="w"> </span><span class="m">1</span><span class="w"> </span><span class="o">})</span>
+</pre></div>
+</div>
+</li>
+</ul>
+</li>
+</ul>
+</section>
+</section>
+<section id="pruebas-de-la-api">
+<h2>Pruebas de la API<a class="headerlink" href="#pruebas-de-la-api" title="Link to this heading">#</a></h2>
+<p>Una vez que hemos desarrollado la API REST con Slim Framework, podemos probar los endpoints utilizando Postman. A continuación se muestran algunos ejemplos de peticiones a la API REST:</p>
+<ul>
+<li><p>Crear una nueva categoría:</p>
+<ul>
+<li><p>Método: <code class="docutils literal notranslate"><span class="pre">POST</span></code></p></li>
+<li><p>URL: <code class="docutils literal notranslate"><span class="pre">http://localhost:8080/api/categories</span></code></p></li>
+<li><p>Cuerpo: <code class="docutils literal notranslate"><span class="pre">{&quot;name&quot;:</span> <span class="pre">&quot;Electrónica&quot;,</span> <span class="pre">&quot;description&quot;:</span> <span class="pre">&quot;Categoría</span> <span class="pre">de</span> <span class="pre">productos</span> <span class="pre">electrónicos&quot;,</span> <span class="pre">&quot;parentId&quot;:</span> <span class="pre">null}</span></code></p></li>
+<li><p>Respuesta esperada: <code class="docutils literal notranslate"><span class="pre">{&quot;status&quot;:</span> <span class="pre">201,</span> <span class="pre">&quot;message&quot;:</span> <span class="pre">&quot;Category</span> <span class="pre">created&quot;,</span> <span class="pre">&quot;categoryId&quot;:</span> <span class="pre">&quot;67c200a4953f04997706efbc&quot;}</span></code></p>
+<p><img alt="postman-create-category" src="../../../_images/postman-create-category1.png" /></p>
+</li>
+</ul>
+</li>
+<li><p>Obtener todas las categorías:</p>
+<ul>
+<li><p>Método: <code class="docutils literal notranslate"><span class="pre">GET</span></code></p></li>
+<li><p>URL: <code class="docutils literal notranslate"><span class="pre">http://localhost:8080/api/categories</span></code></p></li>
+<li><p>Respuesta esperada: Lista de categorías en formato JSON</p>
+<p><img alt="postman-get-categories" src="../../../_images/postman-get-categories.png" /></p>
+</li>
+</ul>
+</li>
+<li><p>Crear un nuevo producto:</p>
+<ul class="simple">
+<li><p>Método: <code class="docutils literal notranslate"><span class="pre">POST</span></code></p></li>
+<li><p>URL: <code class="docutils literal notranslate"><span class="pre">http://localhost:8080/api/products</span></code></p></li>
+<li><p>Cuerpo: <code class="docutils literal notranslate"><span class="pre">{&quot;name&quot;:</span> <span class="pre">&quot;Smartphone&quot;,</span> <span class="pre">&quot;description&quot;:</span> <span class="pre">&quot;Teléfono</span> <span class="pre">inteligente&quot;,</span> <span class="pre">&quot;price&quot;:</span> <span class="pre">500,</span> <span class="pre">&quot;categoryId&quot;:</span> <span class="pre">&quot;67c200a4953f04997706efbc&quot;}</span></code></p></li>
+<li><p>Respuesta esperada: <code class="docutils literal notranslate"><span class="pre">{&quot;status&quot;:</span> <span class="pre">201,</span> <span class="pre">&quot;message&quot;:</span> <span class="pre">&quot;Product</span> <span class="pre">created&quot;,</span> <span class="pre">&quot;productId&quot;:</span> <span class="pre">&quot;67c2015e953f04997706efbd&quot;}</span></code></p></li>
+</ul>
+</li>
+<li><p>Obtener todos los productos de una categoría:</p>
+<ul>
+<li><p>Método: <code class="docutils literal notranslate"><span class="pre">GET</span></code></p></li>
+<li><p>URL: <code class="docutils literal notranslate"><span class="pre">http://localhost:8080/api/products?categoryId=67c200a4953f04997706efbc</span></code></p></li>
+<li><p>Respuesta esperada: Lista de productos en formato JSON</p>
+<p><img alt="postman-get-products" src="../../../_images/postman-get-products1.png" /></p>
+</li>
+</ul>
+</li>
+<li><p>Añadir un comentario a un producto:</p>
+<ul>
+<li><p>Método: <code class="docutils literal notranslate"><span class="pre">POST</span></code></p></li>
+<li><p>URL: <code class="docutils literal notranslate"><span class="pre">http://localhost:8080/api/reviews</span></code></p></li>
+<li><p>Cuerpo: <code class="docutils literal notranslate"><span class="pre">{&quot;productId&quot;:</span> <span class="pre">&quot;67c2015e953f04997706efbd&quot;,</span> <span class="pre">&quot;userId&quot;:</span> <span class="pre">&quot;60c72b2f9b1d8b3a4c8b4569&quot;,</span> <span class="pre">&quot;username&quot;:</span> <span class="pre">&quot;usuario123&quot;,</span> <span class="pre">&quot;rating&quot;:</span> <span class="pre">4.5,</span> <span class="pre">&quot;comment&quot;:</span> <span class="pre">&quot;Muy</span> <span class="pre">buen</span> <span class="pre">producto,</span> <span class="pre">la</span> <span class="pre">batería</span> <span class="pre">dura</span> <span class="pre">bastante.&quot;}</span></code></p></li>
+<li><p>Respuesta esperada: <code class="docutils literal notranslate"><span class="pre">{&quot;status&quot;:</span> <span class="pre">201,</span> <span class="pre">&quot;message&quot;:</span> <span class="pre">&quot;Comment</span> <span class="pre">added&quot;,</span> <span class="pre">&quot;commentId&quot;:</span> <span class="pre">&quot;67c2023d953f04997706efbe&quot;}</span></code></p>
+<p><img alt="postman-add-review" src="../../../_images/postman-add-review.png" /></p>
+</li>
+</ul>
+</li>
+<li><p>Obtener los comentarios de un producto:</p>
+<ul>
+<li><p>Método: <code class="docutils literal notranslate"><span class="pre">GET</span></code></p></li>
+<li><p>URL: <code class="docutils literal notranslate"><span class="pre">http://localhost:8080/api/reviews?productId=60c72b2f9b1d8b3a4c8b4568</span></code></p></li>
+<li><p>Respuesta esperada: Lista de comentarios en formato JSON</p>
+<p><img alt="postman-get-reviews" src="../../../_images/postman-get-reviews.png" /></p>
+</li>
+</ul>
+</li>
+<li><p>Actualizar un comentario:</p>
+<ul>
+<li><p>Método: <code class="docutils literal notranslate"><span class="pre">PUT</span></code></p></li>
+<li><p>URL: <code class="docutils literal notranslate"><span class="pre">http://localhost:8080/api/reviews/67c2023d953f04997706efbe</span></code></p></li>
+<li><p>Cuerpo: <code class="docutils literal notranslate"><span class="pre">{&quot;userId&quot;:</span> <span class="pre">&quot;60c72b2f9b1d8b3a4c8b4569&quot;,</span> <span class="pre">&quot;rating&quot;:</span> <span class="pre">4.0,</span> <span class="pre">&quot;comment&quot;:</span> <span class="pre">&quot;Muy</span> <span class="pre">buen</span> <span class="pre">producto,</span> <span class="pre">la</span> <span class="pre">batería</span> <span class="pre">dura</span> <span class="pre">bastante.&quot;}</span></code></p></li>
+<li><p>Respuesta esperada: <code class="docutils literal notranslate"><span class="pre">{&quot;status&quot;:</span> <span class="pre">200,</span> <span class="pre">&quot;message&quot;:</span> <span class="pre">&quot;Comment</span> <span class="pre">updated&quot;}</span></code></p>
+<p><img alt="postman-update-review" src="../../../_images/postman-update-review.png" /></p>
+</li>
+</ul>
+</li>
+<li><p>Eliminar un comentario:</p>
+<ul>
+<li><p>Método: <code class="docutils literal notranslate"><span class="pre">DELETE</span></code></p></li>
+<li><p>URL: <code class="docutils literal notranslate"><span class="pre">http://localhost:8080/api/reviews/67c2023d953f04997706efbe</span></code></p></li>
+<li><p>Cuerpo: <code class="docutils literal notranslate"><span class="pre">{&quot;userId&quot;:</span> <span class="pre">&quot;60c72b2f9b1d8b3a4c8b4569&quot;}</span></code></p></li>
+<li><p>Respuesta esperada: <code class="docutils literal notranslate"><span class="pre">{&quot;status&quot;:</span> <span class="pre">200,</span> <span class="pre">&quot;message&quot;:</span> <span class="pre">&quot;Comment</span> <span class="pre">deleted&quot;}</span></code></p>
+<p><img alt="postman-delete-review" src="../../../_images/postman-delete-review.png" /></p>
+</li>
+</ul>
+</li>
+<li><p>Eliminar un producto:</p>
+<ul>
+<li><p>Método: <code class="docutils literal notranslate"><span class="pre">DELETE</span></code></p></li>
+<li><p>URL: <code class="docutils literal notranslate"><span class="pre">http://localhost:8080/api/products/67c2015e953f04997706efbd</span></code></p></li>
+<li><p>Respuesta esperada: <code class="docutils literal notranslate"><span class="pre">{&quot;status&quot;:</span> <span class="pre">200,</span> <span class="pre">&quot;message&quot;:</span> <span class="pre">&quot;Product</span> <span class="pre">and</span> <span class="pre">associated</span> <span class="pre">reviews</span> <span class="pre">deleted&quot;}</span></code></p>
+<p><img alt="postman-delete-product" src="../../../_images/postman-delete-product.png" /></p>
+</li>
+</ul>
+</li>
+<li><p>Eliminar una categoría:</p>
+<ul>
+<li><p>Método: <code class="docutils literal notranslate"><span class="pre">DELETE</span></code></p></li>
+<li><p>URL: <code class="docutils literal notranslate"><span class="pre">http://localhost:8080/api/categories/67c200a4953f04997706efbc</span></code></p></li>
+<li><p>Respuesta esperada: <code class="docutils literal notranslate"><span class="pre">{&quot;status&quot;:</span> <span class="pre">200,</span> <span class="pre">&quot;message&quot;:</span> <span class="pre">&quot;Category</span> <span class="pre">deleted&quot;}</span></code></p>
+<p><img alt="postman-delete-category" src="../../../_images/postman-delete-category.png" /></p>
+</li>
+</ul>
+</li>
+</ul>
+</section>
+<section id="conclusiones">
+<h2>Conclusiones<a class="headerlink" href="#conclusiones" title="Link to this heading">#</a></h2>
+<p>En este tutorial, se ha desarrollado una API REST para la gestión de productos, categorías y comentarios de una tienda en línea utilizando Slim Framework y MongoDB. A lo largo del proceso, hemos configurado un entorno de desarrollo con Docker y Docker Compose, implementado los endpoints necesarios para la API REST y probado la API con Postman.</p>
+<p>MongoDB es una excelente opción para almacenar datos no estructurados o semiestructurados, como se ha observado en los comentarios de los usuarios. Además, su capacidad de escalar horizontalmente y su flexibilidad en el esquema de datos hacen que sea una base de datos ideal para aplicaciones modernas y escalables. La combinación de Slim Framework y MongoDB permite desarrollar aplicaciones web rápidas y eficientes con una arquitectura RESTful.</p>
+<p>Este proyecto no sólo proporciona una solución funcional para la gestión de productos, categorías y comentarios, sino que también sirve como punto de partida para desarrollar aplicaciones web más complejas y escalables. Se pueden añadir más funcionalidades a la API, como la autenticación de usuarios, la gestión de pedidos y la integración con pasarelas de pago.</p>
+</section>
+<section id="licencia">
+<h2>Licencia<a class="headerlink" href="#licencia" title="Link to this heading">#</a></h2>
+<p>Licencia CC BY-NC-ND 4.0</p>
+<p>Copyright (c) 2025 [Manuel Torres - Departamento de Informática - Universidad de Almería]</p>
+<p>Este proyecto está licenciado bajo la Licencia CC BY-NC-ND 4.0. Esto significa que puedes compartir el proyecto siempre que cites al autor, no lo uses para fines comerciales y no realices obras derivadas.</p>
+</section>
+</section>
+
+    <script type="text/x-thebe-config">
+    {
+        requestKernel: true,
+        binderOptions: {
+            repo: "binder-examples/jupyter-stacks-datascience",
+            ref: "master",
+        },
+        codeMirrorConfig: {
+            theme: "abcdef",
+            mode: "python"
+        },
+        kernelOptions: {
+            name: "python3",
+            path: "./notebooks/CasosDeUso/valoracionesMongoDB"
+        },
+        predefinedOutput: true
+    }
+    </script>
+    <script>kernelName = 'python3'</script>
+
+                </article>
+              
+
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="../ofertasFlashRedis/index.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title">Desarrollo de una API REST para gestión de ofertas flash con Slim Framework y Redis</p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="../recomendacionesNeo4j/index.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">Desarrollo de una API REST para gestión de recomendaciones con Slim Framework y Neo4j</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+  <div class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> Contents
+  </div>
+  <nav class="bd-toc-nav page-toc">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#introduccion">Introducción</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#descricion-del-problema">Descrición del problema</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#configuracion-del-entorno-de-desarrollo">Configuración del entorno de desarrollo</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#servicios">Servicios</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#instrucciones-de-instalacion">Instrucciones de instalación</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#uso-basico-de-la-extension-mongodb-para-php">Uso básico de la extensión MongoDB para PHP</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#conexion-a-mongodb">Conexión a MongoDB</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#operaciones-basicas">Operaciones básicas</a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#insertar-documentos">Insertar documentos</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#consultar-documentos">Consultar documentos</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#actualizar-documentos">Actualizar documentos</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#eliminar-documentos">Eliminar documentos</a></li>
+</ul>
+</li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#manejo-de-errores">Manejo de errores</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#desarrollo-de-la-api">Desarrollo de la API</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#especificacion-de-los-endpoints-de-la-api">Especificación de los endpoints de la API</a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#ejemplo-de-json-de-un-producto">Ejemplo de JSON de un producto</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#ejemplo-de-json-de-una-categoria">Ejemplo de JSON de una categoría</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#ejemplo-de-json-de-un-comentario">Ejemplo de JSON de un comentario</a></li>
+</ul>
+</li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#crear-la-aplicacion-slim">Crear la aplicación Slim</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#endpoint-de-prueba">Endpoint de prueba</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#endpoints-de-categorias">Endpoints de categorías</a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#endpoint-para-crear-una-categoria">Endpoint para crear una categoría</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#endpoint-para-obtener-todas-las-categorias-incluyendo-la-jerarquia">Endpoint para obtener todas las categorías incluyendo la jerarquía</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#endpoint-para-obtener-todas-las-categorias">Endpoint para obtener todas las categorías</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#endpoint-para-obtener-una-categoria-por-id">Endpoint para obtener una categoría por ID</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#endpoint-para-actualizar-una-categoria">Endpoint para actualizar una categoría</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#endpoint-para-eliminar-una-categoria">Endpoint para eliminar una categoría</a></li>
+</ul>
+</li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#endpoints-de-productos">Endpoints de productos</a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#endpoint-para-crear-un-producto">Endpoint para crear un producto</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#endpoint-para-obtener-detalles-de-un-producto">Endpoint para obtener detalles de un producto</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#endpoint-para-consultar-productos">Endpoint para consultar productos</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#endpoint-para-actualizar-un-producto">Endpoint para actualizar un producto</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#endpoint-para-eliminar-un-producto">Endpoint para eliminar un producto</a></li>
+</ul>
+</li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#endpoints-de-comentarios">Endpoints de comentarios</a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#endpoint-para-anadir-un-comentario-a-un-producto">Endpoint para añadir un comentario a un producto</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#endpoint-para-obtener-los-comentarios-de-un-producto-o-por-usuario">Endpoint para obtener los comentarios de un producto o por usuario</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#endpoint-para-actualizar-un-comentario">Endpoint para actualizar un comentario</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#endpoint-para-eliminar-un-comentario">Endpoint para eliminar un comentario</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#indices-para-mejorar-el-rendimiento">Indices para mejorar el rendimiento</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#definir-indices-en-mongodb">Definir índices en MongoDB</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#indices-recomendados-para-la-api">Índices recomendados para la API</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#pruebas-de-la-api">Pruebas de la API</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#conclusiones">Conclusiones</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#licencia">Licencia</a></li>
+</ul>
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
+  
+  <div class="footer-item">
+    
+<p class="component-author">
+By Manuel Torres
+</p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+
+  <p class="copyright">
+    
+      © Copyright 2023.
+      <br/>
+    
+  </p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+</div>
+          </footer>
+        
+
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="../../../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b"></script>
+<script src="../../../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+  <footer class="bd-footer">
+  </footer>
+  </body>
+</html>

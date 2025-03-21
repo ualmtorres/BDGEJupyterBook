@@ -1,0 +1,1292 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="../../../" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Bases de datos clave-valor &#8212; Aprendiendo bases de datos con Jupyter</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../../../_static/styles/theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="../../../_static/styles/bootstrap.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="../../../_static/styles/pydata-sphinx-theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+
+  
+  <link href="../../../_static/vendor/fontawesome/6.5.2/css/all.min.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="../../../_static/vendor/fontawesome/6.5.2/webfonts/fa-solid-900.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../../../_static/vendor/fontawesome/6.5.2/webfonts/fa-brands-400.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../../../_static/vendor/fontawesome/6.5.2/webfonts/fa-regular-400.woff2" />
+
+    <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=03e43079" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/styles/sphinx-book-theme.css?v=eba8b062" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/togglebutton.css?v=13237357" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/sphinx-thebe.css?v=4fa983c6" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/sphinx-design.min.css?v=95c83b7e" />
+  
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../../../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b" />
+<link rel="preload" as="script" href="../../../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b" />
+  <script src="../../../_static/vendor/fontawesome/6.5.2/js/all.min.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+    <script src="../../../_static/documentation_options.js?v=9eb32ce0"></script>
+    <script src="../../../_static/doctools.js?v=9a2dae69"></script>
+    <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../../_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="../../../_static/copybutton.js?v=f281be69"></script>
+    <script src="../../../_static/scripts/sphinx-book-theme.js?v=887ef09a"></script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="../../../_static/togglebutton.js?v=4a39c7ea"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="../../../_static/design-tabs.js?v=f930bc37"></script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script async="async" src="../../../_static/sphinx-thebe.js?v=c100c467"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'notebooks/Docs/Tema2/redis';</script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-primary-sidebar-checkbox"/>
+  <label class="overlay overlay-primary" for="pst-primary-sidebar-checkbox"></label>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-secondary-sidebar-checkbox"/>
+  <label class="overlay overlay-secondary" for="pst-secondary-sidebar-checkbox"></label>
+  
+  <div class="search-button__wrapper">
+    <div class="search-button__overlay"></div>
+    <div class="search-button__search-container">
+<form class="bd-search d-flex align-items-center"
+      action="../../../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         id="search-input"
+         placeholder="Search this book..."
+         aria-label="Search this book..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form></div>
+  </div>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+        
+      
+      <div class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+    
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="../../intro.html">
+  
+  
+  
+  
+  
+    
+    
+      
+    
+    
+    <img src="../../../_static/di.png" class="logo__image only-light" alt="Aprendiendo bases de datos con Jupyter - Home"/>
+    <script>document.write(`<img src="../../../_static/di.png" class="logo__image only-dark" alt="Aprendiendo bases de datos con Jupyter - Home"/>`);</script>
+  
+  
+</a></div>
+        <div class="sidebar-primary-item">
+
+ <script>
+ document.write(`
+   <button class="btn search-button-field search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass"></i>
+    <span class="search-button__default-text">Search</span>
+    <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+   </button>
+ `);
+ </script></div>
+        <div class="sidebar-primary-item"><nav class="bd-links bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
+        
+        <ul class="nav bd-sidenav bd-sidenav__home-link">
+            <li class="toctree-l1">
+                <a class="reference internal" href="../../intro.html">
+                    Bases de datos a gran escala
+                </a>
+            </li>
+        </ul>
+        <p aria-level="2" class="caption" role="heading"><span class="caption-text">Temario</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../Tema1/tema1.html">Tema 1. Modelos de almacenamiento no relacionales. El fenómeno NoSQL</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tema2.html">Tema 2. Bases de datos clave-valor</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../Tema3/tema3.html">Tema 3. Bases de datos orientadas a documentos</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../Tema4/tema4.html">Tema 4. Bases de datos orientadas a grafos</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../Tema5/tema5.html">Tema 5. Bases de datos orientadas a columnas</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Labs</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../../Labs/Lab01/lab01.html">Lab 01. Consultas en MongoDB</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../Labs/Lab02/lab02.html">Lab 02. Indexación en MongoDB</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../Labs/Lab03/lab03.html">Lab 03. Desarrollo de un Blog con PHP y MongoDB</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../Labs/Lab04/lab04.html">Lab 04. Framework de Agregación de MongoDB</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../Labs/Lab05/lab05.html">Lab 05. Consultas en Neo4j</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../Labs/Lab06/lab06.html">Lab 06. Desarrollo de un aplicación PHP para la consulta de información cinematográfica almacenada en Neo4j</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Casos de uso</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../../CasosDeUso/ofertasFlashRedis/index.html">Desarrollo de una API REST para gestión de ofertas flash con Slim Framework y Redis</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../CasosDeUso/valoracionesMongoDB/index.html">Desarrollo de una API REST para gestión de productos y valoraciones con Slim Framework y MongoDB</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../CasosDeUso/recomendacionesNeo4j/index.html">Desarrollo de una API REST para gestión de recomendaciones con Slim Framework y Neo4j</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../CasosDeUso/historialCassandra/index.html">Desarrollo de una API REST para gestión historial de pedidos y seguimiento en tiempo real con Express y Cassandra</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Actividades complementarias</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../../ActividadesComplementarias/actividades.html">Descripción</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../ActividadesComplementarias/gestionRedTransporteMovilidadUrbana.html">Actividad complementaria. Gestión de una red de transporte y movilidad urbana</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../ActividadesComplementarias/gestionEmergenciasDesastresNaturales.html">Actividad complementaria. Gestión de emergencias y desastres naturales</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Licencia</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../../../LICENSE.html">Licencia</a></li>
+</ul>
+
+    </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+  </div>
+  
+  <div id="rtd-footer-container"></div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><button class="sidebar-toggle primary-toggle btn btn-sm" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</button></div>
+      
+    </div>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+<a href="https://github.com/ualmtorres/AprendiendoBasesDeDatosConJupyter" target="_blank"
+   class="btn btn-sm btn-source-repository-button"
+   title="Source repository"
+   data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fab fa-github"></i>
+  </span>
+
+</a>
+
+
+
+
+
+
+<div class="dropdown dropdown-download-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Download this page">
+    <i class="fas fa-download"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="../../../_sources/notebooks/Docs/Tema2/redis.md" target="_blank"
+   class="btn btn-sm btn-download-source-button dropdown-item"
+   title="Download source file"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="btn__text-container">.md</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li>
+<button onclick="window.print()"
+  class="btn btn-sm btn-download-pdf-button dropdown-item"
+  title="Print to PDF"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="btn__text-container">.pdf</span>
+</button>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+<button onclick="toggleFullScreen()"
+  class="btn btn-sm btn-fullscreen-button"
+  title="Fullscreen mode"
+  data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="theme-switch fa-solid fa-sun fa-lg" data-mode="light"></i>
+    <i class="theme-switch fa-solid fa-moon fa-lg" data-mode="dark"></i>
+    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"></i>
+  </button>
+`);
+</script>
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm pst-navbar-icon search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
+  </button>
+`);
+</script>
+<button class="sidebar-toggle secondary-toggle btn btn-sm" title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="fa-solid fa-list"></span>
+</button>
+</div></div>
+      
+    </div>
+  
+</div>
+</div>
+              
+              
+
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1>Bases de datos clave-valor</h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+            <div>
+                <h2> Contents </h2>
+            </div>
+            <nav aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#introduccion-a-las-bases-de-datos-clave-valor">Introducción a las bases de datos clave-valor</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#redis-como-base-de-datos-clave-valor">Redis como base de datos clave-valor</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#instalacion">Instalación</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#configuracion-de-redis">Configuración de Redis</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#snapshotting">Snapshotting</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#archivo-append-only">Archivo Append-Only</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#monitorizacion-del-rendimiento">Monitorización del rendimiento</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#clientes">Clientes</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#operaciones-basicas">Operaciones básicas</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#set-y-get"><code class="docutils literal notranslate"><span class="pre">SET</span></code> y <code class="docutils literal notranslate"><span class="pre">GET</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#operaciones-incr-y-decr">Operaciones <code class="docutils literal notranslate"><span class="pre">INCR</span></code> y <code class="docutils literal notranslate"><span class="pre">DECR</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#operaciones-sobre-cadenas">Operaciones sobre cadenas</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#operaciones-sobre-listas">Operaciones sobre listas</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#listas-bloqueadas">Listas bloqueadas</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#operaciones-sobre-conjuntos">Operaciones sobre conjuntos</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#conjuntos-ordenados">Conjuntos ordenados</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#hashes">Hashes</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#expiracion-de-pares-clave-valor">Expiración de pares clave-valor</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#espacios-de-nombres">Espacios de nombres</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#publicacion-suscripcion">Publicación-Suscripción</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#transacciones">Transacciones</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#conclusiones">Conclusiones</a></li>
+</ul>
+            </nav>
+        </div>
+    </div>
+</div>
+
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <section class="tex2jax_ignore mathjax_ignore" id="bases-de-datos-clave-valor">
+<h1>Bases de datos clave-valor<a class="headerlink" href="#bases-de-datos-clave-valor" title="Link to this heading">#</a></h1>
+<p>Manuel Torres</p>
+<p>Máster en Ingeniería Informática. Universidad de Almería</p>
+<hr class="docutils" />
+<p>Redis es una de las bases de datos NoSQL más utilizadas en aplicaciones que requieren alta velocidad y eficiencia en el acceso a los datos. Su naturaleza en memoria y su versatilidad lo convierten en una solución ideal para múltiples casos de uso, como almacenamiento en caché, sistemas de colas, gestión de sesiones y análisis en tiempo real. En este tutorial se introducen los fundamentos de Redis, desde su funcionamiento como base de datos clave-valor hasta su soporte para estructuras de datos avanzadas como listas, conjuntos y hashes. También se tratan otras características interesantes como el modelo de publicación-suscripción, los espacios de nombres para organizar los datos y las transacciones para garantizar operaciones atómicas.</p>
+<p>A lo largo del recorrido, hemos visto cómo estas funcionalidades permiten construir sistemas eficientes y escalables, aprovechando la rapidez y flexibilidad de Redis en escenarios como comercio electrónico, sistemas de mensajería y redes sociales, entre otros. Con este conocimiento, se propone la incorporación de Redis en aplicaciones para mejorar el rendimiento y la disponibilidad de los datos en entornos exigentes.</p>
+<ul class="simple">
+<li><p>Conocer los fundamentos de las bases de datos clave-valor y su aplicación en sistemas distribuidos.</p></li>
+<li><p>Aprender a utilizar Redis como base de datos clave-valor en aplicaciones web y móviles.</p></li>
+<li><p>Explorar las características avanzadas de Redis, como listas, conjuntos, hashes y conjuntos ordenados.</p></li>
+<li><p>Comprender el modelo de publicación-suscripción de Redis y su uso en sistemas de mensajería y notificaciones en tiempo real.</p></li>
+<li><p>Conocer las mejores prácticas para el diseño y la implementación de aplicaciones con Redis, incluyendo la gestión de sesiones, la caché de datos y la gestión de colas.</p></li>
+</ul>
+<div class="admonition tip">
+<p class="admonition-title">Tip</p>
+<p>Enlaces de interés:</p>
+<ul class="simple">
+<li><p><a class="reference external" href="https://github.com/ualmtorres/bdge-express-test">Tutorial sobre uso de Redis en una API REST en Express</a></p></li>
+<li><p><a class="reference external" href="https://github.com/ualmtorres/bdge-entorno-desarrollo-docker/blob/master/docker-compose.yml">Archivo <code class="docutils literal notranslate"><span class="pre">docker-compose.yml</span></code> para instalación de bases de datos NoSQL (Redis, MongoDB, Neo4j)</a></p></li>
+</ul>
+</div>
+<section id="introduccion-a-las-bases-de-datos-clave-valor">
+<h2>Introducción a las bases de datos clave-valor<a class="headerlink" href="#introduccion-a-las-bases-de-datos-clave-valor" title="Link to this heading">#</a></h2>
+<p>Las bases de datos clave-valor son un tipo de almacenamiento de datos NoSQL que utilizan una estructura simple de pares clave-valor. Cada clave es única y se asocia con un valor, que puede ser cualquier tipo de dato, desde una cadena de texto hasta un objeto complejo.</p>
+<p>Una de las principales características de las bases de datos clave-valor es su capacidad para ofrecer un rendimiento excepcionalmente alto. Esto se debe a que todas las operaciones de acceso a los datos se realizan mediante la clave primaria, lo que permite búsquedas rápidas y eficientes. Además, su simplicidad las hace fácilmente escalables, lo que es ideal para aplicaciones que requieren manejar grandes volúmenes de datos. Una de las razones por las que las bases de datos clave-valor pueden escalar horizontalmente es su simplicidad en la estructura de datos. Al utilizar pares clave-valor, es fácil distribuir los datos entre múltiples nodos en un clúster. Cada nodo puede manejar una parte del espacio de claves, lo que permite repartir la carga de trabajo y aumentar la capacidad de almacenamiento y procesamiento.</p>
+<p>Además, muchas bases de datos clave-valor, como Redis, ofrecen mecanismos integrados para la replicación y particionamiento de datos. La replicación permite mantener copias de los datos en múltiples nodos para garantizar la disponibilidad y la tolerancia a fallos. El particionamiento, por otro lado, divide los datos en fragmentos que se distribuyen entre los nodos del clúster, permitiendo un acceso más rápido y eficiente a los datos.</p>
+<p>Otra característica importante de las bases de datos clave-valor es su flexibilidad en el esquema de datos. Al no tener un esquema fijo, las bases de datos clave-valor permiten almacenar cualquier tipo de información sin restricciones. Esto es especialmente útil en entornos donde la estructura de los datos puede variar o evolucionar con el tiempo.</p>
+<p>En una base de datos clave-valor, el valor es un blob (Binary Large Object) que la base de datos almacena sin preocuparse por su contenido. Es responsabilidad de las aplicaciones comprender y manejar los datos almacenados. Esta flexibilidad permite a los desarrolladores almacenar cualquier tipo de información sin restricciones de esquema.</p>
+<p>Las bases de datos clave-valor son especialmente útiles en escenarios donde se requiere un acceso rápido a los datos y donde la estructura de los datos puede variar. Algunos ejemplos de uso incluyen:</p>
+<ul class="simple">
+<li><p><strong>Caché de datos</strong>: Almacenar resultados de consultas frecuentes para mejorar el rendimiento de las aplicaciones.</p></li>
+<li><p><strong>Sesiones de usuario</strong>: Guardar información de sesión de usuarios en aplicaciones web.</p></li>
+<li><p><strong>Almacenamiento de configuraciones</strong>: Mantener configuraciones de aplicaciones que pueden cambiar dinámicamente.</p></li>
+</ul>
+<p>En resumen, las bases de datos clave-valor son una solución poderosa y flexible para el almacenamiento de datos en aplicaciones modernas, ofreciendo un equilibrio entre simplicidad, rendimiento y escalabilidad.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><a class="reference external" href="https://db-engines.com/en/ranking/key-value+store">Ranking de las bases de datos clave-valo</a> en <a class="reference external" href="http://DB-Engines.com">DB-Engines.com</a></p>
+</div>
+</section>
+<section id="redis-como-base-de-datos-clave-valor">
+<h2>Redis como base de datos clave-valor<a class="headerlink" href="#redis-como-base-de-datos-clave-valor" title="Link to this heading">#</a></h2>
+<blockquote>
+<div><p>Redis is an open source (BSD licensed), <strong>in-memory data structure store used as a database, cache, message broker, and streaming engine</strong>. Redis provides data structures such as strings, hashes, lists, sets, sorted sets with range queries, bitmaps, hyperloglogs, geospatial indexes, and streams. Redis has <strong>built-in replication</strong>, Lua scripting, LRU eviction, transactions, and <strong>different levels of on-disk persistence</strong> via Redis Sentinel and <strong>automatic partitioning</strong> with Redis Cluster.
+(<a class="reference external" href="https://redis.io/docs/about/">https://redis.io/docs/about/</a>)</p>
+</div></blockquote>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Para probar Redis en un tutorial interactivo ir a <a class="reference external" href="https://try.redis.io/">Tutorial Try Redis</a>.</p>
+</div>
+<section id="instalacion">
+<h3>Instalación<a class="headerlink" href="#instalacion" title="Link to this heading">#</a></h3>
+<ul class="simple">
+<li><p><a class="reference external" href="https://www.server-world.info/en/note?os=Ubuntu_22.04&amp;amp;p=redis6&amp;amp;f=1">Instalación de Redis en Ubuntu</a></p></li>
+<li><p><a class="reference external" href="https://facsiaginsa.com/redis/setup-redis-ha-using-sentinel">Configuración de Sentinel para alta disponibidad</a></p></li>
+<li><p><a class="reference external" href="https://gist.github.com/ualmtorres/3cb1c0536fb691577c78bfa8402135e0">Instalación standalone con Docker Compose (incluye RedisInsight - Web GUI)</a></p></li>
+<li><p><a class="reference external" href="https://raw.githubusercontent.com/bitnami/containers/main/bitnami/redis-cluster/docker-compose.yml">Cluster Redis con Docker Compose</a></p></li>
+</ul>
+</section>
+<section id="configuracion-de-redis">
+<h3>Configuración de Redis<a class="headerlink" href="#configuracion-de-redis" title="Link to this heading">#</a></h3>
+<p>La configuración de Redis se realiza mediante el archivo <code class="docutils literal notranslate"><span class="pre">redis.conf</span></code>, que está muy bien documentado y permite ajustar numerosos parámetros para adaptar el comportamiento de Redis a las necesidades específicas de cada aplicación. Algunos de los parámetros más importantes que se pueden configurar son:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">daemonize</span></code> (ejecución como daemon)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">port</span></code> (puerto de escucha)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">bind</span></code> (IPs a las que se escucha)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">timeout</span></code> (corte a clientes inactivos)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">databases</span></code> (número de bases de datos)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">save</span></code> (retraso en almacenamiento en disco)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">dbfilename</span></code> (nombre del archivo de la BD. En /src)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">slaveof</span></code> (para Replicación Maestro-Esclavo)</p></li>
+</ul>
+<p>Destacar, que cada servidor tiene su propio `redis.conf``</p>
+</section>
+<section id="snapshotting">
+<h3>Snapshotting<a class="headerlink" href="#snapshotting" title="Link to this heading">#</a></h3>
+<p>Redis no almacena directamente en disco, sino que lo hace de forma periódica o a petición del cliente. Esto puede provocar pérdida de datos en caso de fallo. Para evitarlo, Redis dispone de un archivo <code class="docutils literal notranslate"><span class="pre">appendonly.aof</span></code> que guarda un registro para cada operación de escritura. Si el servidor cae antes de escribir en disco, cuando vuelva a estar disponible incluirá lo que esté pendiente. En <code class="docutils literal notranslate"><span class="pre">redis.conf</span></code> se especifica el número de cambios ocurridos antes de almacenar en disco. Los valores predeterminados son:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>save<span class="w"> </span><span class="m">900</span><span class="w"> </span><span class="m">1</span><span class="w"> </span><span class="p">&amp;</span>lt<span class="p">;</span><span class="m">1</span>&gt;
+save<span class="w"> </span><span class="m">300</span><span class="w"> </span><span class="m">10</span><span class="w"> </span><span class="p">&amp;</span>lt<span class="p">;</span><span class="m">2</span>&gt;
+save<span class="w"> </span><span class="m">60</span><span class="w"> </span><span class="m">10000</span><span class="w"> </span><span class="p">&amp;</span>lt<span class="p">;</span><span class="m">3</span>&gt;
+</pre></div>
+</div>
+<ol class="arabic simple">
+<li><p>Almacenar después de 900 segundos si hay al menos 1 cambio</p></li>
+<li><p>Almacenar después de 300 segundos si hay al menos 10 cambios</p></li>
+<li><p>Almacenar después de 60 segundos si hay al menos 10.000 cambios</p></li>
+</ol>
+<p>También es posible no almacenar nada en disco con <code class="docutils literal notranslate"><span class="pre">appendfsync</span> <span class="pre">no</span></code> o hacerlo siempre con <code class="docutils literal notranslate"><span class="pre">appendfsync</span> <span class="pre">always</span></code>.</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">appendfsync</span> <span class="pre">no</span></code> es útil en entornos donde la velocidad es crítica y la pérdida de datos es aceptable, como en sistemas de caché donde los datos pueden ser regenerados fácilmente.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">appendfsync</span> <span class="pre">always</span></code> es ideal para aplicaciones donde la consistencia de los datos es crucial y no se puede permitir la pérdida de datos, como en sistemas financieros o de transacciones críticas.</p></li>
+</ul>
+</section>
+<section id="archivo-append-only">
+<h3>Archivo Append-Only<a class="headerlink" href="#archivo-append-only" title="Link to this heading">#</a></h3>
+<p>Redis es persistente eventualmente de forma predeterminada, lo que significa que escribe los datos en disco a intervalos regulares o a petición del cliente mediante el comando <code class="docutils literal notranslate"><span class="pre">SAVE</span></code>. Sin embargo, esta forma de persistencia puede no ser suficiente en aplicaciones donde la consistencia de los datos es crucial. Para abordar esta necesidad, Redis ofrece el archivo <code class="docutils literal notranslate"><span class="pre">appendonly.aof</span></code>, que guarda un registro de cada operación de escritura realizada en la base de datos.</p>
+<p>El archivo <code class="docutils literal notranslate"><span class="pre">appendonly.aof</span></code> actúa como un log que registra todas las operaciones de escritura en el orden en que se realizaron. Esto asegura que, en caso de que el servidor Redis se caiga antes de escribir los datos en disco, cuando vuelva a estar disponible, podrá reproducir todas las operaciones pendientes y restaurar el estado exacto de la base de datos.</p>
+<p>Para activar el archivo <code class="docutils literal notranslate"><span class="pre">appendonly.aof</span></code>, es necesario modificar el archivo de configuración <code class="docutils literal notranslate"><span class="pre">redis.conf</span></code> y establecer el parámetro <code class="docutils literal notranslate"><span class="pre">appendonly</span></code> a <code class="docutils literal notranslate"><span class="pre">yes</span></code>:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>appendonly<span class="w"> </span>yes
+</pre></div>
+</div>
+<p>Una vez activado, Redis comenzará a registrar todas las operaciones de escritura en el archivo <code class="docutils literal notranslate"><span class="pre">appendonly.aof</span></code>. Sin embargo, es importante encontrar un equilibrio entre la consistencia de los datos y el rendimiento del sistema. Esto se puede ajustar mediante el parámetro <code class="docutils literal notranslate"><span class="pre">appendfsync</span></code> en <code class="docutils literal notranslate"><span class="pre">redis.conf</span></code>, que controla la frecuencia con la que Redis sincroniza el archivo <code class="docutils literal notranslate"><span class="pre">appendonly.aof</span></code> con el disco. Los valores posibles son:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">appendfsync</span> <span class="pre">always</span></code>: Redis sincroniza el archivo <code class="docutils literal notranslate"><span class="pre">appendonly.aof</span></code> con el disco después de cada operación de escritura. Este valor garantiza la máxima consistencia de los datos, pero puede afectar significativamente el rendimiento.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">appendfsync</span> <span class="pre">everysec</span></code>: Redis sincroniza el archivo <code class="docutils literal notranslate"><span class="pre">appendonly.aof</span></code> con el disco cada segundo. Este es el valor más habitual, ya que ofrece un buen equilibrio entre consistencia y rendimiento.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">appendfsync</span> <span class="pre">no</span></code>: Redis no sincroniza el archivo <code class="docutils literal notranslate"><span class="pre">appendonly.aof</span></code> con el disco. Este valor maximiza el rendimiento, pero puede provocar pérdida de datos en caso de fallo del servidor.</p></li>
+</ul>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># appendfsync always</span>
+appendfsync<span class="w"> </span>everysec
+<span class="c1"># appendfsync no</span>
+</pre></div>
+</div>
+<p>Además, Redis ofrece la posibilidad de realizar una reescritura del archivo <code class="docutils literal notranslate"><span class="pre">appendonly.aof</span></code> para reducir su tamaño y mejorar el rendimiento. La reescritura se realiza en segundo plano y consiste en crear un nuevo archivo <code class="docutils literal notranslate"><span class="pre">appendonly.aof</span></code> que contiene solo las operaciones necesarias para reconstruir el estado actual de la base de datos. Esto elimina las operaciones redundantes y reduce el tamaño del archivo.</p>
+<p>En resumen, el archivo <code class="docutils literal notranslate"><span class="pre">appendonly.aof</span></code> es una herramienta poderosa que permite a Redis ofrecer una persistencia más robusta y consistente, adecuada para aplicaciones críticas donde la pérdida de datos no es aceptable. Sin embargo, es importante configurar adecuadamente los parámetros de sincronización para encontrar el equilibrio adecuado entre consistencia y rendimiento.</p>
+</section>
+<section id="monitorizacion-del-rendimiento">
+<h3>Monitorización del rendimiento<a class="headerlink" href="#monitorizacion-del-rendimiento" title="Link to this heading">#</a></h3>
+<p>Para monitorizar el rendimiento de Redis, existe una utilidad llamada <code class="docutils literal notranslate"><span class="pre">redis-benchmark</span></code> que permite realizar pruebas de rendimiento y medir la capacidad de respuesta del servidor en diferentes escenarios. Algunos de los parámetros que se pueden ajustar en <code class="docutils literal notranslate"><span class="pre">redis-benchmark</span></code> son:</p>
+<ul class="simple">
+<li><p>Número de peticiones</p></li>
+<li><p>Número de clientes paralelos</p></li>
+<li><p>Operaciones a realizar (SET, GET, INCR, LPUSH, LPOP, SADD, SPOP, LRANGE, MSET, etc.)</p></li>
+</ul>
+<p>De forma predeterminada, <code class="docutils literal notranslate"><span class="pre">redis-benchmark</span></code> se conecta al puerto 6379 y realiza 10.000 peticiones con 50 clientes paralelos. Sin embargo, estos valores se pueden ajustar según las necesidades de la prueba. Por ejemplo, para cambiar el número de peticiones, se puede utilizar el siguiente comando:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>redis-benchmark<span class="w"> </span>-n<span class="w"> </span><span class="p">&amp;</span>lt<span class="p">;</span>numeroPeticiones&gt;
+</pre></div>
+</div>
+</section>
+<section id="clientes">
+<h3>Clientes<a class="headerlink" href="#clientes" title="Link to this heading">#</a></h3>
+<p>Redis es una base de datos muy popular y cuenta con una amplia variedad de clientes en diferentes lenguajes de programación. Estos clientes permiten a los desarrolladores interactuar con Redis desde sus aplicaciones de forma sencilla y eficiente. Algunos de los clientes más populares son C, C#, Dart, Go, Java, Node.js, Perl, PHP, Python, Ruby, … Para más información, se puede consultar la página oficial de <a class="reference external" href="http://redis.io/clients">clientes de Redis</a>.</p>
+</section>
+</section>
+<section id="operaciones-basicas">
+<h2>Operaciones básicas<a class="headerlink" href="#operaciones-basicas" title="Link to this heading">#</a></h2>
+<p>Redis ofrece una amplia variedad de comandos para interactuar con la base de datos. Algunos de los comandos más comunes son:</p>
+<section id="set-y-get">
+<h3><code class="docutils literal notranslate"><span class="pre">SET</span></code> y <code class="docutils literal notranslate"><span class="pre">GET</span></code><a class="headerlink" href="#set-y-get" title="Link to this heading">#</a></h3>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">SET</span> <span class="pre">key</span> <span class="pre">value</span></code>: Establece el valor de una clave.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">GET</span> <span class="pre">key</span></code>: Obtiene el valor de una clave.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">MSET</span> <span class="pre">key</span> <span class="pre">value</span> <span class="pre">[key</span> <span class="pre">value</span> <span class="pre">...]</span></code>: Establece múltiples claves y valores.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">MGET</span> <span class="pre">key</span> <span class="pre">[key</span> <span class="pre">...]</span></code>: Obtiene los valores de múltiples claves.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">DEL</span> <span class="pre">key</span></code>: Elimina una clave.</p></li>
+</ul>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>SET<span class="w"> </span>ual<span class="w"> </span><span class="s2">&quot;https://www.ual.es&quot;</span>
+<span class="s2">&quot;OK&quot;</span>
+
+GET<span class="w"> </span>ual
+<span class="s2">&quot;https://www.ual.es&quot;</span>
+
+MSET<span class="w"> </span>ugr<span class="w"> </span><span class="s2">&quot;https://www.ugr.es&quot;</span><span class="w"> </span>uma<span class="w"> </span><span class="s2">&quot;https://www.uma.es&quot;</span>
+<span class="s2">&quot;OK&quot;</span>
+
+MGET<span class="w"> </span>ugr<span class="w"> </span>uma
+<span class="m">1</span><span class="o">)</span><span class="w"> </span><span class="s2">&quot;https://www.ugr.es&quot;</span>
+<span class="m">2</span><span class="o">)</span><span class="w"> </span><span class="s2">&quot;https://www.uma.es&quot;</span>
+
+DEL<span class="w"> </span>uma
+<span class="o">(</span>integer<span class="o">)</span><span class="w"> </span><span class="m">1</span>
+
+GET<span class="w"> </span>uma
+<span class="s2">&quot;(nil)&quot;</span>
+</pre></div>
+</div>
+<p>Como ejemplo de uso de SET y GET, se puede utilizar Redis para</p>
+<ul class="simple">
+<li><p>Almacenar y recuperar URLs acortadas. Por ejemplo, se puede almacenar la URL original como valor y la URL corta como clave. De esta forma, al recuperar la URL corta, se obtiene la URL original. Este es un caso de uso común en aplicaciones web que requieren acortar URLs para compartir enlaces de forma más sencilla.</p></li>
+<li><p>Caché de llamadas a APIs. Por ejemplo, se puede almacenar la URL de la llamada a la API como clave y el contenido de la respuesta como valor. De esta forma, si se realiza una llamada a la misma URL, se puede recuperar la respuesta desde la caché en lugar de realizar la llamada de nuevo.</p></li>
+</ul>
+</section>
+<section id="operaciones-incr-y-decr">
+<h3>Operaciones <code class="docutils literal notranslate"><span class="pre">INCR</span></code> y <code class="docutils literal notranslate"><span class="pre">DECR</span></code><a class="headerlink" href="#operaciones-incr-y-decr" title="Link to this heading">#</a></h3>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">INCR</span> <span class="pre">key</span></code>: Incrementa el valor de una clave numérica.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">DECR</span> <span class="pre">key</span></code>: Decrementa el valor de una clave numérica.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">INCRBY</span> <span class="pre">key</span> <span class="pre">increment</span></code>: Incrementa el valor de una clave numérica en una cantidad específica.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">DECRBY</span> <span class="pre">key</span> <span class="pre">decrement</span></code>: Decrementa el valor de una clave numérica en una cantidad específica.</p></li>
+</ul>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>SET<span class="w"> </span>count<span class="w"> </span><span class="m">1</span>
+<span class="s2">&quot;OK&quot;</span>
+
+INCR<span class="w"> </span>count
+<span class="o">(</span>integer<span class="o">)</span><span class="w"> </span><span class="m">2</span>
+
+GET<span class="w"> </span>count
+<span class="s2">&quot;2&quot;</span>
+
+INCRBY<span class="w"> </span>count<span class="w"> </span><span class="m">10</span>
+<span class="o">(</span>integer<span class="o">)</span><span class="w"> </span><span class="m">12</span>
+
+DECRBY<span class="w"> </span>count<span class="w"> </span><span class="m">5</span>
+<span class="o">(</span>integer<span class="o">)</span><span class="w"> </span><span class="m">7</span>
+
+GET<span class="w"> </span>count
+<span class="s2">&quot;7&quot;</span>
+
+SET<span class="w"> </span>cadena<span class="w"> </span><span class="s2">&quot;Hola&quot;</span>
+<span class="s2">&quot;OK&quot;</span>
+
+INCR<span class="w"> </span>cadena
+<span class="s2">&quot;ERR value is not an integer or out of range&quot;</span>
+</pre></div>
+</div>
+<p>Como ejemplo de uso de <code class="docutils literal notranslate"><span class="pre">INCR</span></code> y <code class="docutils literal notranslate"><span class="pre">DECR</span></code>, se puede utilizar Redis para</p>
+<ul class="simple">
+<li><p>Contar el número de clics en un enlace (p.e. de un producto en una tienda online). Por ejemplo, se puede almacenar el número de clics como un valor numérico en una clave y utilizar <code class="docutils literal notranslate"><span class="pre">INCR</span></code> para incrementar el número de clics cada vez que alguien hace clic en el enlace.</p></li>
+<li><p>Controlar el stock de productos en un almacén. Por ejemplo, se puede almacenar la cantidad de productos disponibles como un valor numérico en una clave y utilizar <code class="docutils literal notranslate"><span class="pre">DECR</span></code> para decrementar la cantidad cada vez que se realiza una venta.</p></li>
+</ul>
+</section>
+<section id="operaciones-sobre-cadenas">
+<h3>Operaciones sobre cadenas<a class="headerlink" href="#operaciones-sobre-cadenas" title="Link to this heading">#</a></h3>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">APPEND</span> <span class="pre">key</span> <span class="pre">value</span></code>: Añade un valor al final de una cadena.</p></li>
+</ul>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>EXISTS<span class="w"> </span>myKey
+<span class="s2">&quot;(nil)&quot;</span>
+
+APPEND<span class="w"> </span>myKey<span class="w"> </span><span class="s2">&quot;Hello&quot;</span>
+<span class="o">(</span>integer<span class="o">)</span><span class="w"> </span><span class="m">5</span>
+
+APPEND<span class="w"> </span>myKey<span class="w"> </span><span class="s2">&quot; World!!&quot;</span>
+<span class="o">(</span>integer<span class="o">)</span><span class="w"> </span><span class="m">13</span>
+
+GET<span class="w"> </span>myKey
+<span class="s2">&quot;Hello World!!&quot;</span>
+</pre></div>
+</div>
+<p>Como ejemplo de uso de <code class="docutils literal notranslate"><span class="pre">APPEND</span></code>, se puede utilizar Redis para</p>
+<ul class="simple">
+<li><p>Almacenar y concatenar mensajes de chat en tiempo real. Por ejemplo, se puede almacenar cada mensaje como un valor en una clave y utilizar <code class="docutils literal notranslate"><span class="pre">APPEND</span></code> para añadir nuevos mensajes al final de la cadena. De esta forma, se puede mantener un historial de mensajes en una conversación de chat.</p></li>
+<li><p>Generar un log de eventos en una aplicación. Por ejemplo, se puede almacenar cada evento como un valor en una clave y utilizar <code class="docutils literal notranslate"><span class="pre">APPEND</span></code> para añadir nuevos eventos al final de la cadena. De esta forma, se puede mantener un registro de todos los eventos ocurridos en la aplicación.</p></li>
+</ul>
+</section>
+<section id="operaciones-sobre-listas">
+<h3>Operaciones sobre listas<a class="headerlink" href="#operaciones-sobre-listas" title="Link to this heading">#</a></h3>
+<p>Las listas son colecciones ordenadas de elementos que actúan como pilas y colas. Permiten también la inserción en cualquier parte y pueden contener valores repetidos.</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">LPUSH</span> <span class="pre">key</span> <span class="pre">value</span></code>: Añade un valor al principio de una lista.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">RPUSH</span> <span class="pre">key</span> <span class="pre">value</span></code>: Añade un valor al final de una lista.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">LPOP</span> <span class="pre">key</span></code>: Elimina y obtiene el primer elemento de una lista.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">RPOP</span> <span class="pre">key</span></code>: Elimina y obtiene el último elemento de una lista.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">LRANGE</span> <span class="pre">key</span> <span class="pre">start</span> <span class="pre">stop</span></code>: Obtiene un rango de elementos de una lista.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">LLEN</span> <span class="pre">key</span></code>: Obtiene la longitud de una lista.</p></li>
+</ul>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>LPUSH<span class="w"> </span>colores<span class="w"> </span>amarillo
+<span class="o">(</span>integer<span class="o">)</span><span class="w"> </span><span class="m">1</span>
+
+LPUSH<span class="w"> </span>colores<span class="w"> </span>rojo
+<span class="o">(</span>integer<span class="o">)</span><span class="w"> </span><span class="m">2</span>
+
+RPUSH<span class="w"> </span>colores<span class="w"> </span>verde
+<span class="o">(</span>integer<span class="o">)</span><span class="w"> </span><span class="m">3</span>
+
+LRANGE<span class="w"> </span>colores<span class="w"> </span><span class="m">0</span><span class="w"> </span>-1
+<span class="m">1</span><span class="o">)</span><span class="w"> </span><span class="s2">&quot;rojo&quot;</span>
+<span class="m">2</span><span class="o">)</span><span class="w"> </span><span class="s2">&quot;amarillo&quot;</span>
+<span class="m">3</span><span class="o">)</span><span class="w"> </span><span class="s2">&quot;verde&quot;</span>
+
+LRANGE<span class="w"> </span>colores<span class="w"> </span><span class="m">1</span><span class="w"> </span><span class="m">2</span>
+<span class="m">1</span><span class="o">)</span><span class="w"> </span><span class="s2">&quot;amarillo&quot;</span>
+<span class="m">2</span><span class="o">)</span><span class="w"> </span><span class="s2">&quot;verde&quot;</span>
+
+LPOP<span class="w"> </span>colores
+<span class="s2">&quot;rojo&quot;</span>
+
+LRANGE<span class="w"> </span>colores<span class="w"> </span><span class="m">0</span><span class="w"> </span>-1
+<span class="m">1</span><span class="o">)</span><span class="w"> </span><span class="s2">&quot;amarillo&quot;</span>
+<span class="m">2</span><span class="o">)</span><span class="w"> </span><span class="s2">&quot;verde&quot;</span>
+
+LSET<span class="w"> </span>colores<span class="w"> </span><span class="m">0</span><span class="w"> </span>rojo
+<span class="s2">&quot;OK&quot;</span>
+
+LRANGE<span class="w"> </span>colores<span class="w"> </span><span class="m">0</span><span class="w"> </span>-1
+<span class="m">1</span><span class="o">)</span><span class="w"> </span><span class="s2">&quot;rojo&quot;</span>
+<span class="m">2</span><span class="o">)</span><span class="w"> </span><span class="s2">&quot;verde&quot;</span>
+
+LINDEX<span class="w"> </span>colores<span class="w"> </span><span class="m">1</span>
+<span class="s2">&quot;verde&quot;</span>
+
+LINSERT<span class="w"> </span>colores<span class="w"> </span>before<span class="w"> </span>verde<span class="w"> </span>amarillo
+<span class="o">(</span>integer<span class="o">)</span><span class="w"> </span><span class="m">3</span>
+
+LRANGE<span class="w"> </span>colores<span class="w"> </span><span class="m">0</span><span class="w"> </span>-1
+<span class="m">1</span><span class="o">)</span><span class="w"> </span><span class="s2">&quot;rojo&quot;</span>
+<span class="m">2</span><span class="o">)</span><span class="w"> </span><span class="s2">&quot;amarillo&quot;</span>
+<span class="m">3</span><span class="o">)</span><span class="w"> </span><span class="s2">&quot;verde&quot;</span>
+
+LLEN<span class="w"> </span>colores
+<span class="o">(</span>integer<span class="o">)</span><span class="w"> </span><span class="m">3</span>
+</pre></div>
+</div>
+<p>Como ejemplo de uso de listas, se puede utilizar Redis para</p>
+<ul class="simple">
+<li><p>Mantener un historial de eventos en una aplicación. Por ejemplo, se puede almacenar cada evento como un valor en una lista y utilizar <code class="docutils literal notranslate"><span class="pre">RPUSH</span></code> para añadir nuevos eventos al final de la lista y <code class="docutils literal notranslate"><span class="pre">LRANGE</span></code> para obtener un rango de eventos.</p></li>
+<li><p>Implementar un sistema de notificaciones en tiempo real. Por ejemplo, se puede almacenar cada notificación como un valor en una lista y utilizar <code class="docutils literal notranslate"><span class="pre">LPUSH</span></code> para añadir nuevas notificaciones al principio de la lista y <code class="docutils literal notranslate"><span class="pre">LRANGE</span></code> para obtener un rango de notificaciones.</p></li>
+<li><p>Almacenar y recuperar mensajes en una aplicación de chat. Por ejemplo, se puede almacenar cada mensaje como un valor en una lista y utilizar <code class="docutils literal notranslate"><span class="pre">RPUSH</span></code> para añadir nuevos mensajes al final de la lista y <code class="docutils literal notranslate"><span class="pre">LRANGE</span></code> para obtener un rango de mensajes.</p></li>
+<li><p>Almacenamiento de los sitios preferidos de usuarios. Por ejemplo, se puede almacenar cada sitio web como un valor en una lista y utilizar <code class="docutils literal notranslate"><span class="pre">RPUSH</span></code> para añadir nuevos sitios al final de la lista y <code class="docutils literal notranslate"><span class="pre">LRANGE</span></code> para obtener un rango de sitios.</p></li>
+</ul>
+</section>
+<section id="listas-bloqueadas">
+<h3>Listas bloqueadas<a class="headerlink" href="#listas-bloqueadas" title="Link to this heading">#</a></h3>
+<p>Las listas bloqueadas son una forma de comunicación entre procesos en Redis. Un cliente suscriptor se suscribe a una lista con un tiempo de espera específico utilizando los comandos <code class="docutils literal notranslate"><span class="pre">BRPOP</span></code> o <code class="docutils literal notranslate"><span class="pre">BLPOP</span></code>. El cliente queda bloqueado esperando hasta que haya un valor disponible en la lista o hasta que se produzca el timeout. Mientras tanto, un grupo de usuarios publicadores pueden escribir (push) en la lista, y el cliente suscriptor sacará (pop) los elementos de la lista cuando estén disponibles.</p>
+<p>Este mecanismo es útil en escenarios donde se necesita una comunicación asíncrona y eficiente entre diferentes procesos. Por ejemplo, en una aplicación de mensajería, los mensajes pueden ser publicados en una lista por los usuarios y los suscriptores pueden recibirlos en tiempo real. Otro caso de uso es en sistemas de procesamiento de tareas, donde las tareas son encoladas por diferentes productores y procesadas por consumidores en el orden en que fueron añadidas a la lista.</p>
+<p>El uso de listas bloqueadas en Redis permite implementar patrones de diseño como colas de trabajo y sistemas de notificación en tiempo real, aprovechando la alta disponibilidad y el rendimiento de Redis.</p>
+<div class="pst-scrollable-table-container"><table class="table">
+<thead>
+<tr class="row-odd"><th class="head"><p></p></th>
+<th class="head"><p></p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><strong>Suscriptor</strong></p></td>
+<td><p><strong>Publicador</strong></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">www.xxx.yyy.zzz:6379&gt;</span> <span class="pre">echo</span> <span class="pre">&quot;Soy</span> <span class="pre">el</span> <span class="pre">suscriptor&quot;</span></code> <code class="docutils literal notranslate"><span class="pre">&quot;Soy</span> <span class="pre">el</span> <span class="pre">suscriptor&quot;</span></code> <code class="docutils literal notranslate"><span class="pre">BRPOP</span> <span class="pre">comments</span> <span class="pre">300</span></code> <em>Bloqueado hasta publicación o timeout</em></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">echo</span> <span class="pre">&quot;Soy</span> <span class="pre">el</span> <span class="pre">productor</span> <span class="pre">de</span> <span class="pre">elementos&quot;</span></code> <code class="docutils literal notranslate"><span class="pre">&quot;Soy</span> <span class="pre">el</span> <span class="pre">productor</span> <span class="pre">de</span> <span class="pre">elementos&quot;</span></code> <code class="docutils literal notranslate"><span class="pre">&gt;</span> <span class="pre">LPUSH</span> <span class="pre">comments</span> <span class="pre">&quot;Mi</span> <span class="pre">comentario&quot;</span></code> <code class="docutils literal notranslate"><span class="pre">(integer)</span> <span class="pre">1</span></code></p></td>
+</tr>
+<tr class="row-odd"><td><p><em>Desbloqueado por la publicación</em> <code class="docutils literal notranslate"><span class="pre">1)</span> <span class="pre">&quot;comments&quot;</span></code> <code class="docutils literal notranslate"><span class="pre">2)</span> <span class="pre">&quot;Mi</span> <span class="pre">comentario&quot;</span></code> <code class="docutils literal notranslate"><span class="pre">(220.57s)</span></code> &lt;- <em>Tiempo transcurrido para la publicación por parte del suscriptor</em></p></td>
+<td><p></p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+<section id="operaciones-sobre-conjuntos">
+<h3>Operaciones sobre conjuntos<a class="headerlink" href="#operaciones-sobre-conjuntos" title="Link to this heading">#</a></h3>
+<p>Los conjuntos son colecciones no ordenadas de elementos únicos.</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">SADD</span> <span class="pre">key</span> <span class="pre">member</span></code>: Añade un miembro a un conjunto.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">SREM</span> <span class="pre">key</span> <span class="pre">member</span></code>: Elimina un miembro de un conjunto.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">SMEMBERS</span> <span class="pre">key</span></code>: Obtiene todos los miembros de un conjunto.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">SCARD</span> <span class="pre">key</span></code>: Obtiene el número de miembros de un conjunto.</p></li>
+</ul>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>GET<span class="w"> </span>semaforo
+<span class="s2">&quot;(nil)&quot;</span>
+
+SADD<span class="w"> </span>semaforo<span class="w"> </span>rojo<span class="w"> </span>amarillo<span class="w"> </span>verde
+<span class="o">(</span>integer<span class="o">)</span><span class="w"> </span><span class="m">3</span>
+
+SMEMBERS<span class="w"> </span>semaforo
+<span class="m">1</span><span class="o">)</span><span class="w"> </span><span class="s2">&quot;amarillo&quot;</span>
+<span class="m">2</span><span class="o">)</span><span class="w"> </span><span class="s2">&quot;verde&quot;</span>
+<span class="m">3</span><span class="o">)</span><span class="w"> </span><span class="s2">&quot;rojo&quot;</span>
+
+SREM<span class="w"> </span>semaforo<span class="w"> </span>amarillo
+<span class="o">(</span>integer<span class="o">)</span><span class="w"> </span><span class="m">1</span>
+
+SPOP<span class="w"> </span>semaforo
+<span class="s2">&quot;verde&quot;</span>
+
+SMEMBERS<span class="w"> </span>semaforo
+<span class="m">1</span><span class="o">)</span><span class="w"> </span><span class="s2">&quot;rojo&quot;</span>
+
+SADD<span class="w"> </span>semaforo<span class="w"> </span>amarillo<span class="w"> </span>verde
+<span class="o">(</span>integer<span class="o">)</span><span class="w"> </span><span class="m">2</span>
+
+SCARD<span class="w"> </span>semaforo
+<span class="o">(</span>integer<span class="o">)</span><span class="w"> </span><span class="m">3</span>
+
+SADD<span class="w"> </span>semaforo<span class="w"> </span>amarillo
+<span class="o">(</span>integer<span class="o">)</span><span class="w"> </span><span class="m">1</span>
+
+SMEMBERS<span class="w"> </span>semaforo
+<span class="m">1</span><span class="o">)</span><span class="w"> </span><span class="s2">&quot;amarillo&quot;</span>
+<span class="m">2</span><span class="o">)</span><span class="w"> </span><span class="s2">&quot;verde&quot;</span>
+<span class="m">3</span><span class="o">)</span><span class="w"> </span><span class="s2">&quot;rojo&quot;</span>
+</pre></div>
+</div>
+<p>Como ejemplo de uso de conjuntos, se puede utilizar Redis para</p>
+<ul class="simple">
+<li><p>Almacenar y recuperar etiquetas de artículos en un blog. Por ejemplo, se puede almacenar las etiquetas de cada artículo como miembros de un conjunto y utilizar <code class="docutils literal notranslate"><span class="pre">SADD</span></code> para añadir nuevas etiquetas al conjunto y <code class="docutils literal notranslate"><span class="pre">SMEMBERS</span></code> para obtener todas las etiquetas de un artículo.</p></li>
+<li><p>Implementar un sistema de votación en una aplicación. Por ejemplo, se puede almacenar los votos de los usuarios como miembros de un conjunto y utilizar <code class="docutils literal notranslate"><span class="pre">SADD</span></code> para añadir nuevos votos al conjunto y <code class="docutils literal notranslate"><span class="pre">SCARD</span></code> para obtener el número total de votos.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">SUNION</span> <span class="pre">key</span> <span class="pre">[key</span> <span class="pre">...]</span></code>: Añade múltiples conjuntos.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">SDIFF</span> <span class="pre">key</span> <span class="pre">[key</span> <span class="pre">...]</span></code>: Resta múltiples conjuntos.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">SINTER</span> <span class="pre">key</span> <span class="pre">[key</span> <span class="pre">...]</span></code>: Intersecta múltiples conjuntos.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">SISMEMBER</span> <span class="pre">key</span> <span class="pre">member</span></code>: Determina si un valor dado es miembro de un conjunto.</p></li>
+</ul>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>SADD<span class="w"> </span>arcoIris<span class="w"> </span>rojo<span class="w"> </span>naranja<span class="w"> </span>amarillo<span class="w"> </span>verde<span class="w"> </span>azul<span class="w"> </span>añil<span class="w"> </span>violeta
+<span class="o">(</span>integer<span class="o">)</span><span class="w"> </span><span class="m">7</span>
+
+SUNION<span class="w"> </span>semaforo<span class="w"> </span>arcoIris
+<span class="m">1</span><span class="o">)</span><span class="w"> </span><span class="s2">&quot;azul&quot;</span>
+<span class="m">2</span><span class="o">)</span><span class="w"> </span><span class="s2">&quot;a\xc3\xb1il&quot;</span>
+<span class="m">3</span><span class="o">)</span><span class="w"> </span><span class="s2">&quot;naranja&quot;</span>
+<span class="m">4</span><span class="o">)</span><span class="w"> </span><span class="s2">&quot;verde&quot;</span>
+<span class="m">5</span><span class="o">)</span><span class="w"> </span><span class="s2">&quot;rojo&quot;</span>
+<span class="m">6</span><span class="o">)</span><span class="w"> </span><span class="s2">&quot;amarillo&quot;</span>
+<span class="m">7</span><span class="o">)</span><span class="w"> </span><span class="s2">&quot;member&quot;</span>
+<span class="m">8</span><span class="o">)</span><span class="w"> </span><span class="s2">&quot;violeta&quot;</span>
+
+SDIFF<span class="w"> </span>arcoIris<span class="w"> </span>semaforo
+<span class="m">1</span><span class="o">)</span><span class="w"> </span><span class="s2">&quot;azul&quot;</span>
+<span class="m">2</span><span class="o">)</span><span class="w"> </span><span class="s2">&quot;a\xc3\xb1il&quot;</span>
+<span class="m">3</span><span class="o">)</span><span class="w"> </span><span class="s2">&quot;naranja&quot;</span>
+<span class="m">4</span><span class="o">)</span><span class="w"> </span><span class="s2">&quot;violeta&quot;</span>
+
+SINTER<span class="w"> </span>arcoIris<span class="w"> </span>semaforo
+<span class="m">1</span><span class="o">)</span><span class="w"> </span><span class="s2">&quot;verde&quot;</span>
+<span class="m">2</span><span class="o">)</span><span class="w"> </span><span class="s2">&quot;rojo&quot;</span>
+<span class="m">3</span><span class="o">)</span><span class="w"> </span><span class="s2">&quot;amarillo&quot;</span>
+
+SISMEMBER<span class="w"> </span>semaforo<span class="w"> </span>naranja
+<span class="s2">&quot;(nil)&quot;</span>
+</pre></div>
+</div>
+<p>Como ejemplo de uso de las operaciones de unión, intersección y diferencia entre conjuntos, se puede utilizar Redis para</p>
+<ul class="simple">
+<li><p>Contar el número de visitas a un sitio web. Por ejemplo, se puede almacenar las direcciones IP de los visitantes de cada página como miembros de un conjunto y utilizar <code class="docutils literal notranslate"><span class="pre">SADD</span></code> para añadir nuevas direcciones IP al conjunto. Luego, se pueden combinar conjuntos de direcciones IP para obtener un conjunto de direcciones IP únicas y contar el número total de visitas.</p></li>
+<li><p>Gestionar listas de amigos en redes sociales. Por ejemplo, se puede utilizar Redis para almacenar los amigos de cada usuario como miembros de un conjunto y utilizar <code class="docutils literal notranslate"><span class="pre">SINTER</span></code> para encontrar amigos en común entre dos usuarios.</p></li>
+<li><p>Implementar un sistema de recomendaciones. Por ejemplo, se puede utilizar Redis para almacenar los productos comprados por cada usuario como miembros de un conjunto y utilizar <code class="docutils literal notranslate"><span class="pre">SDIFF</span></code> para recomendar productos que otros usuarios han comprado pero el usuario actual no.</p></li>
+</ul>
+</section>
+<section id="conjuntos-ordenados">
+<h3>Conjuntos ordenados<a class="headerlink" href="#conjuntos-ordenados" title="Link to this heading">#</a></h3>
+<p>Los conjuntos ordenados son colecciones de elementos únicos ordenados por un score asociado a cada elemento. Los conjuntos ordenados son útiles para almacenar datos que requieren un orden específico, como clasificaciones, puntuaciones, fechas, etc. Como son conjuntos, los elementos son únicos, y a su vez se comportan como una lista en tanto que los elementos están ordenados.</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">ZADD</span> <span class="pre">key</span> <span class="pre">score</span> <span class="pre">member</span></code>: Añade un miembro a un conjunto ordenado.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">ZREM</span> <span class="pre">key</span> <span class="pre">member</span></code>: Elimina un miembro de un conjunto ordenado.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">ZCOUNT</span> <span class="pre">key</span> <span class="pre">min</span> <span class="pre">max</span></code>: Obtiene el número de miembros en un rango de scores.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">ZINCRBY</span> <span class="pre">key</span> <span class="pre">increment</span> <span class="pre">member</span></code>: Incrementa el score de un miembro en un conjunto ordenado.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">ZSCORE</span> <span class="pre">key</span> <span class="pre">member</span></code>: Obtiene el score de un miembro en un conjunto ordenado.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">ZRANGE</span> <span class="pre">key</span> <span class="pre">start</span> <span class="pre">stop</span> <span class="pre">[WITHSCORES]</span></code>: Obtiene un rango de miembros en un conjunto ordenado.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">ZRANGEBYSCORE</span> <span class="pre">key</span> <span class="pre">min</span> <span class="pre">max</span> <span class="pre">[WITHSCORES]</span> <span class="pre">[LIMIT</span> <span class="pre">offset</span> <span class="pre">count]</span></code>: Obtiene un rango de miembros en un conjunto ordenado por score.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">ZRANK</span> <span class="pre">key</span> <span class="pre">member</span></code>: Obtiene el índice de un miembro en un conjunto ordenado.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">ZREMRANGEBYRANK</span> <span class="pre">key</span> <span class="pre">start</span> <span class="pre">stop</span></code>: Elimina todos los miembros en un rango de índices en un conjunto ordenado.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">ZREMRANGEBYSCORE</span> <span class="pre">key</span> <span class="pre">min</span> <span class="pre">max</span></code>: Elimina todos los miembros en un rango de scores en un conjunto ordenado.</p></li>
+</ul>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>ZADD<span class="w"> </span>productos<span class="w"> </span><span class="m">27</span><span class="w"> </span><span class="s2">&quot;Champu&quot;</span>
+<span class="o">(</span>integer<span class="o">)</span><span class="w"> </span><span class="m">1</span>
+
+ZADD<span class="w"> </span>productos<span class="w"> </span><span class="m">12</span><span class="w"> </span><span class="s2">&quot;Lejia&quot;</span>
+<span class="o">(</span>integer<span class="o">)</span><span class="w"> </span><span class="m">1</span>
+
+ZADD<span class="w"> </span>productos<span class="w"> </span><span class="m">34</span><span class="w"> </span><span class="s2">&quot;Suavizante&quot;</span>
+<span class="o">(</span>integer<span class="o">)</span><span class="w"> </span><span class="m">1</span>
+
+ZADD<span class="w"> </span>productos<span class="w"> </span><span class="m">6</span><span class="w"> </span><span class="s2">&quot;Detergente&quot;</span>
+<span class="o">(</span>integer<span class="o">)</span><span class="w"> </span><span class="m">1</span>
+
+ZADD<span class="w"> </span>productos<span class="w"> </span><span class="m">15</span><span class="w"> </span><span class="s2">&quot;Antical&quot;</span><span class="w"> </span><span class="m">18</span><span class="w"> </span><span class="s2">&quot;Quitamanchas&quot;</span><span class="w"> </span><span class="m">4</span><span class="w"> </span><span class="s2">&quot;Activador lavado&quot;</span><span class="w"> </span><span class="m">3</span><span class="w"> </span><span class="s2">&quot;Agua destilada&quot;</span>
+<span class="o">(</span>integer<span class="o">)</span><span class="w"> </span><span class="m">4</span>
+
+ZCARD<span class="w"> </span>productos
+<span class="o">(</span>integer<span class="o">)</span><span class="w"> </span><span class="m">8</span>
+
+ZCOUNT<span class="w"> </span>productos<span class="w"> </span><span class="m">0</span><span class="w"> </span><span class="m">5</span>
+<span class="o">(</span>integer<span class="o">)</span><span class="w"> </span><span class="m">2</span>
+
+ZINCRBY<span class="w"> </span>productos<span class="w"> </span>-1<span class="w"> </span><span class="s2">&quot;Champu&quot;</span>
+<span class="s2">&quot;26&quot;</span>
+
+ZSCORE<span class="w"> </span>productos<span class="w"> </span><span class="s2">&quot;Champu&quot;</span>
+<span class="s2">&quot;26&quot;</span>
+
+ZRANGE<span class="w"> </span>productos<span class="w"> </span><span class="m">0</span><span class="w"> </span><span class="m">5</span><span class="w"> </span>WITHSCORES
+<span class="m">1</span><span class="o">)</span><span class="w"> </span><span class="s2">&quot;Agua destilada&quot;</span>
+<span class="m">2</span><span class="o">)</span><span class="w"> </span><span class="s2">&quot;3&quot;</span>
+<span class="m">3</span><span class="o">)</span><span class="w"> </span><span class="s2">&quot;Activador lavado&quot;</span>
+<span class="m">4</span><span class="o">)</span><span class="w"> </span><span class="s2">&quot;4&quot;</span>
+<span class="m">5</span><span class="o">)</span><span class="w"> </span><span class="s2">&quot;Detergente&quot;</span>
+<span class="m">6</span><span class="o">)</span><span class="w"> </span><span class="s2">&quot;6&quot;</span>
+<span class="m">7</span><span class="o">)</span><span class="w"> </span><span class="s2">&quot;Lejia&quot;</span>
+<span class="m">8</span><span class="o">)</span><span class="w"> </span><span class="s2">&quot;12&quot;</span>
+<span class="m">9</span><span class="o">)</span><span class="w"> </span><span class="s2">&quot;Antical&quot;</span>
+<span class="m">10</span><span class="o">)</span><span class="w"> </span><span class="s2">&quot;15&quot;</span>
+<span class="m">11</span><span class="o">)</span><span class="w"> </span><span class="s2">&quot;Quitamanchas&quot;</span>
+<span class="m">12</span><span class="o">)</span><span class="w"> </span><span class="s2">&quot;18&quot;</span>
+
+ZRANGEBYSCORE<span class="w"> </span>productos<span class="w"> </span><span class="m">0</span><span class="w"> </span><span class="m">5</span><span class="w"> </span>WITHSCORES
+<span class="m">1</span><span class="o">)</span><span class="w"> </span><span class="s2">&quot;Agua destilada&quot;</span>
+<span class="m">2</span><span class="o">)</span><span class="w"> </span><span class="s2">&quot;3&quot;</span>
+<span class="m">3</span><span class="o">)</span><span class="w"> </span><span class="s2">&quot;Activador lavado&quot;</span>
+<span class="m">4</span><span class="o">)</span><span class="w"> </span><span class="s2">&quot;4&quot;</span>
+
+ZRANK<span class="w"> </span>productos<span class="w"> </span><span class="s2">&quot;Activador lavado&quot;</span>
+<span class="o">(</span>integer<span class="o">)</span><span class="w"> </span><span class="m">1</span>
+
+ZINCRBY<span class="w"> </span>productos<span class="w"> </span>-3<span class="w"> </span><span class="s2">&quot;Activador lavado&quot;</span>
+<span class="s2">&quot;1&quot;</span>
+
+ZRANK<span class="w"> </span>productos<span class="w"> </span><span class="s2">&quot;Activador lavado&quot;</span>
+<span class="o">(</span>integer<span class="o">)</span><span class="w"> </span><span class="m">0</span>
+
+ZRANGE<span class="w"> </span>productos<span class="w"> </span><span class="m">0</span><span class="w"> </span>-1<span class="w"> </span>WITHSCORES
+<span class="m">1</span><span class="o">)</span><span class="w"> </span><span class="s2">&quot;Activador lavado&quot;</span>
+<span class="m">2</span><span class="o">)</span><span class="w"> </span><span class="s2">&quot;1&quot;</span>
+<span class="m">3</span><span class="o">)</span><span class="w"> </span><span class="s2">&quot;Agua destilada&quot;</span>
+<span class="m">4</span><span class="o">)</span><span class="w"> </span><span class="s2">&quot;3&quot;</span>
+<span class="m">5</span><span class="o">)</span><span class="w"> </span><span class="s2">&quot;Detergente&quot;</span>
+<span class="m">6</span><span class="o">)</span><span class="w"> </span><span class="s2">&quot;6&quot;</span>
+<span class="m">7</span><span class="o">)</span><span class="w"> </span><span class="s2">&quot;Lejia&quot;</span>
+<span class="m">8</span><span class="o">)</span><span class="w"> </span><span class="s2">&quot;12&quot;</span>
+<span class="m">9</span><span class="o">)</span><span class="w"> </span><span class="s2">&quot;Antical&quot;</span>
+<span class="m">10</span><span class="o">)</span><span class="w"> </span><span class="s2">&quot;15&quot;</span>
+<span class="m">11</span><span class="o">)</span><span class="w"> </span><span class="s2">&quot;Quitamanchas&quot;</span>
+<span class="m">12</span><span class="o">)</span><span class="w"> </span><span class="s2">&quot;18&quot;</span>
+
+ZREM<span class="w"> </span>productos<span class="w"> </span><span class="s2">&quot;Quitamanchas&quot;</span>
+<span class="o">(</span>integer<span class="o">)</span><span class="w"> </span><span class="m">1</span>
+
+ZREMRANGEBYSCORE<span class="w"> </span>productos<span class="w"> </span><span class="m">15</span><span class="w"> </span><span class="m">50</span>
+<span class="o">(</span>integer<span class="o">)</span><span class="w"> </span><span class="m">1</span>
+
+ZRANGE<span class="w"> </span>productos<span class="w"> </span><span class="m">0</span><span class="w"> </span>-1
+<span class="m">1</span><span class="o">)</span><span class="w"> </span><span class="s2">&quot;Activador lavado&quot;</span>
+<span class="m">2</span><span class="o">)</span><span class="w"> </span><span class="s2">&quot;Agua destilada&quot;</span>
+<span class="m">3</span><span class="o">)</span><span class="w"> </span><span class="s2">&quot;Detergente&quot;</span>
+<span class="m">4</span><span class="o">)</span><span class="w"> </span><span class="s2">&quot;Lejia&quot;</span>
+
+ZREMRANGEBYRANK<span class="w"> </span>productos<span class="w"> </span><span class="m">2</span><span class="w"> </span>-1
+<span class="o">(</span>integer<span class="o">)</span><span class="w"> </span><span class="m">2</span>
+
+ZRANGE<span class="w"> </span>productos<span class="w"> </span><span class="m">0</span><span class="w"> </span>-1
+<span class="m">1</span><span class="o">)</span><span class="w"> </span><span class="s2">&quot;Activador lavado&quot;</span>
+<span class="m">2</span><span class="o">)</span><span class="w"> </span><span class="s2">&quot;Agua destilada&quot;</span>
+</pre></div>
+</div>
+<p>Como ejemplo de uso de conjuntos ordenados, se puede utilizar Redis para</p>
+<ul class="simple">
+<li><p>Mantener una clasificación de productos en una tienda online. Por ejemplo, se puede almacenar los productos como miembros de un conjunto ordenado y utilizar <code class="docutils literal notranslate"><span class="pre">ZADD</span></code> para añadir nuevos productos al conjunto con un score asociado a su puntuación o clics. Luego, se pueden utilizar comandos como <code class="docutils literal notranslate"><span class="pre">ZRANGE</span></code> para obtener un rango de productos ordenados por score.</p></li>
+<li><p>Almacenar y recuperar puntuaciones de usuarios en un juego. Por ejemplo, se puede almacenar los usuarios como miembros de un conjunto ordenado y utilizar <code class="docutils literal notranslate"><span class="pre">ZINCRBY</span></code> para incrementar la puntuación de un usuario en el conjunto. Luego, se pueden utilizar comandos como <code class="docutils literal notranslate"><span class="pre">ZRANK</span></code> para obtener la posición de un usuario en la clasificación.</p></li>
+</ul>
+</section>
+<section id="hashes">
+<h3>Hashes<a class="headerlink" href="#hashes" title="Link to this heading">#</a></h3>
+<p>Los hashes son colecciones de pares campo-valor en Redis. Los hashes son útiles para representar objetos o estructuras de datos complejas en Redis, ya que permiten almacenar múltiples campos y valores en una sola clave. Los campos y valores en un hash son únicos, lo que significa que no puede haber dos campos con el mismo nombre en un hash. Son útiles para almacenar objetos o estructuras de datos complejas en Redis. Como restricción, no se pueden anidar.</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">HSET</span> <span class="pre">key</span> <span class="pre">field</span> <span class="pre">value</span></code>: Establece el valor de un campo en un hash.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">HGET</span> <span class="pre">key</span> <span class="pre">field</span></code>: Obtiene el valor de un campo en un hash.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">HMSET</span> <span class="pre">key</span> <span class="pre">field</span> <span class="pre">value</span> <span class="pre">[field</span> <span class="pre">value</span> <span class="pre">...]</span></code>: Establece múltiples campos y valores en un hash.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">HMGET</span> <span class="pre">key</span> <span class="pre">field</span> <span class="pre">[field</span> <span class="pre">...]</span></code>: Obtiene los valores de múltiples campos en un hash.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">HGETALL</span> <span class="pre">key</span></code>: Obtiene todos los campos y valores de un hash.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">HDEL</span> <span class="pre">key</span> <span class="pre">field</span> <span class="pre">[field</span> <span class="pre">...]</span></code>: Elimina uno o más campos de un hash.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">HEXISTS</span> <span class="pre">key</span> <span class="pre">field</span></code>: Determina si un campo existe en un hash.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">HINCRBY</span> <span class="pre">key</span> <span class="pre">field</span> <span class="pre">increment</span></code>: Incrementa el valor de un campo en un hash.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">HKEYS</span> <span class="pre">key</span></code>: Obtiene todos los campos de un hash.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">HVALS</span> <span class="pre">key</span></code>: Obtiene todos los valores de un hash.</p></li>
+</ul>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>HSET<span class="w"> </span>user:1000<span class="w"> </span>nombre<span class="w"> </span><span class="s2">&quot;Manuel Torres&quot;</span>
+<span class="o">(</span>integer<span class="o">)</span><span class="w"> </span><span class="m">1</span>
+
+HSET<span class="w"> </span>user:1000<span class="w"> </span>email<span class="w"> </span><span class="s2">&quot;mtorres@ual.es&quot;</span>
+<span class="o">(</span>integer<span class="o">)</span><span class="w"> </span><span class="m">1</span>
+
+HSET<span class="w"> </span>user:1000<span class="w"> </span>universidad<span class="w"> </span><span class="s2">&quot;Universidad de Almeria&quot;</span>
+<span class="o">(</span>integer<span class="o">)</span><span class="w"> </span><span class="m">1</span>
+
+HSET<span class="w"> </span>user:1000<span class="w"> </span>asignaturas<span class="w"> </span><span class="m">5</span>
+<span class="o">(</span>integer<span class="o">)</span><span class="w"> </span><span class="m">1</span>
+
+HGET<span class="w"> </span>user:1000<span class="w"> </span>email
+<span class="s2">&quot;mtorres@ual.es&quot;</span>
+
+HMSET<span class="w"> </span>user:1001<span class="w"> </span>nombre<span class="w"> </span><span class="s2">&quot;Antonio Corral&quot;</span><span class="w"> </span>email<span class="w"> </span><span class="s2">&quot;acorral@ual.es&quot;</span><span class="w"> </span>asignaturas<span class="w"> </span><span class="m">7</span>
+<span class="s2">&quot;OK&quot;</span>
+
+HGETALL<span class="w"> </span>user:1000
+<span class="m">1</span><span class="o">)</span><span class="w"> </span><span class="s2">&quot;nombre&quot;</span>
+<span class="m">2</span><span class="o">)</span><span class="w"> </span><span class="s2">&quot;Manuel Torres&quot;</span>
+<span class="m">3</span><span class="o">)</span><span class="w"> </span><span class="s2">&quot;email&quot;</span>
+<span class="m">4</span><span class="o">)</span><span class="w"> </span><span class="s2">&quot;mtorres@ual.es&quot;</span>
+<span class="m">5</span><span class="o">)</span><span class="w"> </span><span class="s2">&quot;universidad&quot;</span>
+<span class="m">6</span><span class="o">)</span><span class="w"> </span><span class="s2">&quot;Universidad de Almeria&quot;</span>
+<span class="m">7</span><span class="o">)</span><span class="w"> </span><span class="s2">&quot;asignaturas&quot;</span>
+<span class="m">8</span><span class="o">)</span><span class="w"> </span><span class="s2">&quot;5&quot;</span>
+
+HDEL<span class="w"> </span>user:1001<span class="w"> </span>asignaturas
+<span class="o">(</span>integer<span class="o">)</span><span class="w"> </span><span class="m">1</span>
+
+HEXISTS<span class="w"> </span>user:1001<span class="w"> </span>asignaturas
+<span class="s2">&quot;(nil)&quot;</span>
+
+HINCRBY<span class="w"> </span>user:1000<span class="w"> </span>asignaturas<span class="w"> </span><span class="m">1</span>
+<span class="o">(</span>integer<span class="o">)</span><span class="w"> </span><span class="m">6</span>
+
+HKEYS<span class="w"> </span>user:1000
+<span class="m">1</span><span class="o">)</span><span class="w"> </span><span class="s2">&quot;nombre&quot;</span>
+<span class="m">2</span><span class="o">)</span><span class="w"> </span><span class="s2">&quot;email&quot;</span>
+<span class="m">3</span><span class="o">)</span><span class="w"> </span><span class="s2">&quot;universidad&quot;</span>
+<span class="m">4</span><span class="o">)</span><span class="w"> </span><span class="s2">&quot;asignaturas&quot;</span>
+
+HVALS<span class="w"> </span>user:1000
+<span class="m">1</span><span class="o">)</span><span class="w"> </span><span class="s2">&quot;Manuel Torres&quot;</span>
+<span class="m">2</span><span class="o">)</span><span class="w"> </span><span class="s2">&quot;mtorres@ual.es&quot;</span>
+<span class="m">3</span><span class="o">)</span><span class="w"> </span><span class="s2">&quot;Universidad de Almeria&quot;</span>
+<span class="m">4</span><span class="o">)</span><span class="w"> </span><span class="s2">&quot;6&quot;</span>
+
+HVALS<span class="w"> </span>user:1001
+<span class="m">1</span><span class="o">)</span><span class="w"> </span><span class="s2">&quot;Antonio Corral&quot;</span>
+<span class="m">2</span><span class="o">)</span><span class="w"> </span><span class="s2">&quot;acorral@ual.es&quot;</span>
+
+HKEYS<span class="w"> </span>user:1001
+<span class="m">1</span><span class="o">)</span><span class="w"> </span><span class="s2">&quot;nombre&quot;</span>
+<span class="m">2</span><span class="o">)</span><span class="w"> </span><span class="s2">&quot;email&quot;</span>
+</pre></div>
+</div>
+<p>Como ejemplo de uso de hashes, se puede utilizar Redis para</p>
+<ul class="simple">
+<li><p>Gestionar carritos de compra en una tienda online. Por ejemplo, se puede almacenar los productos y cantidades en un hash con el ID del usuario como clave y los productos y cantidades como campos y valores en el hash. Luego, se pueden utilizar comandos como <code class="docutils literal notranslate"><span class="pre">HSET</span></code> para añadir productos al carrito y <code class="docutils literal notranslate"><span class="pre">HGET</span></code> para obtener los productos del carrito.</p></li>
+<li><p>Gestionar el inventario de productos en una tienda online. Por ejemplo, se puede almacenar los productos y cantidades disponibles en un hash con el ID del producto como clave y la cantidad disponible como valor en el hash. Luego, se pueden utilizar comandos como <code class="docutils literal notranslate"><span class="pre">HSET</span></code> para añadir productos al inventario y <code class="docutils literal notranslate"><span class="pre">HGET</span></code> para obtener la cantidad disponible de un producto.</p></li>
+<li><p>Seguidores de un usuario en una red social. Por ejemplo, se puede almacenar los seguidores de un usuario en un hash con el ID del usuario como clave y los IDs de los seguidores como campos y valores en el hash. Luego, se pueden utilizar comandos como <code class="docutils literal notranslate"><span class="pre">HSET</span></code> para añadir seguidores al usuario y <code class="docutils literal notranslate"><span class="pre">HGET</span></code> para obtener los seguidores de un usuario.</p></li>
+</ul>
+</section>
+</section>
+<section id="expiracion-de-pares-clave-valor">
+<h2>Expiración de pares clave-valor<a class="headerlink" href="#expiracion-de-pares-clave-valor" title="Link to this heading">#</a></h2>
+<p>Redis es especialmente útil como caché para almacenar datos que son costosos de obtener o calcular. Utilizando el tiempo de vida (TTL) de las claves, podemos evitar que la caché crezca sin control. Los pares clave-valor se eliminan automáticamente después de un tiempo especificado, asegurando que la caché se mantenga eficiente y actualizada.</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">EXPIRE</span> <span class="pre">key</span> <span class="pre">seconds</span></code>: Establece el tiempo de vida de una clave en segundos.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">SETEX</span> <span class="pre">key</span> <span class="pre">seconds</span> <span class="pre">value</span></code>: Establece el valor y el tiempo de vida de una clave en segundos.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">EXPIREAT</span> <span class="pre">key</span> <span class="pre">timestamp</span></code>: Establece el tiempo de vida de una clave como una marca de tiempo UNIX.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">TTL</span> <span class="pre">key</span></code>: Obtiene el tiempo de vida de una clave.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">EXISTS</span> <span class="pre">key</span></code>: Determina si una clave existe.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">PERSIST</span> <span class="pre">key</span></code>: Elimina el tiempo de vida de una clave antes de que expire.</p></li>
+</ul>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>SET<span class="w"> </span><span class="s2">&quot;https://www.bdge.com&quot;</span><span class="w"> </span><span class="s2">&quot;&lt;html&gt;&lt;body&gt; ... &lt;/body&gt;&lt;/html&gt;&quot;</span>
+<span class="s2">&quot;OK&quot;</span>
+
+EXPIRE<span class="w"> </span><span class="s2">&quot;https://www.bdge.com&quot;</span><span class="w"> </span><span class="m">60</span>
+<span class="o">(</span>integer<span class="o">)</span><span class="w"> </span><span class="m">1</span>
+
+SETEX<span class="w"> </span><span class="s2">&quot;https://www.bdge.com&quot;</span><span class="w"> </span><span class="m">60</span><span class="w"> </span><span class="s2">&quot;&lt;html&gt;&lt;body&gt; ... &lt;/body&gt;&lt;/html&gt;&quot;</span>
+<span class="s2">&quot;OK&quot;</span>
+
+TTL<span class="w"> </span><span class="s2">&quot;https://www.bdge.com&quot;</span>
+<span class="o">(</span>integer<span class="o">)</span><span class="w"> </span><span class="m">53</span>
+
+EXISTS<span class="w"> </span><span class="s2">&quot;https://www.bdge.com&quot;</span>
+<span class="o">(</span>integer<span class="o">)</span><span class="w"> </span><span class="m">1</span>
+
+PERSIST<span class="w"> </span><span class="s2">&quot;https://www.bdge.com&quot;</span>
+<span class="o">(</span>integer<span class="o">)</span><span class="w"> </span><span class="m">1</span>
+
+TTL<span class="w"> </span><span class="s2">&quot;https://www.bdge.com&quot;</span>
+<span class="o">(</span>integer<span class="o">)</span><span class="w"> </span>-1
+</pre></div>
+</div>
+<p>Como ejemplo de uso de la expiración de pares clave-valor, se puede utilizar Redis para</p>
+<ul class="simple">
+<li><p>Almacenar datos temporales en una aplicación. Por ejemplo, se puede almacenar los resultados de una consulta a una API externa en una clave con un tiempo de vida de 5 minutos. De esta forma, los datos se mantienen actualizados y se eliminan automáticamente después de 5 minutos.</p></li>
+<li><p>Implementar una caché de consultas a una base de datos. Por ejemplo, se puede almacenar los resultados de una consulta a una base de datos en una clave con un tiempo de vida de 1 hora. De esta forma, las consultas se almacenan en caché y se eliminan automáticamente después de 1 hora.</p></li>
+</ul>
+</section>
+<section id="espacios-de-nombres">
+<h2>Espacios de nombres<a class="headerlink" href="#espacios-de-nombres" title="Link to this heading">#</a></h2>
+<p>Las claves residen en un espacio de nombres. Redis los llama bases de datos y se identifican por un número (0, 1, …). Se puede cambiar de espacio de nombres con el comando <code class="docutils literal notranslate"><span class="pre">SELECT</span></code>. Redis permite hasta 16 bases de datos por defecto, pero se pueden configurar más si es necesario. Los espacios de nombres son útiles para separar diferentes conjuntos de datos y evitar colisiones de claves. Por ejemplo, se puede utilizar un espacio de nombres para cada idioma en una aplicación de internacionalización.</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">SELECT</span> <span class="pre">index</span></code>: Cambia al espacio de nombres con el índice especificado.</p></li>
+</ul>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>SET<span class="w"> </span>saludo<span class="w"> </span><span class="s2">&quot;Hola&quot;</span>
+OK
+
+GET<span class="w"> </span>saludo
+<span class="s2">&quot;Hola&quot;</span>
+
+SELECT<span class="w"> </span><span class="m">1</span>
+OK
+
+GET<span class="w"> </span>saludo
+<span class="o">(</span>nil<span class="o">)</span>
+
+SET<span class="w"> </span>saludo<span class="w"> </span><span class="s2">&quot;Hello&quot;</span><span class="w"> </span>
+OK
+
+GET<span class="w"> </span>saludo
+<span class="s2">&quot;Hello&quot;</span>
+
+SELECT<span class="w"> </span><span class="m">0</span>
+OK
+
+GET<span class="w"> </span>saludo
+<span class="s2">&quot;Hola&quot;</span>
+</pre></div>
+</div>
+</section>
+<section id="publicacion-suscripcion">
+<h2>Publicación-Suscripción<a class="headerlink" href="#publicacion-suscripcion" title="Link to this heading">#</a></h2>
+<p>Redis ofrece un mecanismo de publicación-suscripción que permite a los clientes enviar y recibir mensajes en tiempo real. Los clientes pueden suscribirse a canales y recibir mensajes publicados en esos canales por otros clientes. Este mecanismo es útil para implementar sistemas de mensajería, notificaciones en tiempo real, actualizaciones en tiempo real, etc.</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">SUBSCRIBE</span> <span class="pre">channel</span> <span class="pre">[channel</span> <span class="pre">...]</span></code>: Se suscribe a uno o más canales.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">UNSUBSCRIBE</span> <span class="pre">[channel</span> <span class="pre">[channel</span> <span class="pre">...]]</span></code>: Se desuscribe de uno o más canales.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">PUBLISH</span> <span class="pre">channel</span> <span class="pre">message</span></code>: Publica un mensaje en un canal.</p></li>
+</ul>
+<div class="pst-scrollable-table-container"><table class="table">
+<thead>
+<tr class="row-odd"><th class="head"><p><strong>Suscriptor 1</strong></p></th>
+<th class="head"><p><strong>Suscriptor 2</strong></p></th>
+<th class="head"><p><strong>Publicador</strong></p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">SUBSCRIBE</span> <span class="pre">comments</span> <span class="pre">Reading</span> <span class="pre">messages...</span> <span class="pre">(press</span> <span class="pre">Ctrl-C</span> <span class="pre">to</span> <span class="pre">quit)</span> <span class="pre">1)</span> <span class="pre">&quot;subscribe&quot;</span> <span class="pre">2)</span> <span class="pre">&quot;comments&quot;</span> <span class="pre">3)</span> <span class="pre">(integer)</span> <span class="pre">1</span></code> <em>Esperando</em></p></td>
+<td><p></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">SUBSCRIBE</span> <span class="pre">comments</span> <span class="pre">Reading</span> <span class="pre">messages...</span> <span class="pre">(press</span> <span class="pre">Ctrl-C</span> <span class="pre">to</span> <span class="pre">quit)</span> <span class="pre">1)</span> <span class="pre">&quot;subscribe&quot;</span> <span class="pre">2)</span> <span class="pre">&quot;comments&quot;</span> <span class="pre">3)</span> <span class="pre">(integer)</span> <span class="pre">1</span></code> <em>Esperando</em></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p></p></td>
+<td><p></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">PUBLISH</span> <span class="pre">comments</span> <span class="pre">&quot;Esto</span> <span class="pre">es</span> <span class="pre">importante&quot;</span></code></p></td>
+</tr>
+<tr class="row-odd"><td><p>`1) “message” 2) “comments” 3) “Esto es importante”`` <em>Esperando</em></p></td>
+<td><p>`1) “message” 2) “comments” 3) “Esto es importante”`` <em>Esperando</em></p></td>
+<td><p></p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>Como ejemplo de uso de la publicación-suscripción, se puede utilizar Redis para</p>
+<ul class="simple">
+<li><p>Implementar un sistema de notificaciones en tiempo real. Por ejemplo, se puede utilizar Redis para enviar notificaciones a los usuarios en tiempo real cuando se producen eventos importantes en la aplicación.</p></li>
+<li><p>Implementar un sistema de chat en tiempo real. Por ejemplo, se puede utilizar Redis para enviar mensajes de chat entre usuarios en tiempo real.</p></li>
+</ul>
+</section>
+<section id="transacciones">
+<h2>Transacciones<a class="headerlink" href="#transacciones" title="Link to this heading">#</a></h2>
+<p>Redis permite ejecutar un bloque de sentencias de forma similar a las transacciones. Las operaciones son encoladas para poder ejecutarse en secuencia. Las transacciones son cancelables si siguen encoladas.</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">MULTI</span></code>: Inicia una transacción.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">EXEC</span></code>: Ejecuta una transacción.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">DISCARD</span></code>: Cancela una transacción.</p></li>
+</ul>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>MULTI
+<span class="s2">&quot;OK&quot;</span>
+
+SET<span class="w"> </span>uja<span class="w"> </span><span class="s2">&quot;https://www.uja.es&quot;</span>
+<span class="s2">&quot;QUEUED&quot;</span>
+
+SET<span class="w"> </span>count<span class="w"> </span><span class="m">1</span>
+<span class="s2">&quot;QUEUED&quot;</span>
+
+EXEC
+<span class="m">1</span><span class="o">)</span><span class="w"> </span><span class="s2">&quot;OK&quot;</span>
+<span class="m">2</span><span class="o">)</span><span class="w"> </span><span class="s2">&quot;OK&quot;</span>
+</pre></div>
+</div>
+</section>
+<section id="conclusiones">
+<h2>Conclusiones<a class="headerlink" href="#conclusiones" title="Link to this heading">#</a></h2>
+<p>Redis es una base de datos clave-valor en memoria que ofrece una alta velocidad y rendimiento. Es especialmente útil para caché, almacenamiento de sesiones, colas de mensajes, y otras aplicaciones donde la velocidad y la eficiencia son críticas. Redis ofrece una amplia variedad de comandos para interactuar con la base de datos, incluyendo operaciones básicas como <code class="docutils literal notranslate"><span class="pre">SET</span></code> y <code class="docutils literal notranslate"><span class="pre">GET</span></code>, operaciones sobre listas, conjuntos, conjuntos ordenados, hashes, y más. También ofrece características avanzadas como la expiración de pares clave-valor, espacios de nombres, publicación-suscripción, transacciones, y más. Redis es una herramienta poderosa y versátil que se puede utilizar en una amplia variedad de aplicaciones y escenarios.</p>
+<p>Sin embargo, Redis no es una base de datos relacional y no es adecuada para todas las aplicaciones. Normalmente, se utiliza en combinación con otras bases de datos para complementar sus funcionalidades y mejorar el rendimiento. Es importante tener en cuenta las limitaciones de Redis, como la capacidad de almacenamiento limitada por la cantidad de RAM disponible, la persistencia asincrónica, y la necesidad de configurar adecuadamente los parámetros de sincronización y persistencia para garantizar la consistencia de los datos. Es un complemento ideal para aplicaciones que requieren una alta velocidad y rendimiento, como aplicaciones web, juegos en línea, sistemas de mensajería, y más. Además, su capacidad de escalar horizontalmente y su amplia variedad de clientes en diferentes lenguajes de programación hacen de Redis una herramienta poderosa y versátil para desarrolladores y administradores de sistemas.</p>
+</section>
+</section>
+
+    <script type="text/x-thebe-config">
+    {
+        requestKernel: true,
+        binderOptions: {
+            repo: "binder-examples/jupyter-stacks-datascience",
+            ref: "master",
+        },
+        codeMirrorConfig: {
+            theme: "abcdef",
+            mode: "python"
+        },
+        kernelOptions: {
+            name: "python3",
+            path: "./notebooks/Docs/Tema2"
+        },
+        predefinedOutput: true
+    }
+    </script>
+    <script>kernelName = 'python3'</script>
+
+                </article>
+              
+
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+  <div class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> Contents
+  </div>
+  <nav class="bd-toc-nav page-toc">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#introduccion-a-las-bases-de-datos-clave-valor">Introducción a las bases de datos clave-valor</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#redis-como-base-de-datos-clave-valor">Redis como base de datos clave-valor</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#instalacion">Instalación</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#configuracion-de-redis">Configuración de Redis</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#snapshotting">Snapshotting</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#archivo-append-only">Archivo Append-Only</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#monitorizacion-del-rendimiento">Monitorización del rendimiento</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#clientes">Clientes</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#operaciones-basicas">Operaciones básicas</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#set-y-get"><code class="docutils literal notranslate"><span class="pre">SET</span></code> y <code class="docutils literal notranslate"><span class="pre">GET</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#operaciones-incr-y-decr">Operaciones <code class="docutils literal notranslate"><span class="pre">INCR</span></code> y <code class="docutils literal notranslate"><span class="pre">DECR</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#operaciones-sobre-cadenas">Operaciones sobre cadenas</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#operaciones-sobre-listas">Operaciones sobre listas</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#listas-bloqueadas">Listas bloqueadas</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#operaciones-sobre-conjuntos">Operaciones sobre conjuntos</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#conjuntos-ordenados">Conjuntos ordenados</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#hashes">Hashes</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#expiracion-de-pares-clave-valor">Expiración de pares clave-valor</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#espacios-de-nombres">Espacios de nombres</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#publicacion-suscripcion">Publicación-Suscripción</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#transacciones">Transacciones</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#conclusiones">Conclusiones</a></li>
+</ul>
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
+  
+  <div class="footer-item">
+    
+<p class="component-author">
+By Manuel Torres
+</p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+
+  <p class="copyright">
+    
+      © Copyright 2023.
+      <br/>
+    
+  </p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+</div>
+          </footer>
+        
+
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="../../../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b"></script>
+<script src="../../../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+  <footer class="bd-footer">
+  </footer>
+  </body>
+</html>

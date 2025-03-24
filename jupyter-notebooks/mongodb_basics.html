@@ -1,0 +1,1091 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="../" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Usando MongoDB y Python mediante PyMongo &#8212; Aprendiendo bases de datos con Jupyter</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../_static/styles/theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="../_static/styles/bootstrap.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="../_static/styles/pydata-sphinx-theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+
+  
+  <link href="../_static/vendor/fontawesome/6.5.2/css/all.min.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.2/webfonts/fa-solid-900.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.2/webfonts/fa-brands-400.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.2/webfonts/fa-regular-400.woff2" />
+
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=03e43079" />
+    <link rel="stylesheet" type="text/css" href="../_static/styles/sphinx-book-theme.css?v=eba8b062" />
+    <link rel="stylesheet" type="text/css" href="../_static/togglebutton.css?v=13237357" />
+    <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="../_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css?v=be8a1c11" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-thebe.css?v=4fa983c6" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-design.min.css?v=95c83b7e" />
+  
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b" />
+<link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b" />
+  <script src="../_static/vendor/fontawesome/6.5.2/js/all.min.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+    <script src="../_static/documentation_options.js?v=9eb32ce0"></script>
+    <script src="../_static/doctools.js?v=9a2dae69"></script>
+    <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="../_static/copybutton.js?v=f281be69"></script>
+    <script src="../_static/scripts/sphinx-book-theme.js?v=887ef09a"></script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="../_static/togglebutton.js?v=4a39c7ea"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="../_static/design-tabs.js?v=f930bc37"></script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script async="async" src="../_static/sphinx-thebe.js?v=c100c467"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'jupyter-notebooks/mongodb_basics';</script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-primary-sidebar-checkbox"/>
+  <label class="overlay overlay-primary" for="pst-primary-sidebar-checkbox"></label>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-secondary-sidebar-checkbox"/>
+  <label class="overlay overlay-secondary" for="pst-secondary-sidebar-checkbox"></label>
+  
+  <div class="search-button__wrapper">
+    <div class="search-button__overlay"></div>
+    <div class="search-button__search-container">
+<form class="bd-search d-flex align-items-center"
+      action="../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         id="search-input"
+         placeholder="Search this book..."
+         aria-label="Search this book..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form></div>
+  </div>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+        
+      
+      <div class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+    
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="../notebooks/intro.html">
+  
+  
+  
+  
+  
+    
+    
+      
+    
+    
+    <img src="../_static/di.png" class="logo__image only-light" alt="Aprendiendo bases de datos con Jupyter - Home"/>
+    <script>document.write(`<img src="../_static/di.png" class="logo__image only-dark" alt="Aprendiendo bases de datos con Jupyter - Home"/>`);</script>
+  
+  
+</a></div>
+        <div class="sidebar-primary-item">
+
+ <script>
+ document.write(`
+   <button class="btn search-button-field search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass"></i>
+    <span class="search-button__default-text">Search</span>
+    <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+   </button>
+ `);
+ </script></div>
+        <div class="sidebar-primary-item"><nav class="bd-links bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
+        
+        <ul class="nav bd-sidenav bd-sidenav__home-link">
+            <li class="toctree-l1">
+                <a class="reference internal" href="../notebooks/intro.html">
+                    Bases de datos a gran escala
+                </a>
+            </li>
+        </ul>
+        <p aria-level="2" class="caption" role="heading"><span class="caption-text">Temario</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../notebooks/Docs/Tema1/tema1.html">Tema 1. Modelos de almacenamiento no relacionales. El fenómeno NoSQL</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../notebooks/Docs/Tema2/tema2.html">Tema 2. Bases de datos clave-valor</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../notebooks/Docs/Tema3/tema3.html">Tema 3. Bases de datos orientadas a documentos</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../notebooks/Docs/Tema4/tema4.html">Tema 4. Bases de datos orientadas a grafos</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../notebooks/Docs/Tema5/tema5.html">Tema 5. Bases de datos orientadas a columnas</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Labs</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../notebooks/Labs/Lab01/lab01.html">Lab 01. Consultas en MongoDB</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../notebooks/Labs/Lab02/lab02.html">Lab 02. Indexación en MongoDB</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../notebooks/Labs/Lab03/lab03.html">Lab 03. Desarrollo de un Blog con PHP y MongoDB</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../notebooks/Labs/Lab04/lab04.html">Lab 04. Framework de Agregación de MongoDB</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../notebooks/Labs/Lab05/lab05.html">Lab 05. Consultas en Neo4j</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../notebooks/Labs/Lab06/lab06.html">Lab 06. Desarrollo de un aplicación PHP para la consulta de información cinematográfica almacenada en Neo4j</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Casos de uso</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../notebooks/CasosDeUso/cuadroDeMandosParaFinnhub/index.html">Desarrollo de un cuadro de mandos para Finnhub Stock</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../notebooks/CasosDeUso/ofertasFlashRedis/index.html">Desarrollo de una API REST para gestión de ofertas flash con Slim Framework y Redis</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../notebooks/CasosDeUso/valoracionesMongoDB/index.html">Desarrollo de una API REST para gestión de productos y valoraciones con Slim Framework y MongoDB</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../notebooks/CasosDeUso/recomendacionesNeo4j/index.html">Desarrollo de una API REST para gestión de recomendaciones con Slim Framework y Neo4j</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../notebooks/CasosDeUso/historialCassandra/index.html">Desarrollo de una API REST para gestión historial de pedidos y seguimiento en tiempo real con Express y Cassandra</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../notebooks/CasosDeUso/valoracionesMongoDBFastAPI/index.html">Desarrollo de una API REST para gestión de productos y valoraciones con FastAPI y MongoDB</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Actividades complementarias</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../notebooks/ActividadesComplementarias/actividades.html">Descripción</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../notebooks/ActividadesComplementarias/gestionRedTransporteMovilidadUrbana.html">Actividad complementaria. Gestión de una red de transporte y movilidad urbana</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../notebooks/ActividadesComplementarias/gestionEmergenciasDesastresNaturales.html">Actividad complementaria. Gestión de emergencias y desastres naturales</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Licencia</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../LICENSE.html">Licencia</a></li>
+</ul>
+
+    </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+  </div>
+  
+  <div id="rtd-footer-container"></div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><button class="sidebar-toggle primary-toggle btn btn-sm" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</button></div>
+      
+    </div>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+<a href="https://github.com/ualmtorres/AprendiendoBasesDeDatosConJupyter" target="_blank"
+   class="btn btn-sm btn-source-repository-button"
+   title="Source repository"
+   data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fab fa-github"></i>
+  </span>
+
+</a>
+
+
+
+
+
+
+<div class="dropdown dropdown-download-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Download this page">
+    <i class="fas fa-download"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="../_sources/jupyter-notebooks/mongodb_basics.ipynb" target="_blank"
+   class="btn btn-sm btn-download-source-button dropdown-item"
+   title="Download source file"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="btn__text-container">.ipynb</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li>
+<button onclick="window.print()"
+  class="btn btn-sm btn-download-pdf-button dropdown-item"
+  title="Print to PDF"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="btn__text-container">.pdf</span>
+</button>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+<button onclick="toggleFullScreen()"
+  class="btn btn-sm btn-fullscreen-button"
+  title="Fullscreen mode"
+  data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="theme-switch fa-solid fa-sun fa-lg" data-mode="light"></i>
+    <i class="theme-switch fa-solid fa-moon fa-lg" data-mode="dark"></i>
+    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"></i>
+  </button>
+`);
+</script>
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm pst-navbar-icon search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
+  </button>
+`);
+</script>
+<button class="sidebar-toggle secondary-toggle btn btn-sm" title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="fa-solid fa-list"></span>
+</button>
+</div></div>
+      
+    </div>
+  
+</div>
+</div>
+              
+              
+
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1>Usando MongoDB y Python mediante PyMongo</h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+            <div>
+                <h2> Contents </h2>
+            </div>
+            <nav aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#entorno-de-desarrollo">Entorno de desarrollo</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#conexion-a-la-base-de-datos-con-mongoclient">Conexión a la base de datos con MongoClient</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#conexion-mediante-uri">Conexión mediante URI</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#conexion-mediante-diccionario">Conexión mediante diccionario</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#seleccion-de-bases-de-datos-y-colecciones">Selección de bases de datos y colecciones</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#metodos-para-seleccionar-una-base-de-datos">Métodos para seleccionar una base de datos:</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#insercion-de-documentos-en-una-coleccion">Inserción de documentos en una colección</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#metodos-de-insercion">Métodos de inserción:</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#consideraciones">Consideraciones:</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#actualizacion-de-documentos-en-una-coleccion">Actualización de documentos en una colección</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#metodos-de-actualizacion">Métodos de actualización</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#operadores-de-actualizacion">Operadores de actualización</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#eliminacion-de-documentos-en-una-coleccion">Eliminación de documentos en una colección</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#metodos-de-eliminacion">Métodos de eliminación</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#busqueda-de-documentos-en-una-coleccion">Búsqueda de documentos en una colección</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#uso-del-metodo-find">Uso del método <code class="docutils literal notranslate"><span class="pre">find()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#recorrido-de-los-resultados">Recorrido de los resultados</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#ejemplo">Ejemplo</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#uso-del-framework-de-agregacion-en-mongodb">Uso del Framework de Agregación en MongoDB</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#componentes-principales-del-framework-de-agregacion">Componentes principales del framework de agregación</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#ejemplo-de-uso">Ejemplo de uso</a></li>
+</ul>
+</li>
+</ul>
+            </nav>
+        </div>
+    </div>
+</div>
+
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <section class="tex2jax_ignore mathjax_ignore" id="usando-mongodb-y-python-mediante-pymongo">
+<h1>Usando MongoDB y Python mediante PyMongo<a class="headerlink" href="#usando-mongodb-y-python-mediante-pymongo" title="Link to this heading">#</a></h1>
+<p>PyMongo es una biblioteca de Python que permite interactuar con bases de datos MongoDB de manera sencilla y eficiente. Proporciona herramientas para realizar operaciones como:</p>
+<ul class="simple">
+<li><p><strong>Conexión a MongoDB</strong>: Permite conectarse a instancias locales o remotas de MongoDB.</p></li>
+<li><p><strong>Gestión de bases de datos y colecciones</strong>: Facilita la creación, consulta y eliminación de bases de datos y colecciones.</p></li>
+<li><p><strong>Operaciones CRUD</strong>: Soporta operaciones de creación, lectura, actualización y eliminación de documentos.</p></li>
+<li><p><strong>Consultas avanzadas</strong>: Permite realizar consultas complejas, agregaciones y filtrados de datos.</p></li>
+<li><p><strong>Escalabilidad</strong>: Ideal para trabajar con grandes volúmenes de datos gracias a la naturaleza NoSQL de MongoDB.</p></li>
+</ul>
+<p>Es una herramienta esencial para desarrolladores que trabajan con MongoDB en aplicaciones basadas en Python.</p>
+<p>En este tutorial, aprenderemos a usar PyMongo para interactuar con una base de datos MongoDB. Cubriremos los siguientes temas:</p>
+<ol class="arabic simple">
+<li><p>Instalación de PyMongo.</p></li>
+<li><p>Conexión a una base de datos MongoDB.</p></li>
+<li><p>Creación de una base de datos y colección.</p></li>
+<li><p>Inserción de documentos en una colección.</p></li>
+<li><p>Consulta de documentos en una colección.</p></li>
+<li><p>Actualización de documentos en una colección.</p></li>
+<li><p>Eliminación de documentos en una colección.</p></li>
+<li><p>Eliminación de una colección y base de datos.</p></li>
+<li><p>Consultas avanzadas y agregaciones.</p></li>
+</ol>
+<p>Para instalar PyMongo, usaremos el siguiente comando:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pip<span class="w"> </span>install<span class="w"> </span>pymongo
+</pre></div>
+</div>
+<p>¡Comencemos!</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">!</span>pip<span class="w"> </span>install<span class="w"> </span>pymongo
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Requirement already satisfied: pymongo in /opt/conda/lib/python3.12/site-packages (4.11.3)
+Requirement already satisfied: dnspython&lt;3.0.0,&gt;=1.16.0 in /opt/conda/lib/python3.12/site-packages (from pymongo) (2.7.0)
+</pre></div>
+</div>
+</div>
+</div>
+<section id="entorno-de-desarrollo">
+<h2>Entorno de desarrollo<a class="headerlink" href="#entorno-de-desarrollo" title="Link to this heading">#</a></h2>
+<p>Usaremos como entorno de desarrollo el proporcionado en el repositorio de este tutorial. Contiene un archivo <code class="docutils literal notranslate"><span class="pre">docker-compose.yml</span></code> que incluye:</p>
+<ul class="simple">
+<li><p>Un servicio de Jupyter Notebook para ejecutar el código Python. Puerto de acceso: <code class="docutils literal notranslate"><span class="pre">8888</span></code>.</p></li>
+<li><p>Un servicio de MongoDB para almacenar los datos. Nombre del servicio: <code class="docutils literal notranslate"><span class="pre">mongo</span></code>. Puerto de acceso: <code class="docutils literal notranslate"><span class="pre">27017</span></code>.</p></li>
+<li><p>Un servicio de Mongo Express para gestionar MongoDB desde una aplicación web. Puerto de acceso: <code class="docutils literal notranslate"><span class="pre">8081</span></code>.</p></li>
+</ul>
+<p>El contenedor de Jupyter Notebook se construye a partir de un archivo <code class="docutils literal notranslate"><span class="pre">Dockerfile</span></code> que instala las dependencias necesarias para ejecutar código Python con PyMongo. Además, expone el puerto <code class="docutils literal notranslate"><span class="pre">8888</span></code> para acceder al entorno de desarrollo. Las dependencias se instalan mediante el archivo <code class="docutils literal notranslate"><span class="pre">requirements.txt</span></code>.</p>
+<p>El entorno usa un archivo <code class="docutils literal notranslate"><span class="pre">.env</span></code> para configurar las variables de entorno necesarias para MongoDB y Mongo Express. Sus valores se pueden modificar según las necesidades. Además, guarda los datos de MongoDB en un volumen Docker para persistir la información mediante un <em>bind mount</em>.</p>
+<p>El archivo <code class="docutils literal notranslate"><span class="pre">.env</span></code> contiene las siguientes variables de entorno:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># MongoDB</span>
+<span class="nv">MONGO_INITDB_ROOT_USERNAME</span><span class="o">=</span>example
+<span class="nv">MONGO_INITDB_ROOT_PASSWORD</span><span class="o">=</span>example
+
+<span class="c1"># Mongo Express</span>
+<span class="nv">ME_CONFIG_MONGODB_ADMINUSERNAME</span><span class="o">=</span>example
+<span class="nv">ME_CONFIG_MONGODB_ADMINPASSWORD</span><span class="o">=</span>example
+<span class="nv">ME_CONFIG_MONGODB_URL</span><span class="o">=</span>mongodb://example:example@mongo:27017/
+</pre></div>
+</div>
+<p>Para ejecutar el entorno basta con ejecutar el siguiente comando:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>docker-compose<span class="w"> </span>up<span class="w"> </span>-d
+</pre></div>
+</div>
+</section>
+<section id="conexion-a-la-base-de-datos-con-mongoclient">
+<h2>Conexión a la base de datos con MongoClient<a class="headerlink" href="#conexion-a-la-base-de-datos-con-mongoclient" title="Link to this heading">#</a></h2>
+<p>Para interactuar con MongoDB desde Python, utilizaremos la clase <code class="docutils literal notranslate"><span class="pre">MongoClient</span></code> proporcionada por PyMongo. Esta clase permite establecer una conexión con la base de datos y realizar operaciones sobre ella. Existen varias formas de establecer la conexión, pero la más común es mediante la URI de conexión.</p>
+<section id="conexion-mediante-uri">
+<h3>Conexión mediante URI<a class="headerlink" href="#conexion-mediante-uri" title="Link to this heading">#</a></h3>
+<p>La conexión a MongoDB se realiza mediante una URI (Uniform Resource Identifier), que sigue el siguiente formato:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>mongodb://&lt;usuario&gt;:&lt;contraseña&gt;@&lt;host&gt;:&lt;puerto&gt;/&lt;base_de_datos&gt;?opciones
+</pre></div>
+</div>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">&lt;usuario&gt;</span></code>: Nombre de usuario para la autenticación.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">&lt;contraseña&gt;</span></code>: Contraseña asociada al usuario.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">&lt;host&gt;</span></code>: Dirección del servidor MongoDB (puede ser una IP o un nombre de dominio).</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">&lt;puerto&gt;</span></code>: Puerto en el que MongoDB está escuchando (por defecto, <code class="docutils literal notranslate"><span class="pre">27017</span></code>).</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">&lt;base_de_datos&gt;</span></code>: Nombre de la base de datos a la que se desea conectar.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">opciones</span></code>: Parámetros adicionales para configurar la conexión, como <code class="docutils literal notranslate"><span class="pre">authSource</span></code> para especificar la base de datos de autenticación.</p></li>
+</ul>
+</section>
+<section id="conexion-mediante-diccionario">
+<h3>Conexión mediante diccionario<a class="headerlink" href="#conexion-mediante-diccionario" title="Link to this heading">#</a></h3>
+<p>También es posible establecer la conexión mediante un diccionario de configuración, que incluye los mismos parámetros que la URI de conexión y hace que el código sea más legible. Por ejemplo:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">client</span> <span class="o">=</span> <span class="n">MongoClient</span><span class="p">(</span><span class="n">host</span><span class="o">=</span><span class="s2">&quot;localhost&quot;</span><span class="p">,</span> <span class="n">port</span><span class="o">=</span><span class="mi">27017</span><span class="p">,</span> <span class="n">username</span><span class="o">=</span><span class="s2">&quot;the_user&quot;</span><span class="p">,</span> <span class="n">password</span><span class="o">=</span><span class="s2">&quot;the_password&quot;</span><span class="p">,</span> <span class="n">authSource</span><span class="o">=</span><span class="s2">&quot;admin&quot;</span><span class="p">,</span> <span class="n">database</span><span class="o">=</span><span class="s2">&quot;the_database&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Para más información, consultar la <a class="reference external" href="https://pymongo.readthedocs.io/en/stable/">documentación oficial de PyMongo</a>.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">pymongo</span><span class="w"> </span><span class="kn">import</span> <span class="n">MongoClient</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
+
+<span class="c1"># Get the environment variables</span>
+<span class="n">user</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;MONGO_INITDB_ROOT_USERNAME&#39;</span><span class="p">,</span> <span class="s1">&#39;example&#39;</span><span class="p">)</span>
+<span class="n">password</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;MONGO_INITDB_ROOT_PASSWORD&#39;</span><span class="p">,</span> <span class="s1">&#39;example&#39;</span><span class="p">)</span>
+<span class="n">host</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;MONGO_HOST&#39;</span><span class="p">,</span> <span class="s1">&#39;mongo&#39;</span><span class="p">)</span>
+
+<span class="c1"># Set the URI for the connection to the database</span>
+<span class="n">uri</span> <span class="o">=</span> <span class="s2">&quot;mongodb://</span><span class="si">%s</span><span class="s2">:</span><span class="si">%s</span><span class="s2">@</span><span class="si">%s</span><span class="s2">/default_db?authSource=admin&quot;</span>
+
+<span class="c1"># Connect to the database</span>
+<span class="n">client</span> <span class="o">=</span> <span class="n">MongoClient</span><span class="p">(</span>
+    <span class="n">host</span><span class="o">=</span><span class="n">host</span><span class="p">,</span>
+    <span class="n">port</span><span class="o">=</span><span class="mi">27017</span><span class="p">,</span> 
+    <span class="n">username</span><span class="o">=</span><span class="n">user</span><span class="p">,</span>
+    <span class="n">password</span><span class="o">=</span><span class="n">password</span><span class="p">,</span>
+    <span class="n">authSource</span><span class="o">=</span><span class="s1">&#39;admin&#39;</span>
+<span class="p">)</span>
+
+<span class="c1"># Test the connection</span>
+<span class="k">try</span><span class="p">:</span>
+    <span class="c1"># The ping command is cheap and does not require auth</span>
+    <span class="n">client</span><span class="o">.</span><span class="n">admin</span><span class="o">.</span><span class="n">command</span><span class="p">(</span><span class="s1">&#39;ping&#39;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Successfully connected to MongoDB!&quot;</span><span class="p">)</span>
+<span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Failed to connect to MongoDB: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Successfully connected to MongoDB!
+</pre></div>
+</div>
+</div>
+</div>
+<p>Una vez conectados a la base de datos, podemos realizar operaciones como crear bases de datos, colecciones, insertar documentos, consultar datos, actualizar registros y eliminar documentos. Antes de comenzar, veamos las bases de datos disponibles en el servidor MongoDB.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">client</span><span class="o">.</span><span class="n">list_database_names</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>[&#39;admin&#39;, &#39;config&#39;, &#39;local&#39;]
+</pre></div>
+</div>
+</div>
+</div>
+<blockquote>
+<div><p><strong>Nota</strong></p>
+<p>Si la base de datos <code class="docutils literal notranslate"><span class="pre">example</span></code> no contiene ninguna colección con ningún documento no aparecerá en la lista de resultados.</p>
+</div></blockquote>
+</section>
+</section>
+<section id="seleccion-de-bases-de-datos-y-colecciones">
+<h2>Selección de bases de datos y colecciones<a class="headerlink" href="#seleccion-de-bases-de-datos-y-colecciones" title="Link to this heading">#</a></h2>
+<p>En MongoDB, una base de datos se puede seleccionar utilizando el cliente de conexión (<code class="docutils literal notranslate"><span class="pre">MongoClient</span></code>). Esto se realiza accediendo a la base de datos como si fuera un atributo o utilizando la notación de diccionario.</p>
+<section id="metodos-para-seleccionar-una-base-de-datos">
+<h3>Métodos para seleccionar una base de datos:<a class="headerlink" href="#metodos-para-seleccionar-una-base-de-datos" title="Link to this heading">#</a></h3>
+<ol class="arabic">
+<li><p><strong>Notación de atributo</strong>:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">database</span> <span class="o">=</span> <span class="n">client</span><span class="o">.</span><span class="n">nombre_base_datos</span>
+</pre></div>
+</div>
+<p>Este método es útil si el nombre de la base de datos no contiene caracteres especiales como guiones (<code class="docutils literal notranslate"><span class="pre">-</span></code>).</p>
+</li>
+<li><p><strong>Notación de diccionario</strong>:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">database</span> <span class="o">=</span> <span class="n">client</span><span class="p">[</span><span class="s2">&quot;nombre_base_datos&quot;</span><span class="p">]</span>
+</pre></div>
+</div>
+<p>Este método es más flexible y permite seleccionar bases de datos con nombres que contienen caracteres especiales.</p>
+</li>
+</ol>
+<blockquote>
+<div><p><strong>Nota</strong>: Si la base de datos no existe, MongoDB la creará automáticamente cuando se inserte el primer documento en una colección dentro de esa base de datos.</p>
+</div></blockquote>
+<p>En el siguiente paso, seleccionaremos la base de datos llamada <code class="docutils literal notranslate"><span class="pre">example</span></code> utilizando la notación de diccionario.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">database</span> <span class="o">=</span> <span class="n">client</span><span class="p">[</span><span class="s2">&quot;example&quot;</span><span class="p">]</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>Una vez seleccionada la base de datos, podemos comenzar a trabajar con colecciones y documentos. Para seleccionar una colección, simplemente accedemos a ella como si fuera un atributo de la base de datos.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">collection</span> <span class="o">=</span> <span class="n">database</span><span class="p">[</span><span class="s2">&quot;collection&quot;</span><span class="p">]</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>Para mostrar las colecciones de una base de datos, podemos utilizar el método <code class="docutils literal notranslate"><span class="pre">list_collection_names()</span></code>. Si una colección aún no contiene documentos, no se mostrará en la lista de colecciones.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">database</span><span class="o">.</span><span class="n">list_collection_names</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>[]
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+</section>
+<section id="insercion-de-documentos-en-una-coleccion">
+<h2>Inserción de documentos en una colección<a class="headerlink" href="#insercion-de-documentos-en-una-coleccion" title="Link to this heading">#</a></h2>
+<p>En MongoDB, los documentos se pueden insertar en una colección utilizando los métodos <code class="docutils literal notranslate"><span class="pre">insert_one()</span></code> e <code class="docutils literal notranslate"><span class="pre">insert_many()</span></code> proporcionados por PyMongo.</p>
+<section id="metodos-de-insercion">
+<h3>Métodos de inserción:<a class="headerlink" href="#metodos-de-insercion" title="Link to this heading">#</a></h3>
+<ol class="arabic">
+<li><p><strong><code class="docutils literal notranslate"><span class="pre">insert_one(document)</span></code></strong>:
+Este método se utiliza para insertar un único documento en una colección.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">document</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;clave1&quot;</span><span class="p">:</span> <span class="s2">&quot;valor1&quot;</span><span class="p">,</span> <span class="s2">&quot;clave2&quot;</span><span class="p">:</span> <span class="s2">&quot;valor2&quot;</span><span class="p">}</span>
+<span class="n">collection</span><span class="o">.</span><span class="n">insert_one</span><span class="p">(</span><span class="n">document</span><span class="p">)</span>
+</pre></div>
+</div>
+</li>
+<li><p><strong><code class="docutils literal notranslate"><span class="pre">insert_many(documents)</span></code></strong>:
+Este método permite insertar múltiples documentos a la vez. Los documentos deben estar contenidos en una lista.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">documents</span> <span class="o">=</span> <span class="p">[</span>
+     <span class="p">{</span><span class="s2">&quot;clave1&quot;</span><span class="p">:</span> <span class="s2">&quot;valor1&quot;</span><span class="p">,</span> <span class="s2">&quot;clave2&quot;</span><span class="p">:</span> <span class="s2">&quot;valor2&quot;</span><span class="p">},</span>
+     <span class="p">{</span><span class="s2">&quot;clave1&quot;</span><span class="p">:</span> <span class="s2">&quot;valor3&quot;</span><span class="p">,</span> <span class="s2">&quot;clave2&quot;</span><span class="p">:</span> <span class="s2">&quot;valor4&quot;</span><span class="p">}</span>
+<span class="p">]</span>
+<span class="n">collection</span><span class="o">.</span><span class="n">insert_many</span><span class="p">(</span><span class="n">documents</span><span class="p">)</span>
+</pre></div>
+</div>
+</li>
+</ol>
+</section>
+<section id="consideraciones">
+<h3>Consideraciones:<a class="headerlink" href="#consideraciones" title="Link to this heading">#</a></h3>
+<ul class="simple">
+<li><p>Si la colección no existe, MongoDB la creará automáticamente al insertar el primer documento.</p></li>
+<li><p>Cada documento debe ser un diccionario de Python.</p></li>
+<li><p>MongoDB asignará automáticamente un identificador único (<code class="docutils literal notranslate"><span class="pre">_id</span></code>) a cada documento si no se proporciona uno.</p></li>
+</ul>
+<p>En el siguiente paso, insertaremos algunos documentos en la colección seleccionada.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">document</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;first_name&quot;</span><span class="p">:</span> <span class="s2">&quot;Elisabeth&quot;</span><span class="p">,</span> <span class="s2">&quot;last_name&quot;</span><span class="p">:</span> <span class="s2">&quot;Taylor&quot;</span><span class="p">,</span> <span class="s2">&quot;country&quot;</span><span class="p">:</span> <span class="s2">&quot;UK&quot;</span><span class="p">,</span> <span class="s2">&quot;born&quot;</span><span class="p">:</span> <span class="mi">1932</span><span class="p">,</span> <span class="s2">&quot;sex&quot;</span><span class="p">:</span> <span class="s2">&quot;female&quot;</span><span class="p">}</span> 
+<span class="n">collection</span><span class="o">.</span><span class="n">insert_one</span><span class="p">(</span><span class="n">document</span><span class="p">)</span>
+
+<span class="n">document</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;first_name&#39;</span><span class="p">:</span> <span class="s1">&#39;James&#39;</span><span class="p">,</span> <span class="s1">&#39;last_name&#39;</span><span class="p">:</span> <span class="s1">&#39;Dean&#39;</span><span class="p">,</span> <span class="s1">&#39;country&#39;</span><span class="p">:</span> <span class="s1">&#39;USA&#39;</span><span class="p">,</span> <span class="s1">&#39;born&#39;</span><span class="p">:</span> <span class="mi">1931</span><span class="p">,</span> <span class="s1">&#39;sex&#39;</span><span class="p">:</span> <span class="s1">&#39;male&#39;</span><span class="p">}</span>
+<span class="n">collection</span><span class="o">.</span><span class="n">insert_one</span><span class="p">(</span><span class="n">document</span><span class="p">)</span>
+
+<span class="c1"># A mistake is introduced in the first_name of Rock Hudson to update it later</span>
+<span class="n">document</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;first_name&#39;</span><span class="p">:</span> <span class="s1">&#39;Rod&#39;</span><span class="p">,</span> <span class="s1">&#39;last_name&#39;</span><span class="p">:</span> <span class="s1">&#39;Hudson&#39;</span><span class="p">,</span> <span class="s1">&#39;country&#39;</span><span class="p">:</span> <span class="s1">&#39;USA&#39;</span><span class="p">,</span> <span class="s1">&#39;born&#39;</span><span class="p">:</span> <span class="mi">1925</span><span class="p">,</span> <span class="s1">&#39;sex&#39;</span><span class="p">:</span> <span class="s1">&#39;male&#39;</span><span class="p">}</span>
+<span class="n">collection</span><span class="o">.</span><span class="n">insert_one</span><span class="p">(</span><span class="n">document</span><span class="p">)</span>
+
+<span class="n">documents</span> <span class="o">=</span> <span class="p">[</span>
+  <span class="p">{</span><span class="s1">&#39;first_name&#39;</span><span class="p">:</span> <span class="s1">&#39;Caroll&#39;</span><span class="p">,</span> <span class="s1">&#39;last_name&#39;</span><span class="p">:</span> <span class="s1">&#39;Baker&#39;</span><span class="p">,</span> <span class="s1">&#39;country&#39;</span><span class="p">:</span> <span class="s1">&#39;USA&#39;</span><span class="p">,</span> <span class="s1">&#39;born&#39;</span><span class="p">:</span> <span class="mi">1931</span><span class="p">,</span> <span class="s1">&#39;sex&#39;</span><span class="p">:</span> <span class="s1">&#39;female&#39;</span><span class="p">},</span>
+  <span class="p">{</span><span class="s1">&#39;first_name&#39;</span><span class="p">:</span> <span class="s1">&#39;Princess&#39;</span><span class="p">,</span> <span class="s1">&#39;last_name&#39;</span><span class="p">:</span> <span class="s1">&#39;Leia&#39;</span><span class="p">,</span> <span class="s1">&#39;country&#39;</span><span class="p">:</span> <span class="s1">&#39;USA&#39;</span><span class="p">,</span> <span class="s1">&#39;sex&#39;</span><span class="p">:</span> <span class="s1">&#39;female&#39;</span><span class="p">}</span>
+<span class="p">]</span>
+
+<span class="n">collection</span><span class="o">.</span><span class="n">insert_many</span><span class="p">(</span><span class="n">documents</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>InsertManyResult([ObjectId(&#39;67de5d71d8a4db1e034aa215&#39;), ObjectId(&#39;67de5d71d8a4db1e034aa216&#39;)], acknowledged=True)
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+</section>
+<section id="actualizacion-de-documentos-en-una-coleccion">
+<h2>Actualización de documentos en una colección<a class="headerlink" href="#actualizacion-de-documentos-en-una-coleccion" title="Link to this heading">#</a></h2>
+<p>En MongoDB, los documentos se pueden actualizar utilizando los métodos <code class="docutils literal notranslate"><span class="pre">update_one()</span></code> y <code class="docutils literal notranslate"><span class="pre">update_many()</span></code> proporcionados por PyMongo.</p>
+<section id="metodos-de-actualizacion">
+<h3>Métodos de actualización<a class="headerlink" href="#metodos-de-actualizacion" title="Link to this heading">#</a></h3>
+<ol class="arabic">
+<li><p><strong><code class="docutils literal notranslate"><span class="pre">update_one(filter,</span> <span class="pre">update)</span></code></strong>:
+Este método actualiza el primer documento que coincida con el filtro especificado.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">collection</span><span class="o">.</span><span class="n">update_one</span><span class="p">(</span>
+    <span class="p">{</span><span class="s1">&#39;clave&#39;</span><span class="p">:</span> <span class="s1">&#39;valor&#39;</span><span class="p">},</span>  <span class="c1"># Filtro para seleccionar el documento</span>
+    <span class="p">{</span><span class="s1">&#39;$set&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;clave_actualizada&#39;</span><span class="p">:</span> <span class="s1">&#39;nuevo_valor&#39;</span><span class="p">}}</span>  <span class="c1"># Actualización a realizar</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+</li>
+<li><p><strong><code class="docutils literal notranslate"><span class="pre">update_many(filter,</span> <span class="pre">update)</span></code></strong>:
+Este método actualiza todos los documentos que coincidan con el filtro especificado.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">collection</span><span class="o">.</span><span class="n">update_many</span><span class="p">(</span>
+    <span class="p">{</span><span class="s1">&#39;clave&#39;</span><span class="p">:</span> <span class="s1">&#39;valor&#39;</span><span class="p">},</span>  <span class="c1"># Filtro para seleccionar los documentos</span>
+    <span class="p">{</span><span class="s1">&#39;$set&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;clave_actualizada&#39;</span><span class="p">:</span> <span class="s1">&#39;nuevo_valor&#39;</span><span class="p">}}</span>  <span class="c1"># Actualización a realizar</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+</li>
+</ol>
+</section>
+<section id="operadores-de-actualizacion">
+<h3>Operadores de actualización<a class="headerlink" href="#operadores-de-actualizacion" title="Link to this heading">#</a></h3>
+<ul class="simple">
+<li><p><strong><code class="docutils literal notranslate"><span class="pre">$set</span></code></strong>: Establece el valor de un campo específico.</p></li>
+<li><p><strong><code class="docutils literal notranslate"><span class="pre">$unset</span></code></strong>: Elimina un campo de un documento.</p></li>
+<li><p><strong><code class="docutils literal notranslate"><span class="pre">$inc</span></code></strong>: Incrementa el valor de un campo numérico.</p></li>
+<li><p><strong><code class="docutils literal notranslate"><span class="pre">$rename</span></code></strong>: Cambia el nombre de un campo.</p></li>
+<li><p><strong><code class="docutils literal notranslate"><span class="pre">$push</span></code></strong>: Agrega un valor a un array.</p></li>
+<li><p><strong><code class="docutils literal notranslate"><span class="pre">$pull</span></code></strong>: Elimina un valor de un array.</p></li>
+</ul>
+<blockquote>
+<div><p><strong>Nota</strong></p>
+<ul class="simple">
+<li><p>Si el filtro no coincide con ningún documento, no se realizará ninguna actualización.</p></li>
+<li><p>Si el campo especificado en <code class="docutils literal notranslate"><span class="pre">$set</span></code> no existe, MongoDB lo creará automáticamente.</p></li>
+</ul>
+</div></blockquote>
+<p>En el siguiente paso, actualizaremos los documentos en la colección seleccionada.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">collection</span><span class="o">.</span><span class="n">update_many</span><span class="p">(</span>
+    <span class="p">{</span><span class="s1">&#39;last_name&#39;</span><span class="p">:</span> <span class="s1">&#39;Hudson&#39;</span><span class="p">},</span> 
+    <span class="p">{</span><span class="s1">&#39;$set&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;first_name&#39;</span><span class="p">:</span> <span class="s1">&#39;Rock&#39;</span><span class="p">}}</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>UpdateResult({&#39;n&#39;: 1, &#39;nModified&#39;: 1, &#39;ok&#39;: 1.0, &#39;updatedExisting&#39;: True}, acknowledged=True)
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+</section>
+<section id="eliminacion-de-documentos-en-una-coleccion">
+<h2>Eliminación de documentos en una colección<a class="headerlink" href="#eliminacion-de-documentos-en-una-coleccion" title="Link to this heading">#</a></h2>
+<p>En MongoDB, los documentos se pueden eliminar utilizando los métodos <code class="docutils literal notranslate"><span class="pre">delete_one()</span></code> y <code class="docutils literal notranslate"><span class="pre">delete_many()</span></code> proporcionados por PyMongo.</p>
+<section id="metodos-de-eliminacion">
+<h3>Métodos de eliminación<a class="headerlink" href="#metodos-de-eliminacion" title="Link to this heading">#</a></h3>
+<ol class="arabic">
+<li><p><strong><code class="docutils literal notranslate"><span class="pre">delete_one(filter)</span></code></strong>:
+Este método elimina el primer documento que coincida con el filtro especificado.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">collection</span><span class="o">.</span><span class="n">delete_one</span><span class="p">({</span><span class="s1">&#39;clave&#39;</span><span class="p">:</span> <span class="s1">&#39;valor&#39;</span><span class="p">})</span>
+</pre></div>
+</div>
+</li>
+<li><p><strong><code class="docutils literal notranslate"><span class="pre">delete_many(filter)</span></code></strong>:
+Este método elimina todos los documentos que coincidan con el filtro especificado.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">collection</span><span class="o">.</span><span class="n">delete_many</span><span class="p">({</span><span class="s1">&#39;clave&#39;</span><span class="p">:</span> <span class="s1">&#39;valor&#39;</span><span class="p">})</span>
+</pre></div>
+</div>
+</li>
+</ol>
+<blockquote>
+<div><p><strong>Nota</strong>:</p>
+<ul>
+<li><p>Si el filtro no coincide con ningún documento, no se realizará ninguna eliminación.</p></li>
+<li><p>Si se desea eliminar todos los documentos de una colección, se puede usar un filtro vacío <code class="docutils literal notranslate"><span class="pre">{}</span></code>:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">collection</span><span class="o">.</span><span class="n">delete_many</span><span class="p">({})</span>
+</pre></div>
+</div>
+</li>
+</ul>
+</div></blockquote>
+<p>En el siguiente paso, eliminaremos documentos de la colección seleccionada.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">collection</span><span class="o">.</span><span class="n">delete_one</span><span class="p">({</span><span class="s1">&#39;last_name&#39;</span><span class="p">:</span> <span class="s1">&#39;Leia&#39;</span><span class="p">})</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>DeleteResult({&#39;n&#39;: 1, &#39;ok&#39;: 1.0}, acknowledged=True)
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+</section>
+<section id="busqueda-de-documentos-en-una-coleccion">
+<h2>Búsqueda de documentos en una colección<a class="headerlink" href="#busqueda-de-documentos-en-una-coleccion" title="Link to this heading">#</a></h2>
+<p>En MongoDB, los documentos se pueden buscar utilizando el método <code class="docutils literal notranslate"><span class="pre">find()</span></code> proporcionado por PyMongo. Este método permite realizar consultas para recuperar documentos que coincidan con un filtro específico.</p>
+<section id="uso-del-metodo-find">
+<h3>Uso del método <code class="docutils literal notranslate"><span class="pre">find()</span></code><a class="headerlink" href="#uso-del-metodo-find" title="Link to this heading">#</a></h3>
+<ol class="arabic">
+<li><p><strong>Búsqueda con filtro</strong>:
+El método <code class="docutils literal notranslate"><span class="pre">find()</span></code> acepta un diccionario como filtro para especificar los criterios de búsqueda.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">result</span> <span class="o">=</span> <span class="n">collection</span><span class="o">.</span><span class="n">find</span><span class="p">({</span><span class="s1">&#39;clave&#39;</span><span class="p">:</span> <span class="s1">&#39;valor&#39;</span><span class="p">})</span>
+</pre></div>
+</div>
+</li>
+<li><p><strong>Búsqueda sin filtro</strong>:
+Si no se proporciona un filtro, se devolverán todos los documentos de la colección.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">result</span> <span class="o">=</span> <span class="n">collection</span><span class="o">.</span><span class="n">find</span><span class="p">()</span>
+</pre></div>
+</div>
+</li>
+<li><p><strong>Búsqueda con operadores</strong>:
+Se pueden usar operadores como <code class="docutils literal notranslate"><span class="pre">$lt</span></code>, <code class="docutils literal notranslate"><span class="pre">$gt</span></code>, <code class="docutils literal notranslate"><span class="pre">$in</span></code>, <code class="docutils literal notranslate"><span class="pre">$regex</span></code>, entre otros, para realizar consultas más avanzadas.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">result</span> <span class="o">=</span> <span class="n">collection</span><span class="o">.</span><span class="n">find</span><span class="p">({</span><span class="s1">&#39;edad&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;$gt&#39;</span><span class="p">:</span> <span class="mi">30</span><span class="p">}})</span>
+</pre></div>
+</div>
+</li>
+</ol>
+</section>
+<section id="recorrido-de-los-resultados">
+<h3>Recorrido de los resultados<a class="headerlink" href="#recorrido-de-los-resultados" title="Link to this heading">#</a></h3>
+<p>El método <code class="docutils literal notranslate"><span class="pre">find()</span></code> devuelve un cursor, que es un iterable que permite recorrer los documentos devueltos por la consulta. Cada documento es un diccionario de Python.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">for</span> <span class="n">document</span> <span class="ow">in</span> <span class="n">result</span><span class="p">:</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">document</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+<section id="ejemplo">
+<h3>Ejemplo<a class="headerlink" href="#ejemplo" title="Link to this heading">#</a></h3>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">result</span> <span class="o">=</span> <span class="n">collection</span><span class="o">.</span><span class="n">find</span><span class="p">({</span><span class="s1">&#39;sexo&#39;</span><span class="p">:</span> <span class="s1">&#39;femenino&#39;</span><span class="p">})</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Actrices:&quot;</span><span class="p">)</span>
+<span class="k">for</span> <span class="n">document</span> <span class="ow">in</span> <span class="n">result</span><span class="p">:</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">document</span><span class="p">[</span><span class="s1">&#39;nombre&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="n">document</span><span class="p">[</span><span class="s1">&#39;apellido&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<blockquote>
+<div><p><strong>Nota</strong>:</p>
+<ul class="simple">
+<li><p>Si no se encuentran documentos que coincidan con el filtro, el cursor estará vacío.</p></li>
+<li><p>Es posible limitar el número de documentos devueltos utilizando el método <code class="docutils literal notranslate"><span class="pre">limit()</span></code>:
+<code class="docutils literal notranslate"><span class="pre">python</span>&#160;&#160; <span class="pre">result</span> <span class="pre">=</span> <span class="pre">collection.find().limit(5)</span>&#160;&#160; </code></p></li>
+</ul>
+</div></blockquote>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">result</span> <span class="o">=</span> <span class="n">collection</span><span class="o">.</span><span class="n">find</span><span class="p">({</span><span class="s1">&#39;sex&#39;</span><span class="p">:</span> <span class="s1">&#39;female&#39;</span><span class="p">})</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Actresses after updating and deleting bad data:&quot;</span><span class="p">)</span>
+<span class="k">for</span> <span class="n">document</span> <span class="ow">in</span> <span class="n">result</span><span class="p">:</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">document</span><span class="p">[</span><span class="s1">&#39;first_name&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="n">document</span><span class="p">[</span><span class="s1">&#39;last_name&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+<span class="n">result</span> <span class="o">=</span> <span class="n">collection</span><span class="o">.</span><span class="n">find</span><span class="p">({</span><span class="s1">&#39;born&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;$lt&#39;</span><span class="p">:</span> <span class="mi">1930</span><span class="p">}})</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">Actors born before 1930:&quot;</span><span class="p">)</span>
+<span class="k">for</span> <span class="n">document</span> <span class="ow">in</span> <span class="n">result</span><span class="p">:</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">document</span><span class="p">[</span><span class="s1">&#39;first_name&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="n">document</span><span class="p">[</span><span class="s1">&#39;last_name&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="n">document</span><span class="p">[</span><span class="s1">&#39;born&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Actresses after updating and deleting bad data:
+Elisabeth Taylor
+Caroll Baker
+
+Actors born before 1930:
+Rock Hudson 1925
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+</section>
+<section id="uso-del-framework-de-agregacion-en-mongodb">
+<h2>Uso del Framework de Agregación en MongoDB<a class="headerlink" href="#uso-del-framework-de-agregacion-en-mongodb" title="Link to this heading">#</a></h2>
+<p>El framework de agregación en MongoDB permite realizar operaciones avanzadas de procesamiento de datos, como filtrado, agrupamiento, ordenamiento y transformación de documentos dentro de una colección. Este framework utiliza <em>pipelines</em> de agregación, que son secuencias de etapas que procesan los documentos de entrada y producen resultados.</p>
+<section id="componentes-principales-del-framework-de-agregacion">
+<h3>Componentes principales del framework de agregación<a class="headerlink" href="#componentes-principales-del-framework-de-agregacion" title="Link to this heading">#</a></h3>
+<ol class="arabic simple">
+<li><p><strong>Pipeline de agregación</strong>:
+Un pipeline es una lista de etapas que se ejecutan secuencialmente. Cada etapa toma los documentos de entrada, los procesa y pasa los resultados a la siguiente etapa.</p></li>
+<li><p><strong>Etapas comunes</strong>:</p>
+<ul class="simple">
+<li><p><strong><code class="docutils literal notranslate"><span class="pre">$match</span></code></strong>: Filtra documentos según un criterio.</p></li>
+<li><p><strong><code class="docutils literal notranslate"><span class="pre">$group</span></code></strong>: Agrupa documentos por un campo y realiza operaciones de agregación como <code class="docutils literal notranslate"><span class="pre">sum</span></code>, <code class="docutils literal notranslate"><span class="pre">avg</span></code>, <code class="docutils literal notranslate"><span class="pre">max</span></code>, <code class="docutils literal notranslate"><span class="pre">min</span></code>, etc.</p></li>
+<li><p><strong><code class="docutils literal notranslate"><span class="pre">$project</span></code></strong>: Selecciona y transforma campos en los documentos de salida.</p></li>
+<li><p><strong><code class="docutils literal notranslate"><span class="pre">$sort</span></code></strong>: Ordena los documentos por uno o más campos.</p></li>
+<li><p><strong><code class="docutils literal notranslate"><span class="pre">$limit</span></code></strong>: Limita el número de documentos en la salida.</p></li>
+<li><p><strong><code class="docutils literal notranslate"><span class="pre">$skip</span></code></strong>: Omite un número específico de documentos.</p></li>
+<li><p><strong><code class="docutils literal notranslate"><span class="pre">$unwind</span></code></strong>: Descompone arrays en documentos individuales.</p></li>
+</ul>
+</li>
+<li><p><strong>Operadores de agregación</strong>:</p>
+<ul class="simple">
+<li><p><strong><code class="docutils literal notranslate"><span class="pre">$sum</span></code></strong>: Suma los valores de un campo.</p></li>
+<li><p><strong><code class="docutils literal notranslate"><span class="pre">$avg</span></code></strong>: Calcula el promedio de los valores de un campo.</p></li>
+<li><p><strong><code class="docutils literal notranslate"><span class="pre">$max</span></code></strong>: Encuentra el valor máximo de un campo.</p></li>
+<li><p><strong><code class="docutils literal notranslate"><span class="pre">$min</span></code></strong>: Encuentra el valor mínimo de un campo.</p></li>
+<li><p><strong><code class="docutils literal notranslate"><span class="pre">$push</span></code></strong>: Crea un array con los valores de un campo.</p></li>
+<li><p><strong><code class="docutils literal notranslate"><span class="pre">$addToSet</span></code></strong>: Crea un array con valores únicos de un campo.</p></li>
+</ul>
+</li>
+</ol>
+<blockquote>
+<div><p><strong>Nota</strong>:</p>
+<p>EL framework de agregación no ofrece el operador <code class="docutils literal notranslate"><span class="pre">$count</span></code> para contar documentos. En su lugar, se puede usar <code class="docutils literal notranslate"><span class="pre">$group</span></code> con <code class="docutils literal notranslate"><span class="pre">$sum</span></code> para contar documentos. Se sumará 1 a un campo específico para cada documento, lo que dará como resultado el recuento total.</p>
+</div></blockquote>
+</section>
+<section id="ejemplo-de-uso">
+<h3>Ejemplo de uso<a class="headerlink" href="#ejemplo-de-uso" title="Link to this heading">#</a></h3>
+<p>Supongamos que queremos agrupar actores por su género y contar cuántos hay en cada grupo. El pipeline de agregación sería:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># db.actor.aggregate([</span>
+<span class="c1">#	{$match: {&#39;country&#39;: &#39;USA&#39;}},</span>
+<span class="c1">#	{$group: {_id: &#39;$sex&#39;, &#39;total&#39;: {$sum: 1}}}</span>
+<span class="c1"># ])</span>
+
+
+<span class="n">pipeline</span> <span class="o">=</span> <span class="p">[</span>
+	<span class="p">{</span><span class="s1">&#39;$match&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;country&#39;</span><span class="p">:</span> <span class="s1">&#39;USA&#39;</span><span class="p">}},</span>
+	<span class="p">{</span><span class="s1">&#39;$group&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;_id&#39;</span><span class="p">:</span> <span class="s1">&#39;$sex&#39;</span><span class="p">,</span> <span class="s1">&#39;total&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;$sum&#39;</span><span class="p">:</span> <span class="mi">1</span><span class="p">}}}</span>
+<span class="p">]</span>
+
+<span class="n">result</span> <span class="o">=</span> <span class="n">collection</span><span class="o">.</span><span class="n">aggregate</span><span class="p">(</span><span class="n">pipeline</span><span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;USA actors grouped by sex:&quot;</span><span class="p">)</span>
+<span class="k">for</span> <span class="n">doc</span> <span class="ow">in</span> <span class="n">result</span><span class="p">:</span>
+	<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">doc</span><span class="p">[</span><span class="s1">&#39;_id&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="n">doc</span><span class="p">[</span><span class="s1">&#39;total&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">Aggregation result:&quot;</span><span class="p">)</span>
+<span class="n">result</span> <span class="o">=</span> <span class="n">collection</span><span class="o">.</span><span class="n">aggregate</span><span class="p">(</span><span class="n">pipeline</span><span class="p">)</span>
+<span class="k">for</span> <span class="n">doc</span> <span class="ow">in</span> <span class="n">result</span><span class="p">:</span>
+	<span class="nb">print</span><span class="p">(</span><span class="n">doc</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>USA actors grouped by sex:
+male: 2
+female: 1
+
+Aggregation result:
+{&#39;_id&#39;: &#39;male&#39;, &#39;total&#39;: 2}
+{&#39;_id&#39;: &#39;female&#39;, &#39;total&#39;: 1}
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+</section>
+</section>
+
+    <script type="text/x-thebe-config">
+    {
+        requestKernel: true,
+        binderOptions: {
+            repo: "binder-examples/jupyter-stacks-datascience",
+            ref: "master",
+        },
+        codeMirrorConfig: {
+            theme: "abcdef",
+            mode: "python"
+        },
+        kernelOptions: {
+            name: "python3",
+            path: "./jupyter-notebooks"
+        },
+        predefinedOutput: true
+    }
+    </script>
+    <script>kernelName = 'python3'</script>
+
+                </article>
+              
+
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+  <div class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> Contents
+  </div>
+  <nav class="bd-toc-nav page-toc">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#entorno-de-desarrollo">Entorno de desarrollo</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#conexion-a-la-base-de-datos-con-mongoclient">Conexión a la base de datos con MongoClient</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#conexion-mediante-uri">Conexión mediante URI</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#conexion-mediante-diccionario">Conexión mediante diccionario</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#seleccion-de-bases-de-datos-y-colecciones">Selección de bases de datos y colecciones</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#metodos-para-seleccionar-una-base-de-datos">Métodos para seleccionar una base de datos:</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#insercion-de-documentos-en-una-coleccion">Inserción de documentos en una colección</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#metodos-de-insercion">Métodos de inserción:</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#consideraciones">Consideraciones:</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#actualizacion-de-documentos-en-una-coleccion">Actualización de documentos en una colección</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#metodos-de-actualizacion">Métodos de actualización</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#operadores-de-actualizacion">Operadores de actualización</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#eliminacion-de-documentos-en-una-coleccion">Eliminación de documentos en una colección</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#metodos-de-eliminacion">Métodos de eliminación</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#busqueda-de-documentos-en-una-coleccion">Búsqueda de documentos en una colección</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#uso-del-metodo-find">Uso del método <code class="docutils literal notranslate"><span class="pre">find()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#recorrido-de-los-resultados">Recorrido de los resultados</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#ejemplo">Ejemplo</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#uso-del-framework-de-agregacion-en-mongodb">Uso del Framework de Agregación en MongoDB</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#componentes-principales-del-framework-de-agregacion">Componentes principales del framework de agregación</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#ejemplo-de-uso">Ejemplo de uso</a></li>
+</ul>
+</li>
+</ul>
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
+  
+  <div class="footer-item">
+    
+<p class="component-author">
+By Manuel Torres
+</p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+
+  <p class="copyright">
+    
+      © Copyright 2023.
+      <br/>
+    
+  </p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+</div>
+          </footer>
+        
+
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b"></script>
+<script src="../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+  <footer class="bd-footer">
+  </footer>
+  </body>
+</html>

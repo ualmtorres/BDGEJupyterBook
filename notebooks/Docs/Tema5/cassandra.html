@@ -203,6 +203,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../../CasosDeUso/valoracionesMongoDB/index.html">Desarrollo de una API REST para gestión de productos y valoraciones con Slim Framework y MongoDB</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../CasosDeUso/recomendacionesNeo4j/index.html">Desarrollo de una API REST para gestión de recomendaciones con Slim Framework y Neo4j</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../CasosDeUso/historialCassandra/index.html">Desarrollo de una API REST para gestión historial de pedidos y seguimiento en tiempo real con Express y Cassandra</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../CasosDeUso/valoracionesMongoDBFastAPI/index.html">Desarrollo de una API REST para gestión de productos y valoraciones con FastAPI y MongoDB</a></li>
 </ul>
 <p aria-level="2" class="caption" role="heading"><span class="caption-text">Actividades complementarias</span></p>
 <ul class="nav bd-sidenav">
@@ -591,10 +592,10 @@ seed_provider:
 <ul>
 <li><p><em><strong>Nodo:</strong></em> En Cassandra, un nodo es el lugar donde se almacenan los datos. Cada nodo puede ser responsable de almacenar una parte del conjunto de datos completo. Los nodos se distribuyen en varios data centers para mejorar la disponibilidad y la tolerancia a fallos.</p></li>
 <li><p><em><strong>Data Center (Anillo):</strong></em> Un data center en Cassandra es un conjunto de nodos que están físicamente ubicados juntos. Los nodos dentro del mismo data center se comunican entre sí de manera eficiente, lo que reduce la latencia y mejora el rendimiento.</p>
-<p><img alt="Anillo de nodos en Cassandra" src="notebooks/Docs/Tema5/images/cassandra-ring.png" /></p>
+<p><img alt="Anillo de nodos en Cassandra" src="../../../_images/cassandra-ring.png" /></p>
 </li>
 <li><p><em><strong>Cluster:</strong></em> Un clúster en Cassandra es un conjunto de data centers que trabajan juntos para proporcionar una solución de almacenamiento de datos distribuida y altamente disponible. Los clústeres pueden estar compuestos por uno o más data centers.</p>
-<p><img alt="Cluster de anillos en Cassandra" src="notebooks/Docs/Tema5/images/cassandra-cluster.png" /></p>
+<p><img alt="Cluster de anillos en Cassandra" src="../../../_images/cassandra-cluster.png" /></p>
 </li>
 </ul>
 </section>
@@ -675,7 +676,7 @@ WITH<span class="w"> </span><span class="nv">replication</span><span class="w"> 
 <li><p>Si priorizamos <em><strong>Disponibilidad</strong></em> y <em><strong>Tolerancia a la partición</strong></em>, es posible que tengamos que sacrificar la consistencia en ciertas circunstancias. Esto significa que los datos pueden no estar inmediatamente consistentes en todos los nodos durante una partición de red, pero el sistema seguirá respondiendo a las solicitudes de lectura y escritura.</p></li>
 </ul>
 <p>La figura siguiente ilustra los compromisos en un sistema distribuido según el Teorema de CAP.</p>
-<p><img alt="caption=&quot;Compromisos en un sistema distribuido según el Teorema de CAP&quot;" src="notebooks/Docs/Tema5/images/teorema-cap.png" /></p>
+<p><img alt="caption=&quot;Compromisos en un sistema distribuido según el Teorema de CAP&quot;" src="../../../_images/teorema-cap.png" /></p>
 <p>Para ilustrar estos compromisos, consideremos un ejemplo en el contexto de una base de datos distribuida:</p>
 <p>Supongamos que tenemos una base de datos distribuida que prioriza la <em><strong>Disponibilidad</strong></em> y la <em><strong>Tolerancia a la partición</strong></em> sobre la <em><strong>Consistencia</strong></em>. Durante una partición de red, un cliente podría escribir datos en un nodo y luego intentar leerlos desde otro nodo. Debido a la partición, los nodos pueden no estar inmediatamente sincronizados, lo que podría resultar en lecturas inconsistentes hasta que se resuelva la partición.</p>
 <p>Por ejemplo, en el contexto de una red social, durante una partición de red, un usuario podría realizar una publicación en su feed de noticias y luego intentar ver esa publicación desde otro dispositivo. Debido a la partición, los servidores que almacenan los datos pueden no estar inmediatamente sincronizados, lo que podría resultar en la publicación no apareciendo de inmediato en el feed del usuario hasta que se resuelva la partición. En este caso, se prioriza la disponibilidad y la tolerancia a la partición para garantizar que los usuarios puedan seguir accediendo y utilizando la plataforma, aunque las actualizaciones puedan no reflejarse instantáneamente en todos los nodos.</p>
@@ -723,9 +724,9 @@ WITH<span class="w"> </span><span class="nv">replication</span><span class="w"> 
 <li><p><em><strong>Fila</strong></em>: Una fila en Cassandra es un conjunto de columnas referenciadas por una clave primaria. Cada fila tiene una clave primaria única que la identifica dentro de su tabla. Las filas pueden contener un número variable de columnas y se almacenan juntas en particiones en el mismo nodo.</p></li>
 <li><p><em><strong>Partición</strong></em>: Una partición en Cassandra es un conjunto de filas relacionadas que se almacenan juntas en el mismo nodo del clúster. Las particiones se definen por su clave de partición, que determina en qué nodo se almacenan los datos. Las particiones permiten una distribución eficiente de los datos y facilitan la escalabilidad y el rendimiento de lectura y escritura.</p>
 <p>La figura siguiente ilustra cómo se organizan las columnas en filas y particiones en Cassandra.</p>
-<p><img alt="Organización de columnas en filas y particiones en Cassandra" src="notebooks/Docs/Tema5/images/particion.png" /></p>
+<p><img alt="Organización de columnas en filas y particiones en Cassandra" src="../../../_images/particion.png" /></p>
 <p>La figura siguiente muestra un ejemplo concreto de cómo se podrían organizar las columnas en filas y particiones en una tabla de Cassandra.</p>
-<p><img alt="Ejemplo de organización de columnas en filas y particiones en Cassandra" src="notebooks/Docs/Tema5/images/particion-ejemplo.png" /></p>
+<p><img alt="Ejemplo de organización de columnas en filas y particiones en Cassandra" src="../../../_images/particion-ejemplo.png" /></p>
 </li>
 <li><p><em><strong>Tabla</strong></em>: Una tabla en Cassandra es un conjunto de filas organizadas en particiones. Cada tabla tiene un esquema predefinido que define la estructura de las filas y las columnas que puede contener. Las tablas se utilizan para organizar y almacenar datos de manera estructurada en el clúster de Cassandra.</p></li>
 <li><p><em><strong>Keyspace</strong></em>: Un keyspace en Cassandra es un conjunto de tablas que comparten las mismas opciones de replicación y se almacenan en los mismos nodos del clúster. Cada keyspace proporciona un espacio de nombres lógico para organizar y gestionar las tablas relacionadas en el clúster.</p></li>
@@ -852,7 +853,7 @@ WITH<span class="w"> </span><span class="nv">replication</span><span class="w"> 
 <h3>Modelado de datos en Cassandra: Ejemplo<a class="headerlink" href="#modelado-de-datos-en-cassandra-ejemplo" title="Link to this heading">#</a></h3>
 <p>En <a class="reference external" href="https://www.oreilly.com/library/view/cassandra-the-definitive/9781098115159/">Cassandra: The Definitive Guide. O’Reilly</a> se presenta un ejemplo de modelado de datos en Cassandra para una aplicación de reservas de hoteles. En este ejemplo, se describen las consultas más comunes que se realizarán en la aplicación y se diseña un esquema de tabla eficiente para satisfacer estas consultas.</p>
 <p>La figura siguiente ilustra el modelo conceptual de la aplicación de reservas de hoteles.</p>
-<p><img alt="Modelo conceptual de la aplicación de reservas de hoteles" src="notebooks/Docs/Tema5/images/hoteles-ER.png" /></p>
+<p><img alt="Modelo conceptual de la aplicación de reservas de hoteles" src="../../../_images/hoteles-ER.png" /></p>
 <p>En este modelo, se identifican las siguientes consultas comunes:</p>
 <ul class="simple">
 <li><p>Q1: Buscar hoteles cerca de un punto de interés.</p></li>
@@ -866,7 +867,7 @@ WITH<span class="w"> </span><span class="nv">replication</span><span class="w"> 
 <li><p>Q9: Buscar clientes por ID.</p></li>
 </ul>
 <p>La figura siguiente ilustra el flujo de consultas de la aplicación. La línea discontinua hacer referencia de una funcionalidad externa, no implementada en Cassandra. Posiblemente, se realizaría a través del sistema operacional de reservas.</p>
-<p><img alt="Flujo de consultas de la aplicación de reservas de hoteles" src="notebooks/Docs/Tema5/images/hoteles-flujo.png" /></p>
+<p><img alt="Flujo de consultas de la aplicación de reservas de hoteles" src="../../../_images/hoteles-flujo.png" /></p>
 <blockquote>
 <div><p><strong>Notación Chebotko para el modelado de datos en Cassandra</strong></p>
 <p>La notación Chebotko es una técnica de modelado de datos que se utiliza para diseñar esquemas de tablas eficientes en Cassandra. Cada tabla se representa como un conjunto de columnas y se identifican las claves primarias y las claves de partición para optimizar el rendimiento de las consultas. Las tablas se crearán de esta forma:</p>
@@ -879,12 +880,12 @@ WITH<span class="w"> </span><span class="nv">replication</span><span class="w"> 
 <li><p>Clave primaria: Clave de partición y columnas de clustering para optimizar las consultas (p.e. <code class="docutils literal notranslate"><span class="pre">poi_id,</span> <span class="pre">hotel_id</span></code>)</p></li>
 </ul>
 <p>La figura siguiente ilustra un ejemplo de la notación Chebotko.</p>
-<p><img alt="Notación Chebotko" src="notebooks/Docs/Tema5/images/chebotko.png" /></p>
+<p><img alt="Notación Chebotko" src="../../../_images/chebotko.png" /></p>
 </div></blockquote>
 <p>En el ejemplo de la aplicación de reservas de hoteles, se diseñan las tablas siguiendo la notación Chebotko para optimizar el rendimiento de las consultas. La figura siguiente muestra el flujo de consultas y las tablas diseñadas para satisfacer estas consultas usando la notación Chebotko.</p>
-<p><img alt="Flujo de consultas y tablas diseñadas para la aplicación de reservas de hoteles" src="notebooks/Docs/Tema5/images/hoteles-flujo-chebotko.png" /></p>
+<p><img alt="Flujo de consultas y tablas diseñadas para la aplicación de reservas de hoteles" src="../../../_images/hoteles-flujo-chebotko.png" /></p>
 <p>A continuación, hay que organizar las tablas en keyspaces. La figura siguiente muestra cómo se podrían organizar las tablas en keyspaces para la aplicación de reservas de hoteles.</p>
-<p><img alt="Organización de tablas en keyspaces para la aplicación de reservas de hoteles" src="notebooks/Docs/Tema5/images/hoteles-keyspaces.png" /></p>
+<p><img alt="Organización de tablas en keyspaces para la aplicación de reservas de hoteles" src="../../../_images/hoteles-keyspaces.png" /></p>
 <p>A continuación se muestra el código CQL que define las tablas para la aplicación de reservas de hoteles. El código completo se puede encontrar en <a class="reference external" href="https://gist.github.com/ualmtorres/1fc380ab4ea702e941eca63ce3057a42">este enlace</a>.</p>
 <div class="highlight-sql notranslate"><div class="highlight"><pre><span></span><span class="k">CREATE</span><span class="w"> </span><span class="n">KEYSPACE</span><span class="w"> </span><span class="n">hotel</span><span class="w"> </span><span class="k">WITH</span><span class="w"> </span><span class="n">replication</span><span class="w"> </span><span class="o">=</span>
 <span class="w">  </span><span class="err">{</span><span class="s1">&#39;class&#39;</span><span class="p">:</span><span class="w"> </span><span class="s1">&#39;SimpleStrategy&#39;</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;replication_factor&#39;</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="mi">3</span><span class="err">}</span><span class="p">;</span>
